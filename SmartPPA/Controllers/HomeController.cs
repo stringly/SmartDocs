@@ -8,6 +8,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartPPA.Models;
 using SmartPPA.Models.ViewModels;
 
 namespace SmartPPA.Controllers
@@ -97,39 +98,16 @@ namespace SmartPPA.Controllers
 
         // Testing HttpResponse
         // Holy shit, it works.
-        public FileStreamResult GenerateDocument()
+        public ActionResult GenerateDocument()
         {
-            var mem = new MemoryStream();
-            //try
-            //{           
-                // Create Document
-                using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(mem, WordprocessingDocumentType.Document, true))
-                {
-                    // Add a main document part. 
-                    MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+            Dictionary<string, string> formData = new Dictionary<string, string>();
+            formData.Add("EmployeeName1", "DOE, John");
+            formData.Add("PayrollId", "123456");
+            formData.Add("ClassTitle", "Test Officer");
+            formData.Add("Grade", "L01");
+            formData.Add("PositionNumber", "55555");
+            return File(new DocumentGenerator().PopulateDocumentViaMappedList(formData), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Test.docx");
 
-                    new Document(new Body()).Save(mainPart);
-
-                    Body body = mainPart.Document.Body;
-                    body.Append(new Paragraph(new Run(new Text("Hello World!"))));
-
-                    // If I'm not serializing it to the HDD, do I need to call .Save() ?
-                    // mainPart.Document.Save();
-                    // wordDocument.Save("");
-                    // Stream it down to the browser
-                    FileStream fileStream = new FileStream("Test.docx", System.IO.FileMode.CreateNew);
-                    mem.Position = 0;
-                    mem.WriteTo(fileStream);
-                    return File(fileStream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Test.docx");
-                }             
-                
-            //}
-            //catch
-            //{
-            //    mem.Dispose();
-            //    throw;
-            //}
-            
         }
     }
 }
