@@ -25,16 +25,50 @@ namespace SmartPPA.Models
             var mem = new MemoryStream();
             try
             {
-                byte[] byteArray = File.ReadAllBytes("TemplateWithOutContentControls.docx");
+                JobDescription job = new JobDescription(formData.GetValueOrDefault("ClassTitle"));
+                byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
                 mem.Write(byteArray, 0, byteArray.Length);
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
                 {
 
                     MainDocumentPart mainPart = wordDocument.MainDocumentPart;
                     foreach (KeyValuePair<string, string> kvp in formData)
-                    {   // TODO: How to handle linked fields? I think do a Contains() ?
-                        // Pull a resultSet and call the Write() method on all of them
-                        Fields.Find(f => f.FieldName == kvp.Key).Write(mainPart, kvp.Value);
+                    {
+                        if (kvp.Key != "ClassTitle")
+                        {
+                            List<MappedField> results = Fields.Where(f => f.FieldName.Contains(kvp.Key)).ToList();
+                            foreach (MappedField x in results)
+                            {
+                                x.Write(mainPart, kvp.Value);
+                            }                            
+                        }                        
+                    }
+                    // TODO: Write values into HeaderPart
+                    Table tbl = mainPart.HeaderParts.Where(x => x.)
+                    List<MappedField> classTitleTargets = Fields.Where(f => f.FieldName.Contains("ClassTitle")).ToList();
+                    foreach (MappedField m in classTitleTargets)
+                    {
+                        m.Write(mainPart, job.ClassTitle);
+                    }
+                    List<MappedField> gradeTargets = Fields.Where(f => f.FieldName.Contains("Grade")).ToList();
+                    foreach (MappedField m in classTitleTargets)
+                    {
+                        m.Write(mainPart, job.Grade);
+                    }
+
+                    int currentCategoryNumber = 0;                                       
+                    foreach (JobDescriptionCategory c in job.Categories)
+                    {
+                        currentCategoryNumber++;
+                        MappedField categoryNameTarget = Fields.Where(f => f.FieldName.Contains("CategoryTitle_" + currentCategoryNumber)).Single();
+                        MappedField categoryWeightTarget = Fields.Where(f => f.FieldName.Contains("CategoryWeight_" + currentCategoryNumber)).Single();
+                        categoryNameTarget.Write(mainPart, c.Title);
+                        categoryWeightTarget.Write(mainPart, c.Weight.ToString());
+                        TableRow headerRow = c.GetCategoryHeaderRow();
+                        TableRow detailsRow = c.GenerateDetailsRow();
+                        Table table = mainPart.Document.Body.Elements<Table>().ElementAt(6);
+                        table.Append(headerRow);
+                        table.Append(detailsRow);
                     }
                     mainPart.Document.Save();
                 }
@@ -209,13 +243,44 @@ namespace SmartPPA.Models
             Fields = new List<MappedField>
             {
                 
-                new MappedField { FieldName = "EmployeeName1", TableIndex = 0, RowIndex = 1, CellIndex = 1},
-                new MappedField { FieldName = "PayrollId", TableIndex = 0, RowIndex = 1, CellIndex = 2},
-                new MappedField { FieldName = "ClassTitle", TableIndex = 0, RowIndex = 3, CellIndex = 1},
-                new MappedField { FieldName = "Grade", TableIndex = 0, RowIndex = 3, CellIndex = 2},
-                new MappedField { FieldName = "PositionNumber", TableIndex = 0, RowIndex = 3, CellIndex = 3},
-                new MappedField { FieldName = "StartDate", TableIndex = 0, RowIndex = 4, CellIndex = 0},
-                new MappedField { FieldName = "EndDate", TableIndex = 0, RowIndex = 4, CellIndex = 2},
+                new MappedField { FieldName = "EmployeeName_1", TableIndex = 0, RowIndex = 1, CellIndex = 1},                
+                new MappedField { FieldName = "PayrollId_1", TableIndex = 0, RowIndex = 1, CellIndex = 2},
+                new MappedField { FieldName = "ClassTitle_1", TableIndex = 0, RowIndex = 3, CellIndex = 1},
+                new MappedField { FieldName = "Grade_1", TableIndex = 0, RowIndex = 3, CellIndex = 2},
+                new MappedField { FieldName = "PositionNumber_1", TableIndex = 0, RowIndex = 3, CellIndex = 3},
+                new MappedField { FieldName = "StartDate_1", TableIndex = 0, RowIndex = 4, CellIndex = 2},
+                new MappedField { FieldName = "EndDate_1", TableIndex = 0, RowIndex = 4, CellIndex = 0},
+                new MappedField { FieldName = "Department_1", TableIndex = 0, RowIndex = 6, CellIndex = 3},
+                new MappedField { FieldName = "AgencyActivity_1", TableIndex = 0, RowIndex = 6, CellIndex = 4},
+
+                new MappedField { FieldName = "CategoryTitle_1", TableIndex = 1, RowIndex = 2, CellIndex = 1},
+                new MappedField { FieldName = "CategoryWeight_1", TableIndex = 1, RowIndex = 2, CellIndex = 2},
+                new MappedField { FieldName = "CategoryTotal_1", TableIndex = 1, RowIndex = 2, CellIndex = 8},
+
+                new MappedField { FieldName = "CategoryTitle_2", TableIndex = 1, RowIndex = 3, CellIndex = 1},
+                new MappedField { FieldName = "CategoryWeight_2", TableIndex = 1, RowIndex = 3, CellIndex = 2},
+                new MappedField { FieldName = "CategoryTotal_2", TableIndex = 1, RowIndex = 3, CellIndex = 8},
+
+                new MappedField { FieldName = "CategoryTitle_3", TableIndex = 1, RowIndex = 4, CellIndex = 1},
+                new MappedField { FieldName = "CategoryWeight_3", TableIndex = 1, RowIndex = 4, CellIndex = 2},
+                new MappedField { FieldName = "CategoryTotal_3", TableIndex = 1, RowIndex = 4, CellIndex = 8},
+
+                new MappedField { FieldName = "CategoryTitle_4", TableIndex = 1, RowIndex = 5, CellIndex = 1},
+                new MappedField { FieldName = "CategoryWeight_4", TableIndex = 1, RowIndex = 5, CellIndex = 2},
+                new MappedField { FieldName = "CategoryTotal_4", TableIndex = 1, RowIndex = 5, CellIndex = 8},
+
+                new MappedField { FieldName = "CategoryTitle_5", TableIndex = 1, RowIndex = 6, CellIndex = 1},
+                new MappedField { FieldName = "CategoryWeight_5", TableIndex = 1, RowIndex = 6, CellIndex = 2},
+                new MappedField { FieldName = "CategoryTotal_5", TableIndex = 1, RowIndex = 6, CellIndex = 8},
+
+                new MappedField { FieldName = "CategoryTitle_6", TableIndex = 1, RowIndex = 7, CellIndex = 1},
+                new MappedField { FieldName = "CategoryWeight_6", TableIndex = 1, RowIndex = 7, CellIndex = 2},
+                new MappedField { FieldName = "CategoryTotal_6", TableIndex = 1, RowIndex = 7, CellIndex = 8},
+
+                new MappedField { FieldName = "TotalRatingValue", TableIndex = 1, RowIndex = 8, CellIndex = 2},
+                new MappedField { FieldName = "OverallAppraisal", TableIndex = 1, RowIndex = 9, CellIndex = 2},
+
+                new MappedField {FieldName = "EmployeeName_2", TableIndex =  }
             };
         }
     }
