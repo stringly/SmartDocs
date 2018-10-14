@@ -12,6 +12,8 @@ namespace SmartPPA.Models
         public string ClassTitle { get; set; }
         public string WorkingTitle { get; set; }
         public string Grade { get; set; }
+        public string WorkingHours { get; set; }
+        public string Rank { get; set; }
         public List<JobDescriptionCategory> Categories { get; set; }
 
         public JobDescription()
@@ -26,6 +28,8 @@ namespace SmartPPA.Models
             ClassTitle = root.Element("ClassTitle").Value;
             WorkingTitle = root.Element("WorkingTitle").Value;
             Grade = root.Element("Grade").Value;
+            WorkingHours = root.Element("WorkingHours").Value;
+            Rank = root.Element("Rank").Value;
             IEnumerable<XElement> CategoryList = root.Element("Categories").Elements("Category");
             foreach (XElement category in CategoryList)
             {

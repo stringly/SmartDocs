@@ -12,7 +12,7 @@ namespace SmartPPA.Models.ViewModels
         public string EmployeeLastName { get; set; }
         public string EmployeeDepartmentIdNumber { get; set; }
         public string PayrollIdNumber { get; set; }
-        public int ClassTitle { get; set; }
+        public string ClassTitle { get; set; }
         public string JobGrade { get; set; }
         public int EmployeeRank { get; set; }
         public string DepartmentDivision {get;set;}
@@ -29,5 +29,15 @@ namespace SmartPPA.Models.ViewModels
         [Required]
         [MaxLength(5000)]
         public string Recommendation { get; set; }
+
+        public MainFormViewModel()
+        {
+
+        }
+        public MainFormViewModel(JobDescription job)
+        {
+            ClassTitle = job.ClassTitle;
+
+        }
     }
 }

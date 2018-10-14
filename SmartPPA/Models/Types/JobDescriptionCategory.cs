@@ -378,6 +378,7 @@ namespace SmartPPA.Models.Types
                 Paragraph paragraph3 = new Paragraph();
 
                 ParagraphProperties paragraphProperties3 = new ParagraphProperties();
+                SpacingBetweenLines spacingBetweenLines3 = new SpacingBetweenLines(){ After = "100" };
 
                 ParagraphMarkRunProperties paragraphMarkRunProperties3 = new ParagraphMarkRunProperties();
                 RunStyle runStyle3 = new RunStyle() { Val = "TimesLarge" };
@@ -391,7 +392,7 @@ namespace SmartPPA.Models.Types
                 paragraphMarkRunProperties3.Append(caps1);
                 paragraphMarkRunProperties3.Append(fontSize1);
                 paragraphMarkRunProperties3.Append(fontSizeComplexScript1);
-
+                paragraphProperties3.Append(spacingBetweenLines3);
                 paragraphProperties3.Append(paragraphMarkRunProperties3);
                 ProofError proofError1 = new ProofError() { Type = ProofingErrorValues.SpellStart };
 
@@ -444,21 +445,23 @@ namespace SmartPPA.Models.Types
             tableCellProperties4.Append(tableCellWidth4);
             tableCellProperties4.Append(gridSpan1);
             tableCellProperties4.Append(tableCellBorders4);
+            int bulletListCount = 1;
             foreach (PerformanceStandardItem p in PerformanceStandardItems)
             {
-
-
+                
                 Paragraph paragraph4 = new Paragraph();
-
                 ParagraphProperties paragraphProperties4 = new ParagraphProperties();
+                SpacingBetweenLines spacingBetweenLines4 = new SpacingBetweenLines(){ After = "100" };
 
                 ParagraphMarkRunProperties paragraphMarkRunProperties4 = new ParagraphMarkRunProperties();
                 FontSize fontSize3 = new FontSize() { Val = "16" };
                 FontSizeComplexScript fontSizeComplexScript3 = new FontSizeComplexScript() { Val = "16" };
+                Indentation indentation4 = new Indentation(){Left = "270", Hanging ="270"};
 
                 paragraphMarkRunProperties4.Append(fontSize3);
                 paragraphMarkRunProperties4.Append(fontSizeComplexScript3);
-
+                paragraphProperties4.Append(indentation4);
+                paragraphProperties4.Append(spacingBetweenLines4);
                 paragraphProperties4.Append(paragraphMarkRunProperties4);
                 ProofError proofError3 = new ProofError() { Type = ProofingErrorValues.SpellStart };
 
@@ -471,8 +474,8 @@ namespace SmartPPA.Models.Types
                 runProperties2.Append(fontSize4);
                 runProperties2.Append(fontSizeComplexScript4);
                 Text text2 = new Text();
-                text2.Text = p.Detail;
-
+                text2.Text = $"{Letter}{bulletListCount}: {p.Detail}";
+                bulletListCount++;
                 run2.Append(runProperties2);
                 run2.Append(text2);
                 ProofError proofError4 = new ProofError() { Type = ProofingErrorValues.SpellEnd };

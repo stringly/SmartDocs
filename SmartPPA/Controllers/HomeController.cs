@@ -101,10 +101,12 @@ namespace SmartPPA.Controllers
         public ActionResult GenerateDocument()
         {
             Dictionary<string, string> formData = new Dictionary<string, string>();
-            formData.Add("EmployeeName", "DOE, John");
+            formData.Add("EmployeeName", "Smith, Evan");
             formData.Add("PayrollId", "123456");
             formData.Add("PositionNumber", "55555");
-            formData.Add("ClassTitle", "PoliceOfficer_Patrol");
+            formData.Add("Job", "PoliceOfficer_Patrol");
+            formData.Add("StartDate", "01/01/2018");
+            formData.Add("EndDate", "01/01/2018");
             return File(new DocumentGenerator().PopulateDocumentViaMappedList(formData), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Test.docx");
 
         }

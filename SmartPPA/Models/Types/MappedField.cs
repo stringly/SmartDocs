@@ -15,10 +15,8 @@ namespace SmartPPA.Models.Types
         public int CellIndex { get; set; }
         public string FieldName { get; set; }
 
-        public void Write(MainDocumentPart mainPart, string newText)
-        {
-            
-            Table table = mainPart.Document.Body.Elements<Table>().ElementAt(TableIndex);
+        public void Write(Table table, string newText)
+        {            
             TableRow row = table.Elements<TableRow>().ElementAt(RowIndex);
             TableCell cell = row.Elements<TableCell>().ElementAt(CellIndex);
             //Paragraph p = new Paragraph(new Run(new Text("Hello, World!")));
@@ -32,5 +30,7 @@ namespace SmartPPA.Models.Types
             r.Append(t);
             p.Append(r);
         }
+
+
     }
 }

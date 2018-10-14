@@ -3,6 +3,8 @@
   <ClassTitle id="ClassTitle">Police Officer</ClassTitle>
   <WorkingTitle id="WorkingTitle">Patrol Officer</WorkingTitle>
   <Grade id="Grade">L01</Grade>
+  <Rank id="Rank">Police Officer</Rank>
+  <WorkingHours id="WorkingHours">Varied</WorkingHours>
   <Categories id="Categories">
     <Category id="Category">
       <Letter id="Letter">A</Letter>
@@ -24,7 +26,7 @@
     <Category  id="Category">
       <Letter id="Letter">B</Letter>
       <Weight id="Weight">25</Weight>
-      <Title id="Title">Preliminary Investigation and Reports</Title>
+      <Title id="Title">Preliminary Investigation/Reports</Title>
       <PositionDescriptionFields id="PositionDescriptionFields">
         <PositionDescriptionItem>Conducts preliminary investigations of law violations perpetrated within assigned area, including interviewing victims and witnesses.</PositionDescriptionItem>
         <PositionDescriptionItem>Preserves and protects area to be scrutinized and secures physical evidence and investigation in the prescribed manner.  Uses knowledge of and skill in applying applicable procedures, rules, regulations and ordinances to ensure effective preservation of crime scenes.</PositionDescriptionItem>               
