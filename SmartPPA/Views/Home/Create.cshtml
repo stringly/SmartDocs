@@ -1,103 +1,130 @@
-﻿@model SmartPPA.Models.ViewModels.MainFormViewModel
+﻿@model SmartPPA.Models.ViewModels.PPAFormViewModel
 
 @{
     Layout = "_Layout";
 }
+<link href="~/lib/smart_wizard/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+<link href="~/lib/smart_wizard/css/smart_wizard_theme_arrows.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.ckeditor.com/4.10.1/basic/ckeditor.js"></script>
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div id="smartwizard">
+        <ul>
+            <li><a href="#EmployeeInfo">Employee<br /><small>Information about the employee you are rating.</small></a></li>
+            <li><a href="#PositionInfo">Position<br /><small>Information about the employee's job.</small></a></li>
+            <li><a href="#RatingInfo">Rating<br /><small>Assign the Employee's ratings</small></a></li>
+            <li><a href="#Comments">Comments/Recommendations<br /><small>Provide your comments and recommendations</small></a></li>
+        </ul>
+        <div>
+            <div id="EmployeeInfo" class="">                
+                <div class="form-group row">
+                    <div class="form-group col-xs-3">
+                        <label asp-for="EmployeeFirstName" class="control-label"></label>
+                        <input asp-for="EmployeeFirstName" class="form-control" />
+                        <span asp-validation-for="EmployeeFirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <label asp-for="EmployeeLastName" class="control-label"></label>
+                        <input asp-for="EmployeeLastName" class="form-control" />
+                        <span asp-validation-for="EmployeeLastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-1">
+                        <label asp-for="EmployeeDepartmentIdNumber" class="control-label"></label>
+                        <input asp-for="EmployeeDepartmentIdNumber" class="form-control" />
+                        <span asp-validation-for="EmployeeDepartmentIdNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-1">
+                        <label asp-for="PayrollIdNumber" class="control-label"></label>
+                        <input asp-for="PayrollIdNumber" class="form-control" />
+                        <span asp-validation-for="PayrollIdNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col-xs-3">
+                        <label asp-for="DepartmentDivision" class="control-label"></label>
+                        <input asp-for="DepartmentDivision" class="form-control" />
+                        <span asp-validation-for="DepartmentDivision" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <label asp-for="DepartmentDivisionCode" class="control-label"></label>
+                        <input asp-for="DepartmentDivisionCode" class="form-control" />
+                        <span asp-validation-for="DepartmentDivisionCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label asp-for="WorkPlaceAddress" class="control-label"></label>
+                        <input asp-for="WorkPlaceAddress" class="form-control" />
+                        <span asp-validation-for="WorkPlaceAddress" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group col-xs-4">
+                        <label asp-for="SupervisingEmployeeName" class="control-label"></label>
+                        <input asp-for="SupervisingEmployeeName" class="form-control" />
+                        <span asp-validation-for="SupervisingEmployeeName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label asp-for="SupervisedByEmployeeName" class="control-label"></label>
+                        <input asp-for="SupervisedByEmployeeName" class="form-control" />
+                        <span asp-validation-for="SupervisedByEmployeeName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="PositionInfo" class="">
+                <div class="form-group row">
+                    <div class="form-group col-xs-2">
+                        <label asp-for="StartDate" class="control-label"></label>
+                        <input asp-for="StartDate" class="form-control" style="padding-top:0px" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-2">
+                        <label asp-for="EndDate" class="control-label"></label>
+                        <input asp-for="EndDate" class="form-control" style="padding-top:0px" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+                </div>
 
-<h4>MainFormViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="EmployeeFirstName" class="control-label"></label>
-                <input asp-for="EmployeeFirstName" class="form-control" />
-                <span asp-validation-for="EmployeeFirstName" class="text-danger"></span>
+                <div class="form-group row">
+                    <div class="form-group col-xs-4">
+                        <label asp-for="ClassTitle" class="control-label"></label>
+                        <input asp-for="ClassTitle" class="form-control" />
+                        <span asp-validation-for="ClassTitle" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-2">
+                        <label asp-for="JobGrade" class="control-label"></label>
+                        <input asp-for="JobGrade" class="form-control" />
+                        <span asp-validation-for="JobGrade" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="EmployeeLastName" class="control-label"></label>
-                <input asp-for="EmployeeLastName" class="form-control" />
-                <span asp-validation-for="EmployeeLastName" class="text-danger"></span>
+            <div id="RatingInfo" class="">
+                Step Content
             </div>
-            <div class="form-group">
-                <label asp-for="EmployeeDepartmentIdNumber" class="control-label"></label>
-                <input asp-for="EmployeeDepartmentIdNumber" class="form-control" />
-                <span asp-validation-for="EmployeeDepartmentIdNumber" class="text-danger"></span>
+            <div id="Comments" class="">
+                <div class="form-group">
+                    <label asp-for="Comments" class="control-label"></label>
+                    <textarea asp-for="Comments" class="form-control" id="comments"></textarea>
+                    <span asp-validation-for="Comments" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Recommendation" class="control-label"></label>
+                    <textarea asp-for="Recommendation" class="form-control" id="recommendations"></textarea>
+                    <span asp-validation-for="Recommendation" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="PayrollIdNumber" class="control-label"></label>
-                <input asp-for="PayrollIdNumber" class="form-control" />
-                <span asp-validation-for="PayrollIdNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClassTitle" class="control-label"></label>
-                <input asp-for="ClassTitle" class="form-control" />
-                <span asp-validation-for="ClassTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JobGrade" class="control-label"></label>
-                <input asp-for="JobGrade" class="form-control" />
-                <span asp-validation-for="JobGrade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmployeeRank" class="control-label"></label>
-                <input asp-for="EmployeeRank" class="form-control" />
-                <span asp-validation-for="EmployeeRank" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartmentDivision" class="control-label"></label>
-                <input asp-for="DepartmentDivision" class="form-control" />
-                <span asp-validation-for="DepartmentDivision" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartmentDivisionCode" class="control-label"></label>
-                <input asp-for="DepartmentDivisionCode" class="form-control" />
-                <span asp-validation-for="DepartmentDivisionCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WorkPlaceAddress" class="control-label"></label>
-                <input asp-for="WorkPlaceAddress" class="form-control" />
-                <span asp-validation-for="WorkPlaceAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SupervisingEmployeeName" class="control-label"></label>
-                <input asp-for="SupervisingEmployeeName" class="form-control" />
-                <span asp-validation-for="SupervisingEmployeeName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SupervisedByEmployeeName" class="control-label"></label>
-                <input asp-for="SupervisedByEmployeeName" class="form-control" />
-                <span asp-validation-for="SupervisedByEmployeeName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Comments" class="control-label"></label>
-                <textarea asp-for="Comments" class="form-control"></textarea>
-                <span asp-validation-for="Comments" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Recommendation" class="control-label"></label>
-                <textarea asp-for="Recommendation" class="form-control"></textarea>
-                <span asp-validation-for="Recommendation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
+<script type="text/javascript" src="~/lib/smart_wizard/js/jquery.smartWizard.min.js"></script>
+<script>
+        $(document).ready(function () {
+            $('#smartwizard').smartWizard();            
+            CKEDITOR.replace('comments', {
+                fontSize_defaultLabel: '10px'});
+            CKEDITOR.replace('recommendations');
+        });
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</script>
 

@@ -6,6 +6,7 @@
     <link asp-href-include="lib/bootstrap/css/*.min.css" rel="stylesheet" />
     <title>@ViewBag.Title</title>
     <script src="~/lib/jquery/jquery.min.js"></script>
+    @RenderSection("Head", false)
 </head>
 <body>
     <div class="navbar navbar-inverse" role="navigation">
@@ -26,7 +27,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-xs-11">
+    <div class="col-xs-10">
         <h3 class="text-danger">@ViewBag.Message</h3>
         @RenderBody()
     </div>

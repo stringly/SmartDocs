@@ -20,9 +20,40 @@ namespace SmartPPA.Models
             initializeFieldMap();
         }
 
+        // HOLY SHIT IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!
+        public MemoryStream TestAltChunkInsert(Dictionary<string, string> formData)
+        {
+            var mem = new MemoryStream();
+            string altChunkId = "AltChunkId1";
+            byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
+            mem.Write(byteArray, 0, byteArray.Length);
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
+            {
+                MainDocumentPart mainPart = wordDocument.MainDocumentPart;
+                AlternativeFormatImportPart chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html, altChunkId);
+                using (Stream chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
+                {
+                    using (StreamWriter stringStream = new StreamWriter(chunkStream))
+                    {
+                        stringStream.Write("<html><p><strong>In the merry month of June</strong></p><ul><li><strong><em>From me home I started</em></strong></li><li><strong><em>Left the girls of Tume</em></strong></li><li><strong><em>Merely brok-en hearted</em></strong></li></ul><p>Test.</p></html>");
+                    }
+                }
+                AltChunk altChunk = new AltChunk();
+                altChunk.Id = altChunkId;
+                Table table = mainPart.Document.Body.Elements<Table>().ElementAt(3);
+                TableRow row = table.Elements<TableRow>().ElementAt(1);
+                TableCell cell = row.Elements<TableCell>().ElementAt(0);                
+                Paragraph p = cell.Elements<Paragraph>().First();
+                p.InsertBeforeSelf(altChunk);
+                mainPart.Document.Save();
+            }
+            mem.Seek(0, SeekOrigin.Begin);
+            return mem;
+        }
         public MemoryStream PopulateDocumentViaMappedList(Dictionary<string, string> formData)
         {
             var mem = new MemoryStream();
+            int chunkCount = 1;
             try
             {
                 JobDescription job = new JobDescription(formData.GetValueOrDefault("Job"));
@@ -42,19 +73,41 @@ namespace SmartPPA.Models
                         {
                             if (x.FieldName.Contains("Header"))
                             {
-                                Table table = mainPart.HeaderParts.ElementAt(2).RootElement.Elements<Table>().ElementAt(x.TableIndex);                                
+                                Table table = mainPart.HeaderParts.ElementAt(2).RootElement.Elements<Table>().ElementAt(x.TableIndex);
                                 x.Write(table, kvp.Value);
                             }
                             else
-                            {
+                            {                              
                                 Table table = mainPart.Document.Body.Elements<Table>().ElementAt(x.TableIndex);
-                                x.Write(table, kvp.Value);
-                            }
-                                
-                        }                            
-                                               
-                    }                 
+                                if (x.FieldName == "Recommendations" || x.FieldName == "Assessment")
+                                {
+                                    
+                                    string altChunkId = $"AltChunkId{chunkCount}";
+                                    chunkCount++;
+                                    AlternativeFormatImportPart chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html, altChunkId);
+                                    using (Stream chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
+                                    {
+                                        using (StreamWriter stringStream = new StreamWriter(chunkStream))
+                                        {
+                                            stringStream.Write($"<html style='font-size:10px'>{kvp.Value}</html>");
+                                        }
+                                    }
+                                    AltChunk altChunk = new AltChunk();
+                                    altChunk.Id = altChunkId;
+                                    TableRow row = table.Elements<TableRow>().ElementAt(1);
+                                    TableCell cell = row.Elements<TableCell>().ElementAt(0);
+                                    Paragraph p = cell.Elements<Paragraph>().First();
+                                    p.InsertBeforeSelf(altChunk);
+                                    mainPart.Document.Save();
+                                }                                
+                                else
+                                {
+                                    x.Write(table, kvp.Value);
+                                }
 
+                            }
+                        }                       
+                    }
 
                     int currentCategoryNumber = 0;                                       
                     foreach (JobDescriptionCategory c in job.Categories)
@@ -159,23 +212,23 @@ namespace SmartPPA.Models
                 new MappedField { FieldName = "StartDate_Header", TableIndex = 0, RowIndex = 4, CellIndex = 1 },
                 new MappedField { FieldName = "EndDate_Header", TableIndex = 0, RowIndex = 4, CellIndex = 3 },
                 new MappedField { FieldName = "ClassTitle_Header", TableIndex = 0, RowIndex = 4, CellIndex = 5 },
-                new MappedField { FieldName = "DistrictDivision_Header", TableIndex = 0, RowIndex = 5, CellIndex = 2 },
+                new MappedField { FieldName = "DistrictDivision_Header", TableIndex = 0, RowIndex = 5, CellIndex = 1 },
                 // PAF Performance Assessment Field
-                new MappedField { FieldName = "PerformanceAssessment", TableIndex = 3, RowIndex = 1, CellIndex = 0 },
+                new MappedField { FieldName = "Assessment", TableIndex = 3, RowIndex = 1, CellIndex = 0 },
                 // PAF Supervisor's Recommendation Fields
-                new MappedField { FieldName = "SupervisorsRecommendations", TableIndex = 4, RowIndex = 1, CellIndex = 0 },
+                new MappedField { FieldName = "Recommendations", TableIndex = 4, RowIndex = 1, CellIndex = 0 },
                 // Job Description Page Fields
                 new MappedField { FieldName = "EmployeeName_2", TableIndex = 5, RowIndex = 3, CellIndex = 0 },
                 new MappedField { FieldName = "DistrictDivision_2", TableIndex = 5, RowIndex = 1, CellIndex = 2 }, 
-                new MappedField { FieldName = "DistrictDivisionCode_1", TableIndex = 5, RowIndex = 1, CellIndex = 3 },
+                new MappedField { FieldName = "AgencyActivity_2", TableIndex = 5, RowIndex = 1, CellIndex = 3 },
                 new MappedField { FieldName = "PositionNumber_2", TableIndex = 5, RowIndex = 1, CellIndex = 4 }, 
-                new MappedField { FieldName = "ClassTitle_2", TableIndex = 5, RowIndex = 3, CellIndex = 2 },
-                new MappedField { FieldName = "Grade_1", TableIndex = 5, RowIndex = 3, CellIndex = 3 },
-                new MappedField { FieldName = "WorkingTitle_1", TableIndex = 5, RowIndex = 3, CellIndex = 3 },
-                new MappedField { FieldName = "PlaceOfWork_1", TableIndex = 5, RowIndex = 5, CellIndex = 0 },
-                new MappedField { FieldName = "WorkingHours", TableIndex = 5, RowIndex = 5, CellIndex = 1 },
-                new MappedField { FieldName = "Supervisor_1", TableIndex = 5, RowIndex = 7, CellIndex = 0 },
-                new MappedField { FieldName = "Supervises_1", TableIndex = 5, RowIndex = 9, CellIndex = 0 }
+                new MappedField { FieldName = "ClassTitle_2", TableIndex = 5, RowIndex = 3, CellIndex = 1 },
+                new MappedField { FieldName = "Grade_2", TableIndex = 5, RowIndex = 3, CellIndex = 2 },
+                new MappedField { FieldName = "WorkingTitle_1", TableIndex = 5, RowIndex = 5, CellIndex = 1 },
+                new MappedField { FieldName = "PlaceOfWork_1", TableIndex = 5, RowIndex = 7, CellIndex = 0 },
+                new MappedField { FieldName = "WorkingHours", TableIndex = 5, RowIndex = 7, CellIndex = 1 },
+                new MappedField { FieldName = "Supervisor_1", TableIndex = 5, RowIndex = 9, CellIndex = 0 },
+                new MappedField { FieldName = "Supervises_1", TableIndex = 5, RowIndex = 11, CellIndex = 0 }
             };
         }
     }

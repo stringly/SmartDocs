@@ -23,10 +23,13 @@ namespace SmartPPA.Models.Types
             Paragraph p = cell.Elements<Paragraph>().First();
             Run r = new Run();
             RunProperties runProperties1 = new RunProperties();
-            Bold bold1 = new Bold();
-            runProperties1.Append(bold1);                        
-            Text t = new Text(newText);
+            if (FieldName != "Assessment" && FieldName != "Recommendations")
+            {                
+                Bold bold1 = new Bold();
+                runProperties1.Append(bold1);                
+            }
             r.Append(runProperties1);
+            Text t = new Text(newText);            
             r.Append(t);
             p.Append(r);
         }

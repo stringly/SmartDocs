@@ -30,7 +30,7 @@ namespace SmartPPA.Controllers
         // GET: Home/Create
         public ActionResult Create()
         {
-            return View(new MainFormViewModel());
+            return View(new PPAFormViewModel());
         }
 
         // POST: Home/Create
@@ -107,6 +107,13 @@ namespace SmartPPA.Controllers
             formData.Add("Job", "PoliceOfficer_Patrol");
             formData.Add("StartDate", "01/01/2018");
             formData.Add("EndDate", "01/01/2018");
+            formData.Add("DistrictDivision", "District I");
+            formData.Add("Assessment", "<p><strong>In the merry month of June</strong></p><ul><li><strong><em>From me home I started</em></strong></li><li><strong><em>Left the girls of Tume</em></strong></li><li><strong><em>Merely brok-en hearted</em></strong></li></ul><p>Test.</p>");
+            formData.Add("Recommendations", "RECOMMEND RECOMMEND");
+            formData.Add("AgencyActivity", "5025");
+            formData.Add("PlaceOfWork", "5000 Rhode Island Ave");
+            formData.Add("Supervisor", "Sgt. T. Test #1234");
+            formData.Add("Supervises", "Squad #Test");
             return File(new DocumentGenerator().PopulateDocumentViaMappedList(formData), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Test.docx");
 
         }
