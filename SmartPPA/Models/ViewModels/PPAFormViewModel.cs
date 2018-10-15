@@ -50,11 +50,12 @@ namespace SmartPPA.Models.ViewModels
             StartDate = DateTime.Today.AddYears(-1);
             EndDate = DateTime.Today;
         }
-        public PPAFormViewModel(JobDescription job)
+        public PPAFormViewModel(JobDescription _job)
         {
-            ClassTitle = job.ClassTitle;
+            ClassTitle = _job.ClassTitle;
             StartDate = DateTime.Today.AddYears(-1);
             EndDate = DateTime.Today;
+            Job = _job;
         }
     }
 }

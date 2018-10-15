@@ -30,7 +30,9 @@ namespace SmartPPA.Controllers
         // GET: Home/Create
         public ActionResult Create()
         {
-            return View(new PPAFormViewModel());
+            JobDescription job = new JobDescription("PoliceOfficer_Patrol");
+            PPAFormViewModel vm = new PPAFormViewModel(job);
+            return View(vm);
         }
 
         // POST: Home/Create

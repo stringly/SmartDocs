@@ -89,6 +89,7 @@ namespace SmartPPA.Models
                                     {
                                         using (StreamWriter stringStream = new StreamWriter(chunkStream))
                                         {
+                                            // TODO: Is this defaulted to the right font?
                                             stringStream.Write($"<html style='font-size:10px'>{kvp.Value}</html>");
                                         }
                                     }

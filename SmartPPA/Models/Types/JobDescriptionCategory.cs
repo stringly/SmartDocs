@@ -12,6 +12,8 @@ namespace SmartPPA.Models.Types
         public string Letter { get; set; }
         public int Weight { get; set; }
         public string Title { get; set; }
+        public int SelectedScore {get; set;}
+        public int[] Scores { get; set; }
         public List<PositionDescriptionItem> PositionDescriptionItems { get; set; }
         public List<PerformanceStandardItem> PerformanceStandardItems { get; set; }
 
@@ -19,6 +21,7 @@ namespace SmartPPA.Models.Types
         {
             PositionDescriptionItems = new List<PositionDescriptionItem>();
             PerformanceStandardItems = new List<PerformanceStandardItem>();
+            Scores = new int[] {0,1,2,3,4};
         }
 
         // Creates a Header Row for the Category instance and adds its children.

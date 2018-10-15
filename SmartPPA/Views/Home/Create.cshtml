@@ -97,7 +97,7 @@
                 </div>
             </div>
             <div id="RatingInfo" class="">
-                Step Content
+                @await Component.InvokeAsync("JobDescriptionCategoryList", Model.Job)
             </div>
             <div id="Comments" class="">
                 <div class="form-group">
