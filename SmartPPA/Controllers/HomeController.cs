@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using SmartPPA.Models;
 using SmartPPA.Models.ViewModels;
 
@@ -15,6 +17,12 @@ namespace SmartPPA.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public HomeController(IHostingEnvironment hostingEnvironment)
+        {
+            _hostingEnvironment = hostingEnvironment;
+        }
         // GET: Home
         public ActionResult Index()
         {
@@ -30,27 +38,43 @@ namespace SmartPPA.Controllers
         // GET: Home/Create
         public ActionResult Create()
         {
-            JobDescription job = new JobDescription("PoliceOfficer_Patrol");
-            PPAFormViewModel vm = new PPAFormViewModel(job);
+            PPAFormViewModel vm = new PPAFormViewModel(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions");
             return View(vm);
         }
 
         // POST: Home/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create([Bind(
+            "FirstName," +
+            "LastName," +
+            "DepartmentIdNumber," +
+            "PayrollIdNumber," +
+            "PositionNumber," +
+            "DepartmentDivision," +
+            "DepartmentDivisionCode," +
+            "WorkPlaceAddress," +
+            "SupervisingEmployeeName," +
+            "SupervisedByEmployeeName," +
+            "StartDate," +
+            "EndDate," +
+            "JobPath," +
+            "Assessment," +
+            "Recommendation")]PPAFormViewModel form)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                //return BadRequest(ModelState);
+                form.RepopulateJobList(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions"); 
+                return View(form);
             }
-            catch
+            else
             {
-                return View();
+                DocumentGenerator documentGenerator = new DocumentGenerator(form);
+                string resultDocName = $"PPA - {form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")}.docx";
+                return File(documentGenerator.PopulateDocumentViaMappedList(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
             }
-        }
+    }
 
         // GET: Home/Edit/5
         public ActionResult Edit(int id)
@@ -97,27 +121,32 @@ namespace SmartPPA.Controllers
                 return View();
             }
         }
-
+        
+        public IActionResult GetJobDescriptionViewComponent(string jobTitle)
+        {
+            JobDescription job = new JobDescription(jobTitle);
+            return ViewComponent("JobDescriptionCategoryList", job);
+        }
         // Testing HttpResponse
         // Holy shit, it works.
-        public ActionResult GenerateDocument()
-        {
-            Dictionary<string, string> formData = new Dictionary<string, string>();
-            formData.Add("EmployeeName", "Smith, Evan");
-            formData.Add("PayrollId", "123456");
-            formData.Add("PositionNumber", "55555");
-            formData.Add("Job", "PoliceOfficer_Patrol");
-            formData.Add("StartDate", "01/01/2018");
-            formData.Add("EndDate", "01/01/2018");
-            formData.Add("DistrictDivision", "District I");
-            formData.Add("Assessment", "<p><strong>In the merry month of June</strong></p><ul><li><strong><em>From me home I started</em></strong></li><li><strong><em>Left the girls of Tume</em></strong></li><li><strong><em>Merely brok-en hearted</em></strong></li></ul><p>Test.</p>");
-            formData.Add("Recommendations", "RECOMMEND RECOMMEND");
-            formData.Add("AgencyActivity", "5025");
-            formData.Add("PlaceOfWork", "5000 Rhode Island Ave");
-            formData.Add("Supervisor", "Sgt. T. Test #1234");
-            formData.Add("Supervises", "Squad #Test");
-            return File(new DocumentGenerator().PopulateDocumentViaMappedList(formData), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Test.docx");
+        //public ActionResult GenerateDocument()
+        //{
+        //    Dictionary<string, string> formData = new Dictionary<string, string>();
+        //    formData.Add("EmployeeName", "Smith, Evan");
+        //    formData.Add("PayrollId", "123456");
+        //    formData.Add("PositionNumber", "55555");
+        //    formData.Add("Job", "C:\\Users\\jcsmith1\\source\\repos\\SmartPPA\\SmartPPA\\Resources\\JobDescriptions\\PoliceOfficer_Patrol.xml");
+        //    formData.Add("StartDate", "01/01/2018");
+        //    formData.Add("EndDate", "01/01/2018");
+        //    formData.Add("DistrictDivision", "District I");
+        //    formData.Add("Assessment", "<p><strong>In the merry month of June</strong></p><ul><li><strong><em>From me home I started</em></strong></li><li><strong><em>Left the girls of Tume</em></strong></li><li><strong><em>Merely brok-en hearted</em></strong></li></ul><p>Test.</p>");
+        //    formData.Add("Recommendations", "RECOMMEND RECOMMEND");
+        //    formData.Add("AgencyActivity", "5025");
+        //    formData.Add("PlaceOfWork", "5000 Rhode Island Ave");
+        //    formData.Add("Supervisor", "Sgt. T. Test #1234");
+        //    formData.Add("Supervises", "Squad #Test");
+        //    return File(new DocumentGenerator().PopulateDocumentViaMappedList(formData), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Test.docx");
 
-        }
+        //}
     }
 }

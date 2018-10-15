@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Http;
 using SmartPPA.Models.Types;
+using SmartPPA.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,14 +15,41 @@ namespace SmartPPA.Models
     public class DocumentGenerator
     {
         private List<MappedField> Fields;
+        private Dictionary<string, string> formData;
+        private JobDescription job;
         
         public DocumentGenerator()
         {
             initializeFieldMap();
-        }
+        }        
 
+        public DocumentGenerator(PPAFormViewModel form)
+        {
+            initializeFieldMap();
+            Dictionary<string, string> results = new Dictionary<string, string>();
+            job = new JobDescription(form.JobPath);
+            // TODO: Map the VM to a Dict because I am very lazy            
+            results.Add("EmployeeName", $"{form.LastName}, {form.FirstName}");
+            results.Add("PayrollId", form.PayrollIdNumber);
+            results.Add("PositionNumber", form.PositionNumber);
+            results.Add("Job", form.JobPath);
+            results.Add("StartDate", form.StartDate.ToShortDateString());
+            results.Add("EndDate", form.EndDate.ToShortDateString());
+            results.Add("DistrictDivision", form.DepartmentDivision);
+            results.Add("Assessment", form.Assessment);
+            results.Add("Recommendations", form.Recommendation);
+            results.Add("AgencyActivity", form.DepartmentDivisionCode);
+            results.Add("PlaceOfWork", form.WorkPlaceAddress);
+            results.Add("Supervisor", form.SupervisingEmployeeName);
+            results.Add("Supervises", form?.SupervisedByEmployeeName ?? "N/A");
+            results.Add("ClassTitle", job.ClassTitle);
+            results.Add("Grade", job.Grade);
+            results.Add("WorkingTitle", job.WorkingTitle);
+            formData = results;
+        }
+        
         // HOLY SHIT IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!
-        public MemoryStream TestAltChunkInsert(Dictionary<string, string> formData)
+        public MemoryStream TestAltChunkInsert()
         {
             var mem = new MemoryStream();
             string altChunkId = "AltChunkId1";
@@ -50,16 +78,14 @@ namespace SmartPPA.Models
             mem.Seek(0, SeekOrigin.Begin);
             return mem;
         }
-        public MemoryStream PopulateDocumentViaMappedList(Dictionary<string, string> formData)
+        public MemoryStream PopulateDocumentViaMappedList()
         {
             var mem = new MemoryStream();
             int chunkCount = 1;
             try
             {
-                JobDescription job = new JobDescription(formData.GetValueOrDefault("Job"));
-                formData.Add("ClassTitle", job.ClassTitle);
-                formData.Add("Grade", job.Grade);
-                formData.Add("WorkingTitle", job.WorkingTitle);
+                
+
                 byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
                 mem.Write(byteArray, 0, byteArray.Length);
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
@@ -135,7 +161,6 @@ namespace SmartPPA.Models
             mem.Seek(0, SeekOrigin.Begin);
             return mem;
         }        
-
         private void initializeFieldMap()
         {
             Fields = new List<MappedField>

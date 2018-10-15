@@ -1,8 +1,8 @@
-﻿@model IEnumerable<SmartPPA.Models.Types.JobDescriptionCategory>
+﻿@model List<SmartPPA.Models.Types.JobDescriptionCategory>
 
 <!DOCTYPE html>
 
-<h5>Categories</h5>
+<h4>Job Categories</h4>
 <table class="table">
     <thead>
         <tr>
@@ -30,28 +30,59 @@
             <th>
                 4
             </th>
+            <th style="text-align:center">
+                Score
+            </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
+    @for (int i = 0; i < Model.Count(); i++)
+    {
         <tr>
             <td>
-                @item.Letter
-                @Html.HiddenFor(x => item.SelectedScore)
+                @Model[i].Letter
             </td>
             <td>
-                @item.Title
+                @Model[i].Title
             </td>
             <td>
-                @item.Weight
+                @Model[i].Weight
             </td>
-            @for (int i = 0; i < item.Scores.Count(); i++)
-            {
-                <td>
-                    @Html.RadioButtonFor(x => x.Scores[i])
-                </td>
-            }
+            <td>
+                @Html.RadioButtonFor(x => Model[i].SelectedScore, 0, new { onClick = $"ratingChange({Model[i].Weight}, {i}, 0)" })
+            </td>
+            <td>
+                @Html.RadioButtonFor(x => Model[i].SelectedScore, 1, new { onClick =$"ratingChange({Model[i].Weight}, {i}, 1)" })
+            </td>
+            <td>
+                @Html.RadioButtonFor(x => Model[i].SelectedScore, 2, new { onClick = $"ratingChange({Model[i].Weight}, {i}, 2)" })
+            </td>
+            <td>
+                @Html.RadioButtonFor(x => Model[i].SelectedScore, 3, new { onClick = $"ratingChange({Model[i].Weight}, {i}, 3)" })
+            </td>
+            <td>
+                @Html.RadioButtonFor(x => Model[i].SelectedScore, 4, new { onClick = $"ratingChange({Model[i].Weight}, {i}, 4)" })
+            </td>
+            <td style="text-align:center" >
+                <div id="Row-Total-@i" class="total-col">@(Model[i].SelectedScore * 0.01 * Model[i].Weight)</div>
+            </td>
         </tr>
-        }
+    }
+        <tr>
+            <td colspan="8" style="text-align:right">
+                Total Rating
+            </td>
+            <td id="Total-Rating" style="text-align:center">
+                
+            </td>
+        </tr>
+        <tr>
+            <td colspan="8" style="text-align:right">
+                Overall Appraisal
+            </td>
+            <td id="Overall-Appraisal" style="overflow: hidden; width: 200px; text-align:center;">
+
+            </td>
+        </tr>
     </tbody>
 </table>

@@ -21,10 +21,10 @@ namespace SmartPPA.Models
             Categories = new List<JobDescriptionCategory>();
         }
 
-        public JobDescription(string jobName)
+        public JobDescription(string filePath)
         {
             List<JobDescriptionCategory> results = new List<JobDescriptionCategory>();
-            XElement root = XElement.Load(jobName + ".xml");
+            XElement root = XElement.Load(filePath);
             ClassTitle = root.Element("ClassTitle").Value;
             WorkingTitle = root.Element("WorkingTitle").Value;
             Grade = root.Element("Grade").Value;
