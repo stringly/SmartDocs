@@ -53,8 +53,6 @@ namespace SmartPPA.Models
             
             for (int i = 0; i < form.Categories.Count(); i++)
             {
-                float totalScore = 0.00f;
-                float categoryScore = 0.00f;
                 switch (job.Categories[i].SelectedScore)
                 {
                     case 0:

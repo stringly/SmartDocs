@@ -26,6 +26,8 @@ namespace SmartPPA.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            DocumentCleaner dc = new DocumentCleaner();
+            dc.RemoveComments(_hostingEnvironment.ContentRootPath + @"\Resources\DocumentTemplates\TemplateNoJobDescriptionCell.docx");
             return View();
         }
 

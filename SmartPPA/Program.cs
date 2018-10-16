@@ -12,6 +12,9 @@ namespace SmartPPA
 {
     public class Program
     {
+        // TODO: SQL Server Support for lookups?
+        // TODO: ELMAH to StackDriver?
+        // TODO: LDAP Validation
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();

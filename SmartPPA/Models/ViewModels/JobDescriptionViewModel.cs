@@ -13,12 +13,13 @@ namespace SmartPPA.Models.ViewModels
         
         [Display(Name = "Working Title"), StringLength(50), Required]
         public string WorkingTitle { get; set; }
-        [Display(Name = "Class Title"), StringLength(50), Required]
+        [Display(Name = "Grade"), StringLength(50), Required]
         public string Grade { get; set; }
         [Display(Name = "Working Hours"), StringLength(50), Required]
         public string WorkingHours { get; set; }
         [Display(Name = "Rank"), StringLength(50), Required]
         public string Rank { get; set; }
+        public string FilePath { get; set; }
         public List<JobDescriptionCategory> Categories { get; set; }
         public List<string> Ranks { get; set; }
 
@@ -31,6 +32,8 @@ namespace SmartPPA.Models.ViewModels
 
         public JobDescriptionViewModel(string filePath)
         {
+            int idx = filePath.LastIndexOf(@"\");
+            FilePath = filePath.Substring(idx + 1);            
             Ranks = DefaultRankList();
             List<JobDescriptionCategory> results = new List<JobDescriptionCategory>();
             XElement root = XElement.Load(filePath);
