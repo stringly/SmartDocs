@@ -10,9 +10,8 @@ namespace SmartPPA.ViewComponents
     {
 
         public async Task<IViewComponentResult> InvokeAsync(JobDescription job)
-        {
-            var items = job.Categories.ToList();
-            return View(items);
+        {            
+            return View(job);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model List<SmartPPA.Models.Types.JobDescriptionCategory>
+﻿@model SmartPPA.Models.JobDescription
 
 <!DOCTYPE html>
 
@@ -36,35 +36,35 @@
         </tr>
     </thead>
     <tbody>
-    @for (int i = 0; i < Model.Count(); i++)
+    @for (int i = 0; i < Model.Categories.Count(); i++)
     {
         <tr>
             <td>
-                @Model[i].Letter
+                @Model.Categories[i].Letter
             </td>
             <td>
-                @Model[i].Title
+                @Model.Categories[i].Title
             </td>
             <td>
-                @Model[i].Weight
+                @Model.Categories[i].Weight
             </td>
             <td>
-                @Html.RadioButtonFor(x => Model[i].SelectedScore, 0, new { onClick = $"ratingChange({Model[i].Weight}, {i}, 0)" })
+                @Html.RadioButtonFor(x => Model.Categories[i].SelectedScore, 0, new { onClick = $"ratingChange({Model.Categories[i].Weight}, {i}, 0)" })
             </td>
             <td>
-                @Html.RadioButtonFor(x => Model[i].SelectedScore, 1, new { onClick =$"ratingChange({Model[i].Weight}, {i}, 1)" })
+                @Html.RadioButtonFor(x => Model.Categories[i].SelectedScore, 1, new { onClick =$"ratingChange({Model.Categories[i].Weight}, {i}, 1)" })
             </td>
             <td>
-                @Html.RadioButtonFor(x => Model[i].SelectedScore, 2, new { onClick = $"ratingChange({Model[i].Weight}, {i}, 2)" })
+                @Html.RadioButtonFor(x => Model.Categories[i].SelectedScore, 2, new { onClick = $"ratingChange({Model.Categories[i].Weight}, {i}, 2)" })
             </td>
             <td>
-                @Html.RadioButtonFor(x => Model[i].SelectedScore, 3, new { onClick = $"ratingChange({Model[i].Weight}, {i}, 3)" })
+                @Html.RadioButtonFor(x => Model.Categories[i].SelectedScore, 3, new { onClick = $"ratingChange({Model.Categories[i].Weight}, {i}, 3)" })
             </td>
             <td>
-                @Html.RadioButtonFor(x => Model[i].SelectedScore, 4, new { onClick = $"ratingChange({Model[i].Weight}, {i}, 4)" })
+                @Html.RadioButtonFor(x => Model.Categories[i].SelectedScore, 4, new { onClick = $"ratingChange({Model.Categories[i].Weight}, {i}, 4)" })
             </td>
             <td style="text-align:center" >
-                <div id="Row-Total-@i" class="total-col">@(Model[i].SelectedScore * 0.01 * Model[i].Weight)</div>
+                <div id="Row-Total-@i" class="total-col">@(Model.Categories[i].SelectedScore * 0.01 * Model.Categories[i].Weight)</div>
             </td>
         </tr>
     }

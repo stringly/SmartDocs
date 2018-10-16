@@ -27,17 +27,17 @@
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-1">
+                    <div class="form-group col-xs-2">
                         <label asp-for="DepartmentIdNumber" class="control-label"></label>
                         <input asp-for="DepartmentIdNumber" class="form-control" />
                         <span asp-validation-for="DepartmentIdNumber" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-1">
+                    <div class="form-group col-xs-2">
                         <label asp-for="PayrollIdNumber" class="control-label"></label>
                         <input asp-for="PayrollIdNumber" class="form-control" />
                         <span asp-validation-for="PayrollIdNumber" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-1">
+                    <div class="form-group col-xs-2">
                         <label asp-for="PositionNumber" class="control-label"></label>
                         <input asp-for="PositionNumber" class="form-control" />
                         <span asp-validation-for="PositionNumber" class="text-danger"></span>
@@ -134,7 +134,7 @@
             })
         });
         function ratingChange(weight, row, score) {
-            $('#Row-Total-' + row).text((weight * 0.01) * score);
+            $('#Row-Total-' + row).text(+((weight * 0.01) * score).toFixed(2));
             reCalcOverall();
         }
         function reCalcOverall() {
@@ -144,11 +144,9 @@
             var list = $(".total-col").toArray();
             for (var i = 0; i < list.length; i++){
                 categoryCount++;
-                console.log("Count is:" + categoryCount);
-                sumOfScores = sumOfScores + parseFloat(list[i].innerHTML);
-                console.log("Sum is:" + sumOfScores);
+                sumOfScores = sumOfScores + parseFloat(list[i].innerHTML);                
             }
-            $("#Total-Rating").text(sumOfScores);
+            $("#Total-Rating").text(+sumOfScores.toFixed(2));
             if (sumOfScores <= 0.5) {
                 $("#Overall-Appraisal").text("Unsatisfactory");
             }

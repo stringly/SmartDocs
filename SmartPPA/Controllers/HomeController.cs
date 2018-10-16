@@ -59,8 +59,9 @@ namespace SmartPPA.Controllers
             "StartDate," +
             "EndDate," +
             "JobPath," +
+            "Categories," +
             "Assessment," +
-            "Recommendation")]PPAFormViewModel form)
+            "Recommendation")] PPAFormViewModel form)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +72,7 @@ namespace SmartPPA.Controllers
             else
             {
                 DocumentGenerator documentGenerator = new DocumentGenerator(form);
-                string resultDocName = $"PPA - {form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")}.docx";
+                string resultDocName = $"{form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")} Performance Appraisal.docx";
                 return File(documentGenerator.PopulateDocumentViaMappedList(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
             }
     }

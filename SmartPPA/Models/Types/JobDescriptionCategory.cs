@@ -24,6 +24,11 @@ namespace SmartPPA.Models.Types
             Scores = new int[] {0,1,2,3,4};
         }
 
+        public double GetCategoryRatedScore()
+        {
+            return Math.Round((Weight * SelectedScore * 0.01), 2);
+        }
+
         // Creates a Header Row for the Category instance and adds its children.
         public TableRow GetCategoryHeaderRow()
         {

@@ -45,6 +45,7 @@ namespace SmartPPA.Models.ViewModels
         public string Assessment { get; set; }
         [MaxLength(5000), Required, Display(Name = "Supervisor's Recommendations:")]
         public string Recommendation { get; set; }
+        public List<JobDescriptionCategory> Categories { get; set; }
         public List<JobDescriptionListItem> JobList { get; set; }
 
         public PPAFormViewModel()

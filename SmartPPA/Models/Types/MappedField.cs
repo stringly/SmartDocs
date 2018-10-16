@@ -23,7 +23,12 @@ namespace SmartPPA.Models.Types
             Paragraph p = cell.Elements<Paragraph>().First();
             Run r = new Run();
             RunProperties runProperties1 = new RunProperties();
-            if (FieldName != "Assessment" && FieldName != "Recommendations")
+            if (FieldName.Contains("CategoryRating"))
+            {
+                var runFont1 = new RunFonts { Ascii = "Wingdings" };
+                runProperties1.Append(runFont1);
+            }
+            else if (FieldName != "Assessment" && FieldName != "Recommendations")
             {                
                 Bold bold1 = new Bold();
                 runProperties1.Append(bold1);                

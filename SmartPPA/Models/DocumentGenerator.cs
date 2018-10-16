@@ -28,6 +28,11 @@ namespace SmartPPA.Models
             initializeFieldMap();
             Dictionary<string, string> results = new Dictionary<string, string>();
             job = new JobDescription(form.JobPath);
+            for (int i = 0; i < job.Categories.Count(); i++)
+            {
+                job.Categories[i].SelectedScore = form.Categories[i].SelectedScore;
+            }
+            
             // TODO: Map the VM to a Dict because I am very lazy            
             results.Add("EmployeeName", $"{form.LastName}, {form.FirstName}");
             results.Add("PayrollId", form.PayrollIdNumber);
@@ -45,6 +50,34 @@ namespace SmartPPA.Models
             results.Add("ClassTitle", job.ClassTitle);
             results.Add("Grade", job.Grade);
             results.Add("WorkingTitle", job.WorkingTitle);
+            
+            for (int i = 0; i < form.Categories.Count(); i++)
+            {
+                float totalScore = 0.00f;
+                float categoryScore = 0.00f;
+                switch (job.Categories[i].SelectedScore)
+                {
+                    case 0:
+                        results.Add($"CategoryRating_{i+1}_0", "\u2713");                        
+                        break;
+                    case 1:
+                        results.Add($"CategoryRating_{i+1}_1", "\u2713");
+                        break;
+                    case 2:
+                        results.Add($"CategoryRating_{i+1}_2", "\u2713");
+                        break;
+                    case 3:
+                        results.Add($"CategoryRating_{i+1}_3", "\u2713");
+                        break;
+                    case 4:
+                        results.Add($"CategoryRating_{i+1}_4", "\u2713");
+                        break;
+                }
+
+                results.Add($"CategoryTotal_{i+1}", job.Categories[i].GetCategoryRatedScore().ToString());
+            }
+            results.Add("TotalRatingValue", job.GetOverallScore().ToString());
+            results.Add("OverallAppraisal", job.GetOverallRating());
             formData = results;
         }
         
@@ -171,8 +204,8 @@ namespace SmartPPA.Models
                 new MappedField { FieldName = "ClassTitle_1", TableIndex = 0, RowIndex = 3, CellIndex = 1},
                 new MappedField { FieldName = "Grade_1", TableIndex = 0, RowIndex = 3, CellIndex = 2},
                 new MappedField { FieldName = "PositionNumber_1", TableIndex = 0, RowIndex = 3, CellIndex = 3},
-                new MappedField { FieldName = "StartDate_1", TableIndex = 0, RowIndex = 4, CellIndex = 2},
-                new MappedField { FieldName = "EndDate_1", TableIndex = 0, RowIndex = 4, CellIndex = 0},
+                new MappedField { FieldName = "StartDate_1", TableIndex = 0, RowIndex = 4, CellIndex = 0},
+                new MappedField { FieldName = "EndDate_1", TableIndex = 0, RowIndex = 4, CellIndex = 2},
                 new MappedField { FieldName = "DistrictDivision_1", TableIndex = 0, RowIndex = 6, CellIndex = 3},
                 new MappedField { FieldName = "AgencyActivity_1", TableIndex = 0, RowIndex = 6, CellIndex = 4},
 

@@ -1,0 +1,48 @@
+﻿@model SmartPPA.Models.ViewModels.JobDescriptionViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<h4>JobDescriptionViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group col-sm-3">
+                <label asp-for="WorkingTitle" class="control-label"></label>
+                <input asp-for="WorkingTitle" class="form-control" />
+                <span asp-validation-for="WorkingTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-3">
+                <label asp-for="Grade" class="control-label"></label>
+                <input asp-for="Grade" class="form-control" />
+                <span asp-validation-for="Grade" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-2">
+                <label asp-for="WorkingHours" class="control-label"></label>
+                <input asp-for="WorkingHours" class="form-control" />
+                <span asp-validation-for="WorkingHours" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-3">
+                <label asp-for="Rank" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Rank,
+                            new SelectList(Model.Ranks, "Rank"),
+                            "Select Rank",
+                            new { @class = "form-control" })
+                <span asp-validation-for="Rank" class="text-danger"></span>
+            </div>
+            <div class="col-sm-10">
+                @await Component.InvokeAsync("JobDescriptionCategoryEditor", Model.Categories)
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
