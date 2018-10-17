@@ -17,17 +17,18 @@ namespace SmartPPA.Controllers
 {
     public class HomeController : Controller
     {
+        // TODO: I think the repo eliminates the need for the Hosting Environment?
         private readonly IHostingEnvironment _hostingEnvironment;
+        private IDocumentRepository _repository;
 
-        public HomeController(IHostingEnvironment hostingEnvironment)
+        public HomeController(IHostingEnvironment hostingEnvironment, IDocumentRepository repo)
         {
             _hostingEnvironment = hostingEnvironment;
+            _repository = repo;
         }
         // GET: Home
         public ActionResult Index()
-        {
-            DocumentCleaner dc = new DocumentCleaner();
-            dc.RemoveComments(_hostingEnvironment.ContentRootPath + @"\Resources\DocumentTemplates\TemplateNoJobDescriptionCell.docx");
+        {                       
             return View();
         }
 

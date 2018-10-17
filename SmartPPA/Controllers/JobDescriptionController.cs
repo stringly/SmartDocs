@@ -14,10 +14,12 @@ namespace SmartPPA.Controllers
     public class JobDescriptionController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private IDocumentRepository _repository;
 
-        public JobDescriptionController(IHostingEnvironment hostingEnvironment)
+        public JobDescriptionController(IHostingEnvironment hostingEnvironment, IDocumentRepository repo)
         {
             _hostingEnvironment = hostingEnvironment;
+            _repository = repo;
         }
         public IActionResult Index()
         {
