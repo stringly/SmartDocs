@@ -2,7 +2,7 @@
 
 namespace SmartPPA.Models
 {
-    public class User
+    public class SmartUser
     {
         [Key]
         public int UserId { get; set; }

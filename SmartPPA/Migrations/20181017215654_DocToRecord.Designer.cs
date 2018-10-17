@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartPPA.Models;
 
 namespace SmartPPA.Migrations
 {
     [DbContext(typeof(SmartDocContext))]
-    partial class DocumentContextModelSnapshot : ModelSnapshot
+    [Migration("20181017215654_DocToRecord")]
+    partial class DocToRecord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

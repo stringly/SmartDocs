@@ -23,8 +23,12 @@ namespace SmartPPA.Controllers
         }
         public IActionResult Index()
         {
-            var list = Directory.EnumerateFiles(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions");
-            return View(list);
+            //var list = Directory.EnumerateFiles(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions");
+            JobDescriptionListViewModel vm = new JobDescriptionListViewModel{
+                Jobs = _repository.Jobs.Select(x => new JobDescriptionListViewModeltem(x)).ToList()
+                };
+
+            return View(vm);
         }
 
         // GET: JobDescription/Edit
@@ -44,7 +48,14 @@ namespace SmartPPA.Controllers
             else
             {
                 JobDescription job = new JobDescription(form);
-                job.WriteJobDescriptionToXml(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions\");
+                SmartJob DbJob = new SmartJob
+                {
+                    Name = $"{job.Rank}-{job.WorkingTitle}",
+                    JobDataXml = job.JobDescriptionToXml()
+                    
+                };
+                _repository.SaveJob(DbJob);
+                // job.WriteJobDescriptionToXml(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions\");
 
                 return RedirectToAction(nameof(Index));
             }
@@ -68,8 +79,13 @@ namespace SmartPPA.Controllers
             else
             {
                 JobDescription job = new JobDescription(form);
-                job.WriteJobDescriptionToXml(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions\");
-                
+                //job.WriteJobDescriptionToXml(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions\");
+                SmartJob DbJob = new SmartJob
+                {
+                    Name = $"{job.Rank}-{job.WorkingTitle}",
+                    JobDataXml = job.JobDescriptionToXml()
+                    
+                };
                 return RedirectToAction(nameof(Index));
             }
         }

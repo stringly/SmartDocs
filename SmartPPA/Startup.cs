@@ -31,7 +31,7 @@ namespace SmartPPA
                 options.ServiceName = "SmartDocs";
                 options.Version = "0.01";
             });
-            services.AddDbContext<DocumentContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
+            services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
             services.AddMvc();            
         }
@@ -52,7 +52,7 @@ namespace SmartPPA
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            SeedData.EnsurePopulated(service.GetRequiredService<DocumentContext>());
+            //SeedData.EnsurePopulated(service.GetRequiredService<SmartDocContext>());
         }
     }
 }

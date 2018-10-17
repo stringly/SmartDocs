@@ -1,23 +1,22 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
 namespace SmartPPA.Models
 {
-    public class SmartDocument
+    public class SmartPPA
     {
         [Key]
-        public int DocumentId { get; set; }
+        public int PPAId { get; set; }
+        public SmartRecord Record { get; set;}
         public SmartTemplate Template { get; set; }
         [Column(TypeName="xml")]
         public string FormData { get; set; }
-        public User User { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Modified { get; set; }
+        public SmartJob Job { get; set;}
+
 
         [NotMapped]
-        public XElement MyXmlColumn {
+        public XElement FormDataXml {
             get { return XElement.Parse(FormData); }
             set { FormData = value.ToString(); }
         }

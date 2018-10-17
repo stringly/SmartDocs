@@ -102,7 +102,7 @@ namespace SmartPPA.Models
         {
             XElement root = new XElement("JobDescription");
             // TODO: Parse Files in directory to get list of Ids...
-            root.Add(new XElement("JobId", 2, new XAttribute("id", "JobId")));
+            // root.Add(new XElement("JobId", 2, new XAttribute("id", "JobId")));
             root.Add(new XElement("ClassTitle", ClassTitle, new XAttribute("id", "ClassTitle")));
             root.Add(new XElement("WorkingTitle", WorkingTitle, new XAttribute("id", "WorkingTitle")));
             root.Add(new XElement("Grade", Grade, new XAttribute("id", "Grade")));
@@ -141,6 +141,50 @@ namespace SmartPPA.Models
             }
             root.Add(categories);
             root.Save(filePath + $"{Rank}-{WorkingTitle}.xml");
+        }
+        public XElement JobDescriptionToXml()
+        {
+            XElement root = new XElement("JobDescription");
+            // TODO: Parse Files in directory to get list of Ids...
+            // root.Add(new XElement("JobId", jobId, new XAttribute("id", "JobId")));
+            root.Add(new XElement("ClassTitle", ClassTitle, new XAttribute("id", "ClassTitle")));
+            root.Add(new XElement("WorkingTitle", WorkingTitle, new XAttribute("id", "WorkingTitle")));
+            root.Add(new XElement("Grade", Grade, new XAttribute("id", "Grade")));
+            root.Add(new XElement("Rank", Rank, new XAttribute("id", "Rank")));
+            root.Add(new XElement("WorkingHours", WorkingHours, new XAttribute("id", "WorkingHours")));
+            XElement categories = new XElement("Categories", new XAttribute("id", "Categories"));
+            foreach (JobDescriptionCategory c in Categories)
+            {
+                if (!String.IsNullOrEmpty(c.Title)) {
+                    XElement category = new XElement("Category", new XAttribute("id", "Category"));
+                    category.Add(new XElement("Letter", c.Letter, new XAttribute("id", "Letter")));
+                    category.Add(new XElement("Weight", c.Weight, new XAttribute("id", "Weight")));
+                    category.Add(new XElement("Title", c.Title, new XAttribute("id", "Title")));
+                    XElement positionDescriptionFields = new XElement("PositionDescriptionFields", new XAttribute("id", "PositionDescriptionFields"));
+                    foreach(PositionDescriptionItem p in c.PositionDescriptionItems)
+                    {
+                        if (!String.IsNullOrEmpty(p.Detail))
+                        {
+                            positionDescriptionFields.Add(new XElement("PositionDescriptionItem", p.Detail));
+                        }                    
+                    }
+                    category.Add(positionDescriptionFields);
+                    XElement performanceStandardFields = new XElement("PerformanceStandardFields", new XAttribute("id", "PerformanceStandardFields"));
+                    int itemCount = 0;
+                    foreach (PerformanceStandardItem p in c.PerformanceStandardItems)
+                    {                        
+                        if (!String.IsNullOrEmpty(p.Detail))
+                        {
+                            itemCount++;
+                            performanceStandardFields.Add(new XElement("PerformanceStandardItem", p.Detail, new XAttribute("initial", $"{c.Letter}{itemCount}")));
+                        }                    
+                    }
+                    category.Add(performanceStandardFields);
+                    categories.Add(category);
+                }
+            }
+            root.Add(categories);
+            return root;
         }
     }
 

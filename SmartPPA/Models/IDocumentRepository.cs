@@ -7,8 +7,12 @@ namespace SmartPPA.Models
 {
     public interface IDocumentRepository
     {
-        IEnumerable<User> Users { get; }
-        IEnumerable<SmartDocument> Documents { get; }
+        IEnumerable<SmartUser> Users { get; }
+        IEnumerable<SmartRecord> Documents { get; }
         IEnumerable<SmartTemplate> Templates { get; }
+        IEnumerable<SmartJob> Jobs { get; }
+        IEnumerable<SmartPPA> PPAs { get; }
+
+        void SaveJob(SmartJob job);
     }
 }

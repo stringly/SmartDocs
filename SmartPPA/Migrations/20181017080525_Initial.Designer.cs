@@ -9,7 +9,7 @@ using SmartPPA.Models;
 
 namespace SmartPPA.Migrations
 {
-    [DbContext(typeof(DocumentContext))]
+    [DbContext(typeof(SmartDocContext))]
     [Migration("20181017080525_Initial")]
     partial class Initial
     {

@@ -6,27 +6,29 @@ using System.Threading.Tasks;
 
 namespace SmartPPA.Models
 {
-    public class DocumentContext : DbContext
+    public class SmartDocContext : DbContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartPPA.Models.DocumentContext"/> class.
+        /// Initializes a new instance of the <see cref="T:SmartPPA.Models.SmartDocContext"/> class.
         /// </summary>
         /// <param name="options">A <see cref="T:Microsoft.EntityFrameWorkCore.DbContextOptions"/> of <see cref="T:OrgChartDemo.Models.ApplicationDbContext"/></param>
-        public DocumentContext(DbContextOptions<DocumentContext> options) : base(options)
+        public SmartDocContext(DbContextOptions<SmartDocContext> options) : base(options)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartPPA.Models.DocumentContext"/> class.
+        /// Initializes a new instance of the <see cref="T:SmartPPA.Models.SmartDocContext"/> class.
         /// </summary>
         /// <remarks>
         /// Parameterless Constructor
         /// </remarks>
-        public DocumentContext()
+        public SmartDocContext()
         {
         }
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<SmartDocument> Documents { get; set; }
+        public virtual DbSet<SmartUser> Users { get; set; }
+        public virtual DbSet<SmartRecord> Documents { get; set; }
         public virtual DbSet<SmartTemplate> Templates { get; set; }
+        public virtual DbSet<SmartJob> Jobs { get; set; }
+        public virtual DbSet<SmartPPA> PPAs { get; set; }
     }
 }
