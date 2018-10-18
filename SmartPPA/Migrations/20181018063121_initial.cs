@@ -1,40 +1,75 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartPPA.Migrations
 {
-    public partial class DocToRecord : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Documents_Templates_TemplateId",
-                table: "Documents");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Documents_TemplateId",
-                table: "Documents");
-
-            migrationBuilder.DropColumn(
-                name: "FormData",
-                table: "Documents");
-
-            migrationBuilder.DropColumn(
-                name: "TemplateId",
-                table: "Documents");
-
             migrationBuilder.CreateTable(
                 name: "Jobs",
                 columns: table => new
                 {
                     JobId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
+                    JobName = table.Column<string>(nullable: true),
                     JobData = table.Column<string>(type: "xml", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Jobs", x => x.JobId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Templates",
+                columns: table => new
+                {
+                    TemplateId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DocumentName = table.Column<string>(nullable: true),
+                    DataStream = table.Column<byte[]>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Templates", x => x.TemplateId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BlueDeckId = table.Column<int>(nullable: false),
+                    LogonName = table.Column<string>(nullable: true),
+                    DisplayName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Records",
+                columns: table => new
+                {
+                    DocumentId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Modified = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Records", x => x.DocumentId);
+                    table.ForeignKey(
+                        name: "FK_Records_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,9 +93,9 @@ namespace SmartPPA.Migrations
                         principalColumn: "JobId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PPAs_Documents_RecordDocumentId",
+                        name: "FK_PPAs_Records_RecordDocumentId",
                         column: x => x.RecordDocumentId,
-                        principalTable: "Documents",
+                        principalTable: "Records",
                         principalColumn: "DocumentId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -85,6 +120,11 @@ namespace SmartPPA.Migrations
                 name: "IX_PPAs_TemplateId",
                 table: "PPAs",
                 column: "TemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Records_UserId",
+                table: "Records",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -95,29 +135,14 @@ namespace SmartPPA.Migrations
             migrationBuilder.DropTable(
                 name: "Jobs");
 
-            migrationBuilder.AddColumn<string>(
-                name: "FormData",
-                table: "Documents",
-                type: "xml",
-                nullable: true);
+            migrationBuilder.DropTable(
+                name: "Records");
 
-            migrationBuilder.AddColumn<int>(
-                name: "TemplateId",
-                table: "Documents",
-                nullable: true);
+            migrationBuilder.DropTable(
+                name: "Templates");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Documents_TemplateId",
-                table: "Documents",
-                column: "TemplateId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Documents_Templates_TemplateId",
-                table: "Documents",
-                column: "TemplateId",
-                principalTable: "Templates",
-                principalColumn: "TemplateId",
-                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SmartPPA.Models
     {
         [Key]
         public int JobId { get; set; }
-        public string Name { get; set; }
+        public string JobName { get; set; }
         [Column(TypeName="xml")]
         public string JobData { get; set; }
 

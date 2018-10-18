@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartPPA.Models;
 
 namespace SmartPPA.Migrations
 {
     [DbContext(typeof(SmartDocContext))]
-    partial class DocumentContextModelSnapshot : ModelSnapshot
+    [Migration("20181018084659_DroppedRecordTable")]
+    partial class DroppedRecordTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.2-rtm-30932")
+                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -28,7 +30,7 @@ namespace SmartPPA.Migrations
                     b.Property<string>("JobData")
                         .HasColumnType("xml");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("JobName");
 
                     b.HasKey("JobId");
 
@@ -41,12 +43,16 @@ namespace SmartPPA.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("Created");
+
                     b.Property<string>("FormData")
                         .HasColumnType("xml");
 
                     b.Property<int?>("JobId");
 
-                    b.Property<int?>("RecordDocumentId");
+                    b.Property<DateTime>("Modified");
+
+                    b.Property<int?>("OwnerUserId");
 
                     b.Property<int?>("TemplateId");
 
@@ -54,30 +60,11 @@ namespace SmartPPA.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.HasIndex("RecordDocumentId");
+                    b.HasIndex("OwnerUserId");
 
                     b.HasIndex("TemplateId");
 
                     b.ToTable("PPAs");
-                });
-
-            modelBuilder.Entity("SmartPPA.Models.SmartRecord", b =>
-                {
-                    b.Property<int>("DocumentId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("Modified");
-
-                    b.Property<int?>("UserId");
-
-                    b.HasKey("DocumentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("SmartPPA.Models.SmartTemplate", b =>
@@ -118,20 +105,13 @@ namespace SmartPPA.Migrations
                         .WithMany()
                         .HasForeignKey("JobId");
 
-                    b.HasOne("SmartPPA.Models.SmartRecord", "Record")
+                    b.HasOne("SmartPPA.Models.SmartUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("RecordDocumentId");
+                        .HasForeignKey("OwnerUserId");
 
                     b.HasOne("SmartPPA.Models.SmartTemplate", "Template")
                         .WithMany()
                         .HasForeignKey("TemplateId");
-                });
-
-            modelBuilder.Entity("SmartPPA.Models.SmartRecord", b =>
-                {
-                    b.HasOne("SmartPPA.Models.SmartUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

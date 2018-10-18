@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using SmartPPA.Models;
+using SmartPPA.Models.Types;
 using SmartPPA.Models.ViewModels;
 
 namespace SmartPPA.Controllers
@@ -28,7 +29,8 @@ namespace SmartPPA.Controllers
         }
         // GET: Home
         public ActionResult Index()
-        {                       
+        {
+            //ViewBag.Message = this.User.Identity.Name;
             return View();
         }
 
@@ -41,7 +43,11 @@ namespace SmartPPA.Controllers
         // GET: Home/Create
         public ActionResult Create()
         {
-            PPAFormViewModel vm = new PPAFormViewModel(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions");
+            // TODO: Set the "vm.AuthorUserId" to the current application user
+            PPAFormViewModel vm = new PPAFormViewModel {
+                JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(),
+                Users = _repository.Users.Select(x => new UserListItem(x)).ToList()
+            };
             return View(vm);
         }
 
@@ -57,26 +63,27 @@ namespace SmartPPA.Controllers
             "DepartmentDivision," +
             "DepartmentDivisionCode," +
             "WorkPlaceAddress," +
-            "SupervisingEmployeeName," +
+            "AuthorUserId," +
             "SupervisedByEmployeeName," +
             "StartDate," +
             "EndDate," +
-            "JobPath," +
+            "JobId," +
             "Categories," +
             "Assessment," +
             "Recommendation")] PPAFormViewModel form)
         {
             if (!ModelState.IsValid)
             {
-                //return BadRequest(ModelState);
-                form.RepopulateJobList(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions"); 
+                // Model Validation failed, so recreate the joblist and push back the VM
+                form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
                 return View(form);
             }
             else
-            {
-                DocumentGenerator documentGenerator = new DocumentGenerator(form);
+            {   // TODO: Pass User's Info here             
+                SmartPPAGenerator generator = new SmartPPAGenerator(_repository);                
+                generator.SeedFormInfo(form);
                 string resultDocName = $"{form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")} Performance Appraisal.docx";
-                return File(documentGenerator.PopulateDocumentViaMappedList(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
+                return File(generator.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
             }
     }
 
@@ -126,31 +133,10 @@ namespace SmartPPA.Controllers
             }
         }
         
-        public IActionResult GetJobDescriptionViewComponent(string jobTitle)
+        public IActionResult GetJobDescriptionViewComponent(int jobId)
         {
-            JobDescription job = new JobDescription(jobTitle);
+            JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == jobId));
             return ViewComponent("JobDescriptionCategoryList", job);
         }
-        // Testing HttpResponse
-        // Holy shit, it works.
-        //public ActionResult GenerateDocument()
-        //{
-        //    Dictionary<string, string> formData = new Dictionary<string, string>();
-        //    formData.Add("EmployeeName", "Smith, Evan");
-        //    formData.Add("PayrollId", "123456");
-        //    formData.Add("PositionNumber", "55555");
-        //    formData.Add("Job", "C:\\Users\\jcsmith1\\source\\repos\\SmartPPA\\SmartPPA\\Resources\\JobDescriptions\\PoliceOfficer_Patrol.xml");
-        //    formData.Add("StartDate", "01/01/2018");
-        //    formData.Add("EndDate", "01/01/2018");
-        //    formData.Add("DistrictDivision", "District I");
-        //    formData.Add("Assessment", "<p><strong>In the merry month of June</strong></p><ul><li><strong><em>From me home I started</em></strong></li><li><strong><em>Left the girls of Tume</em></strong></li><li><strong><em>Merely brok-en hearted</em></strong></li></ul><p>Test.</p>");
-        //    formData.Add("Recommendations", "RECOMMEND RECOMMEND");
-        //    formData.Add("AgencyActivity", "5025");
-        //    formData.Add("PlaceOfWork", "5000 Rhode Island Ave");
-        //    formData.Add("Supervisor", "Sgt. T. Test #1234");
-        //    formData.Add("Supervises", "Squad #Test");
-        //    return File(new DocumentGenerator().PopulateDocumentViaMappedList(formData), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Test.docx");
-
-        //}
     }
 }

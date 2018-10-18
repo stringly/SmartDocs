@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartPPA.Models;
 
 namespace SmartPPA.Migrations
 {
     [DbContext(typeof(SmartDocContext))]
-    [Migration("20181017080525_Initial")]
-    partial class Initial
+    partial class SmartDocContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,9 +19,25 @@ namespace SmartPPA.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SmartPPA.Models.SmartDocument", b =>
+            modelBuilder.Entity("SmartPPA.Models.SmartJob", b =>
                 {
-                    b.Property<int>("DocumentId")
+                    b.Property<int>("JobId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("JobData")
+                        .HasColumnType("xml");
+
+                    b.Property<string>("JobName");
+
+                    b.HasKey("JobId");
+
+                    b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("SmartPPA.Models.SmartPPA", b =>
+                {
+                    b.Property<int>("PPAId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -32,19 +46,23 @@ namespace SmartPPA.Migrations
                     b.Property<string>("FormData")
                         .HasColumnType("xml");
 
+                    b.Property<int?>("JobId");
+
                     b.Property<DateTime>("Modified");
+
+                    b.Property<int?>("OwnerUserId");
 
                     b.Property<int?>("TemplateId");
 
-                    b.Property<int?>("UserId");
+                    b.HasKey("PPAId");
 
-                    b.HasKey("DocumentId");
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("OwnerUserId");
 
                     b.HasIndex("TemplateId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Documents");
+                    b.ToTable("PPAs");
                 });
 
             modelBuilder.Entity("SmartPPA.Models.SmartTemplate", b =>
@@ -62,7 +80,7 @@ namespace SmartPPA.Migrations
                     b.ToTable("Templates");
                 });
 
-            modelBuilder.Entity("SmartPPA.Models.User", b =>
+            modelBuilder.Entity("SmartPPA.Models.SmartUser", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -79,15 +97,19 @@ namespace SmartPPA.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SmartPPA.Models.SmartDocument", b =>
+            modelBuilder.Entity("SmartPPA.Models.SmartPPA", b =>
                 {
+                    b.HasOne("SmartPPA.Models.SmartJob", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId");
+
+                    b.HasOne("SmartPPA.Models.SmartUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerUserId");
+
                     b.HasOne("SmartPPA.Models.SmartTemplate", "Template")
                         .WithMany()
                         .HasForeignKey("TemplateId");
-
-                    b.HasOne("SmartPPA.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

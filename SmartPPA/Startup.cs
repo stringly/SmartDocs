@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartPPA.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace SmartPPA
 {
@@ -31,9 +32,11 @@ namespace SmartPPA
                 options.ServiceName = "SmartDocs";
                 options.Version = "0.01";
             });
+
             services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
-            services.AddMvc();            
+            services.AddMvc();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

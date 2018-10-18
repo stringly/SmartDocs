@@ -62,9 +62,11 @@
                 </div>
                 <div class="form-group row">
                     <div class="form-group col-xs-4">
-                        <label asp-for="SupervisingEmployeeName" class="control-label"></label>
-                        <input asp-for="SupervisingEmployeeName" class="form-control" />
-                        <span asp-validation-for="SupervisingEmployeeName" class="text-danger"></span>
+                        <label asp-for="AuthorUserId" class="control-label"></label>
+                        @Html.DropDownListFor(model => model.AuthorUserId,
+                                new SelectList(Model.Users, "UserId", "DisplayName"),
+                                new { @class = "form-control", id = "AuthorId" })
+                        <span asp-validation-for="AuthorUserId" class="text-danger"></span>
                     </div>
                     <div class="form-group col-xs-4">
                         <label asp-for="SupervisedByEmployeeName" class="control-label"></label>
@@ -89,12 +91,12 @@
 
                 <div class="form-group row">
                     <div class="form-group col-xs-4">
-                        <label asp-for="JobPath" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.JobPath,
-                                new SelectList(Model.JobList, "FilePath", "DisplayName"),
-                                "Choose Job Title",
+                        <label asp-for="JobId" class="control-label"></label>
+                        @Html.DropDownListFor(model => model.JobId,
+                                new SelectList(Model.JobList, "JobId", "DisplayName"),
+                                "Choose Job Description:",
                                 new { @class = "form-control", id = "JobDescription" })
-                        <span asp-validation-for="JobPath" class="text-danger"></span>
+                        <span asp-validation-for="JobId" class="text-danger"></span>
                     </div>
                 </div>
                 <div id="RatingInfo">
@@ -130,7 +132,7 @@
             $("#JobDescription").change(function () {
                 var Id = $(this).val();
                 var container = $("#RatingInfo");
-                $.get("/Home/GetJobDescriptionViewComponent", { jobTitle: Id }, function (data) { container.html(data); });
+                $.get("/Home/GetJobDescriptionViewComponent", { jobId: Id }, function (data) { container.html(data); });
             })
         });
         function ratingChange(weight, row, score) {

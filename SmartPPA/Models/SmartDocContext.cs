@@ -26,7 +26,6 @@ namespace SmartPPA.Models
         {
         }
         public virtual DbSet<SmartUser> Users { get; set; }
-        public virtual DbSet<SmartRecord> Documents { get; set; }
         public virtual DbSet<SmartTemplate> Templates { get; set; }
         public virtual DbSet<SmartJob> Jobs { get; set; }
         public virtual DbSet<SmartPPA> PPAs { get; set; }

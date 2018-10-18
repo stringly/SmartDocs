@@ -9,35 +9,54 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SmartPPA.Models
 {
-    public class DocumentGenerator
+    public class SmartPPAGenerator
     {
+        private IDocumentRepository _repository;
         private List<MappedField> Fields;
         private Dictionary<string, string> formData;
         private JobDescription job;
+        private SmartPPA dbPPA;
         
-        public DocumentGenerator()
+        public SmartPPAGenerator(IDocumentRepository repo)
         {
+            _repository = repo;
             initializeFieldMap();
         }        
 
-        public DocumentGenerator(PPAFormViewModel form)
+        public void SeedFormInfo(PPAFormViewModel form)
         {
-            initializeFieldMap();
+            
+
             Dictionary<string, string> results = new Dictionary<string, string>();
-            job = new JobDescription(form.JobPath);
+            SmartJob  dbJob = _repository.Jobs.FirstOrDefault(j => j.JobId == form.JobId);            
+            SmartUser author = _repository.Users.FirstOrDefault(u => u.UserId == form.AuthorUserId);
+            // I think this is the point I want to save the FormData XML...
+            // The idea is that I can reconsitute the VM Form and re-enter here to re-create the document
+            // Snapshot it here, but don't write the record until the formData seeds successfully?
+            dbPPA = new SmartPPA
+            {
+                Job = dbJob,
+                Owner = author,
+                FormDataXml = form.FormDataToXml(),
+                Created = DateTime.Now,
+                Modified = DateTime.Now,
+                Template = null, // TODO: Add template
+            };
+
+            job = new JobDescription(dbJob);
             for (int i = 0; i < job.Categories.Count(); i++)
             {
                 job.Categories[i].SelectedScore = form.Categories[i].SelectedScore;
             }
             
-            // TODO: Map the VM to a Dict because I am very lazy            
+            // Map the VM to a Dict because I am very lazy            
             results.Add("EmployeeName", $"{form.LastName}, {form.FirstName}");
             results.Add("PayrollId", form.PayrollIdNumber);
             results.Add("PositionNumber", form.PositionNumber);
-            results.Add("Job", form.JobPath);
             results.Add("StartDate", form.StartDate.ToShortDateString());
             results.Add("EndDate", form.EndDate.ToShortDateString());
             results.Add("DistrictDivision", form.DepartmentDivision);
@@ -45,7 +64,7 @@ namespace SmartPPA.Models
             results.Add("Recommendations", form.Recommendation);
             results.Add("AgencyActivity", form.DepartmentDivisionCode);
             results.Add("PlaceOfWork", form.WorkPlaceAddress);
-            results.Add("Supervisor", form.SupervisingEmployeeName);
+            results.Add("Supervisor", author.DisplayName);
             results.Add("Supervises", form?.SupervisedByEmployeeName ?? "N/A");
             results.Add("ClassTitle", job.ClassTitle);
             results.Add("Grade", job.Grade);
@@ -77,46 +96,16 @@ namespace SmartPPA.Models
             results.Add("TotalRatingValue", job.GetOverallScore().ToString());
             results.Add("OverallAppraisal", job.GetOverallRating());
             formData = results;
+            
         }
         
-        // HOLY SHIT IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!
-        public MemoryStream TestAltChunkInsert()
-        {
-            var mem = new MemoryStream();
-            string altChunkId = "AltChunkId1";
-            byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
-            mem.Write(byteArray, 0, byteArray.Length);
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
-            {
-                MainDocumentPart mainPart = wordDocument.MainDocumentPart;
-                AlternativeFormatImportPart chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html, altChunkId);
-                using (Stream chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
-                {
-                    using (StreamWriter stringStream = new StreamWriter(chunkStream))
-                    {
-                        stringStream.Write("<html><p><strong>In the merry month of June</strong></p><ul><li><strong><em>From me home I started</em></strong></li><li><strong><em>Left the girls of Tume</em></strong></li><li><strong><em>Merely brok-en hearted</em></strong></li></ul><p>Test.</p></html>");
-                    }
-                }
-                AltChunk altChunk = new AltChunk();
-                altChunk.Id = altChunkId;
-                Table table = mainPart.Document.Body.Elements<Table>().ElementAt(3);
-                TableRow row = table.Elements<TableRow>().ElementAt(1);
-                TableCell cell = row.Elements<TableCell>().ElementAt(0);                
-                Paragraph p = cell.Elements<Paragraph>().First();
-                p.InsertBeforeSelf(altChunk);
-                mainPart.Document.Save();
-            }
-            mem.Seek(0, SeekOrigin.Begin);
-            return mem;
-        }
-        public MemoryStream PopulateDocumentViaMappedList()
+
+        public MemoryStream GenerateDocument()
         {
             var mem = new MemoryStream();
             int chunkCount = 1;
             try
-            {
-                
-
+            { 
                 byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
                 mem.Write(byteArray, 0, byteArray.Length);
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
@@ -162,7 +151,6 @@ namespace SmartPPA.Models
                                 {
                                     x.Write(table, kvp.Value);
                                 }
-
                             }
                         }                       
                     }
@@ -189,7 +177,9 @@ namespace SmartPPA.Models
                 mem.Dispose();
                 throw;
             }
+            // If we get this far, we can save the Db entry
             mem.Seek(0, SeekOrigin.Begin);
+            _repository.SaveSmartPPA(dbPPA);
             return mem;
         }        
         private void initializeFieldMap()
@@ -287,6 +277,40 @@ namespace SmartPPA.Models
                 new MappedField { FieldName = "Supervisor_1", TableIndex = 5, RowIndex = 9, CellIndex = 0 },
                 new MappedField { FieldName = "Supervises_1", TableIndex = 5, RowIndex = 11, CellIndex = 0 }
             };
+        }
+
+
+        // TESTING /////////////////////////////////////////////////////////////////////
+
+        // HOLY SHIT IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!
+        public MemoryStream TestAltChunkInsert()
+        {
+            var mem = new MemoryStream();
+            string altChunkId = "AltChunkId1";
+            byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
+            mem.Write(byteArray, 0, byteArray.Length);
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
+            {
+                MainDocumentPart mainPart = wordDocument.MainDocumentPart;
+                AlternativeFormatImportPart chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html, altChunkId);
+                using (Stream chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
+                {
+                    using (StreamWriter stringStream = new StreamWriter(chunkStream))
+                    {
+                        stringStream.Write("<html><p><strong>In the merry month of June</strong></p><ul><li><strong><em>From me home I started</em></strong></li><li><strong><em>Left the girls of Tume</em></strong></li><li><strong><em>Merely brok-en hearted</em></strong></li></ul><p>Test.</p></html>");
+                    }
+                }
+                AltChunk altChunk = new AltChunk();
+                altChunk.Id = altChunkId;
+                Table table = mainPart.Document.Body.Elements<Table>().ElementAt(3);
+                TableRow row = table.Elements<TableRow>().ElementAt(1);
+                TableCell cell = row.Elements<TableCell>().ElementAt(0);
+                Paragraph p = cell.Elements<Paragraph>().First();
+                p.InsertBeforeSelf(altChunk);
+                mainPart.Document.Save();
+            }
+            mem.Seek(0, SeekOrigin.Begin);
+            return mem;
         }
     }
 }

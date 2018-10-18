@@ -20,7 +20,7 @@ namespace SmartPPA.Models.ViewModels
         public JobDescriptionListViewModeltem(SmartJob dbJob)
         {
             JobId = dbJob.JobId;
-            JobName = dbJob.Name;
+            JobName = dbJob.JobName;
             Grade = dbJob.JobDataXml.Element("Grade").Value;
             Rank = dbJob.JobDataXml.Element("Rank").Value;
         }

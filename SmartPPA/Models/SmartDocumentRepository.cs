@@ -15,7 +15,6 @@ namespace SmartPPA.Models
         }
 
         public IEnumerable<SmartUser> Users => context.Users;
-        public IEnumerable<SmartRecord> Documents => context.Documents;
         public IEnumerable<SmartTemplate> Templates => context.Templates;
         public IEnumerable<SmartJob> Jobs => context.Jobs;
         public IEnumerable<SmartPPA> PPAs => context.PPAs;
@@ -30,8 +29,29 @@ namespace SmartPPA.Models
                 SmartJob dbJob = context.Jobs.FirstOrDefault(j => j.JobId == job.JobId);
                 if (dbJob != null)
                 {
-                    dbJob.Name = job.Name;
+                    dbJob.JobName = job.JobName;
                     dbJob.JobData = job.JobData;                    
+                }
+            }
+            context.SaveChanges();
+        }
+
+        public void SaveSmartPPA(SmartPPA ppa)
+        {
+            if (ppa.PPAId == 0)
+            {
+
+                context.PPAs.Add(ppa);
+            }
+            else
+            {
+                SmartPPA dbPPA = context.PPAs.FirstOrDefault(p => p.PPAId == ppa.PPAId);
+                if (dbPPA != null)
+                {
+                    dbPPA.FormDataXml = ppa.FormDataXml;
+                    dbPPA.Job = ppa.Job;
+                    dbPPA.Template = ppa.Template;
+                    dbPPA.Modified = DateTime.Now;                    
                 }
             }
             context.SaveChanges();

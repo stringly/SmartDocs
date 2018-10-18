@@ -10,14 +10,14 @@ using SmartPPA.Models;
 namespace SmartPPA.Migrations
 {
     [DbContext(typeof(SmartDocContext))]
-    [Migration("20181017215654_DocToRecord")]
-    partial class DocToRecord
+    [Migration("20181018063121_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.2-rtm-30932")
+                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -30,7 +30,7 @@ namespace SmartPPA.Migrations
                     b.Property<string>("JobData")
                         .HasColumnType("xml");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("JobName");
 
                     b.HasKey("JobId");
 
@@ -79,7 +79,7 @@ namespace SmartPPA.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Records");
                 });
 
             modelBuilder.Entity("SmartPPA.Models.SmartTemplate", b =>

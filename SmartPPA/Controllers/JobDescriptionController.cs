@@ -11,6 +11,7 @@ using SmartPPA.Models.ViewModels;
 
 namespace SmartPPA.Controllers
 {
+    // TODO: Add Delete View/Method
     public class JobDescriptionController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -24,23 +25,29 @@ namespace SmartPPA.Controllers
         public IActionResult Index()
         {
             //var list = Directory.EnumerateFiles(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions");
-            JobDescriptionListViewModel vm = new JobDescriptionListViewModel{
+            JobDescriptionListViewModel vm = new JobDescriptionListViewModel
+            {
                 Jobs = _repository.Jobs.Select(x => new JobDescriptionListViewModeltem(x)).ToList()
-                };
+            };
 
             return View(vm);
         }
 
         // GET: JobDescription/Edit
-        public IActionResult Edit(string filePath)
+        public IActionResult Edit(int id)
         {
-            JobDescriptionViewModel job = new JobDescriptionViewModel(filePath);
-            return View(job);
+            SmartJob job = _repository.Jobs.FirstOrDefault(j => j.JobId == id);
+            JobDescriptionViewModel vm = new JobDescriptionViewModel(job);
+            return View(vm);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([Bind("WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
+        public IActionResult Edit(int id, [Bind("WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
         {
+            if (id != form.JobId)
+            {
+                return NotFound();
+            }
             if (!ModelState.IsValid)
             {
                 return View(form);
@@ -50,7 +57,7 @@ namespace SmartPPA.Controllers
                 JobDescription job = new JobDescription(form);
                 SmartJob DbJob = new SmartJob
                 {
-                    Name = $"{job.Rank}-{job.WorkingTitle}",
+                    JobName = $"{job.Rank}-{job.WorkingTitle}",
                     JobDataXml = job.JobDescriptionToXml()
                     
                 };
@@ -82,10 +89,11 @@ namespace SmartPPA.Controllers
                 //job.WriteJobDescriptionToXml(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions\");
                 SmartJob DbJob = new SmartJob
                 {
-                    Name = $"{job.Rank}-{job.WorkingTitle}",
+                    JobName = $"{job.Rank}-{job.WorkingTitle}",
                     JobDataXml = job.JobDescriptionToXml()
                     
                 };
+                _repository.SaveJob(DbJob);
                 return RedirectToAction(nameof(Index));
             }
         }
