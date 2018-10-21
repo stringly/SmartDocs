@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartPPA.Models;
 
 namespace SmartPPA.Migrations
 {
     [DbContext(typeof(SmartDocContext))]
-    partial class SmartDocContextModelSnapshot : ModelSnapshot
+    [Migration("20181019020119_AddDocNameToSmartPPA")]
+    partial class AddDocNameToSmartPPA
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,35 +43,12 @@ namespace SmartPPA.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AssessmentComments");
-
-                    b.Property<int?>("CategoryScore_1");
-
-                    b.Property<int?>("CategoryScore_2");
-
-                    b.Property<int?>("CategoryScore_3");
-
-                    b.Property<int?>("CategoryScore_4");
-
-                    b.Property<int?>("CategoryScore_5");
-
-                    b.Property<int?>("CategoryScore_6");
-
                     b.Property<DateTime>("Created");
-
-                    b.Property<string>("DepartmentDivision");
-
-                    b.Property<string>("DepartmentDivisionCode");
-
-                    b.Property<string>("DepartmentIdNumber");
 
                     b.Property<string>("DocumentName");
 
-                    b.Property<string>("EmployeeFirstName");
-
-                    b.Property<string>("EmployeeLastName");
-
-                    b.Property<DateTime>("EndDate");
+                    b.Property<string>("FormData")
+                        .HasColumnType("xml");
 
                     b.Property<int?>("JobId");
 
@@ -77,19 +56,7 @@ namespace SmartPPA.Migrations
 
                     b.Property<int?>("OwnerUserId");
 
-                    b.Property<string>("PayrollIdNumber");
-
-                    b.Property<string>("PositionNumber");
-
-                    b.Property<string>("RecommendationComments");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<string>("SupervisedByEmployee");
-
                     b.Property<int?>("TemplateId");
-
-                    b.Property<string>("WorkplaceAddress");
 
                     b.HasKey("PPAId");
 

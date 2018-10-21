@@ -12,6 +12,7 @@ namespace SmartPPA.Models.ViewModels
 {
     public class PPAFormViewModel
     {
+        public int PPAId { get; set; }
         [Display(Name = "First Name:"), StringLength(50), Required]
         public string FirstName { get; set; }
         [Display(Name = "Last Name:"), StringLength(50), Required]
@@ -27,10 +28,9 @@ namespace SmartPPA.Models.ViewModels
         [Display(Name = "Department/Division Code:"), StringLength(50), Required]
         public string DepartmentDivisionCode { get; set; }
         [Display(Name = "Work Location:"), StringLength(50), Required]
-        public string WorkPlaceAddress { get; set; }     
-        
+        public string WorkPlaceAddress { get; set; } 
         [Display(Name = "Supervised by Employee:"), StringLength(50)]
-        public string SupervisedByEmployeeName { get; set; }
+        public string SupervisedByEmployee { get; set; }
         [Display(Name = "Start Date:"), Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
@@ -38,9 +38,10 @@ namespace SmartPPA.Models.ViewModels
         [Display(Name = "End Date:"), Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; }        
         [Display(Name = "Job Title"), Required]
         public int JobId { get; set; }
+        public JobDescription job { get; set; }
         [Display(Name = "Immediate Supervisor"), Required]
         public int AuthorUserId { get; set; }
         [MaxLength(5000), Required, Display(Name ="Performance Assessment:")]
@@ -58,6 +59,42 @@ namespace SmartPPA.Models.ViewModels
             
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PPAFormViewModel"/> class.
+        /// </summary>
+        /// <remarks>
+        /// This method is designed to facilitate editing an existing PPA in the Db.
+        /// </remarks>
+        /// <param name="ppa">A <see cref=""/> </param>
+        public PPAFormViewModel(SmartPPA ppa)
+        {
+            PPAId = ppa.PPAId;
+            FirstName = ppa.EmployeeFirstName;
+            LastName = ppa.EmployeeLastName;
+            DepartmentIdNumber = ppa.DepartmentIdNumber;
+            PayrollIdNumber = ppa.PayrollIdNumber;
+            PositionNumber = ppa.PositionNumber;
+            DepartmentDivision = ppa.DepartmentDivision;
+            DepartmentDivisionCode = ppa.DepartmentDivisionCode;
+            WorkPlaceAddress = ppa.WorkplaceAddress;
+            SupervisedByEmployee = ppa.SupervisedByEmployee;
+            StartDate = ppa.StartDate;
+            EndDate = ppa.EndDate;
+            JobId = ppa.Job.JobId;
+            AuthorUserId = ppa.Owner.UserId;
+            Assessment = ppa.AssessmentComments;
+            Recommendation = ppa.RecommendationComments;
+            int?[] scores = {ppa.CategoryScore_1, ppa.CategoryScore_2, ppa.CategoryScore_3, ppa.CategoryScore_4, ppa.CategoryScore_5, ppa.CategoryScore_6 };
+            job = new JobDescription(ppa.Job);
+            for (int i = 0; i < job.Categories.Count(); i++)
+            {
+                job.Categories[i].SelectedScore = scores[i] ?? 0;
+            }
+            Categories = job.Categories;
+            
+        }
+
+        // contentPath deprecated with SQL persistence
         public PPAFormViewModel(string contentPath)
         {
             StartDate = DateTime.Today.AddYears(-1);
@@ -106,15 +143,6 @@ namespace SmartPPA.Models.ViewModels
             JobList = results;
         }
 
-        public XElement FormDataToXml()
-        {
-            XElement root = new XElement("PPAFormData");
-            PropertyInfo[] properties = typeof(PPAFormViewModel).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                root.Add(new XElement(property.Name, property.GetValue(this, null)));
-            }
-            return root;
-        }
+
     }
 }

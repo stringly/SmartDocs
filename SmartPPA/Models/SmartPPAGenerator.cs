@@ -19,17 +19,23 @@ namespace SmartPPA.Models
         private List<MappedField> Fields;
         private Dictionary<string, string> formData;
         private JobDescription job;
-        private SmartPPA dbPPA;
+        public SmartPPA dbPPA;
         
         public SmartPPAGenerator(IDocumentRepository repo)
         {
             _repository = repo;
             initializeFieldMap();
-        }        
+        }
+        
+        public void ReDownloadPPA(int PPAid)
+        {
+            SmartPPA dbPPA = _repository.PPAs.FirstOrDefault(x => x.PPAId == PPAid);
+            PPAFormViewModel vm = new PPAFormViewModel(dbPPA);
+            SeedFormInfo(vm);
+        }
 
         public void SeedFormInfo(PPAFormViewModel form)
-        {
-            
+        {            
 
             Dictionary<string, string> results = new Dictionary<string, string>();
             SmartJob  dbJob = _repository.Jobs.FirstOrDefault(j => j.JobId == form.JobId);            
@@ -39,12 +45,32 @@ namespace SmartPPA.Models
             // Snapshot it here, but don't write the record until the formData seeds successfully?
             dbPPA = new SmartPPA
             {
+                PPAId = form.PPAId,
+                EmployeeFirstName = form.FirstName,
+                EmployeeLastName = form.LastName,
+                DepartmentIdNumber = form.DepartmentIdNumber,
+                PayrollIdNumber = form.PayrollIdNumber,
+                PositionNumber = form.PositionNumber,
+                DepartmentDivision = form.DepartmentDivision,
+                DepartmentDivisionCode = form.DepartmentDivisionCode,
+                WorkplaceAddress = form.WorkPlaceAddress,
+                SupervisedByEmployee = form.SupervisedByEmployee, 
+                StartDate = form.StartDate,
+                EndDate = form.EndDate,
+                AssessmentComments = form.Assessment,
+                RecommendationComments = form.Recommendation,
                 Job = dbJob,
                 Owner = author,
-                FormDataXml = form.FormDataToXml(),
+                CategoryScore_1 = form.Categories[0]?.SelectedScore ?? null,
+                CategoryScore_2 = form.Categories[1]?.SelectedScore ?? null,
+                CategoryScore_3 = form.Categories[2]?.SelectedScore ?? null,
+                CategoryScore_4 = form.Categories[3]?.SelectedScore ?? null,
+                CategoryScore_5 = form.Categories[4]?.SelectedScore ?? null,
+                CategoryScore_6 = form.Categories[5]?.SelectedScore ?? null,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 Template = null, // TODO: Add template
+                DocumentName = $"{form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")} Performance Appraisal.docx"
             };
 
             job = new JobDescription(dbJob);
@@ -65,7 +91,7 @@ namespace SmartPPA.Models
             results.Add("AgencyActivity", form.DepartmentDivisionCode);
             results.Add("PlaceOfWork", form.WorkPlaceAddress);
             results.Add("Supervisor", author.DisplayName);
-            results.Add("Supervises", form?.SupervisedByEmployeeName ?? "N/A");
+            results.Add("Supervises", form?.SupervisedByEmployee ?? "N/A");
             results.Add("ClassTitle", job.ClassTitle);
             results.Add("Grade", job.Grade);
             results.Add("WorkingTitle", job.WorkingTitle);
@@ -97,8 +123,7 @@ namespace SmartPPA.Models
             results.Add("OverallAppraisal", job.GetOverallRating());
             formData = results;
             
-        }
-        
+        }        
 
         public MemoryStream GenerateDocument()
         {
@@ -182,6 +207,7 @@ namespace SmartPPA.Models
             _repository.SaveSmartPPA(dbPPA);
             return mem;
         }        
+
         private void initializeFieldMap()
         {
             Fields = new List<MappedField>

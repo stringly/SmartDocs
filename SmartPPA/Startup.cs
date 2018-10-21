@@ -7,6 +7,7 @@ using SmartPPA.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace SmartPPA
 {
@@ -35,6 +36,9 @@ namespace SmartPPA
 
             services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<UserResolverService>();
+            services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
             services.AddMvc();
 
         }
@@ -47,13 +51,18 @@ namespace SmartPPA
                 app.UseDeveloperExceptionPage();
                 app.UseGoogleExceptionLogging();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error/Main");
+            }
             app.UseGoogleExceptionLogging();
+            
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Choices}/{id?}");
             });
             //SeedData.EnsurePopulated(service.GetRequiredService<SmartDocContext>());
         }

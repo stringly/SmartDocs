@@ -1,0 +1,28 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link asp-href-include="lib/bootstrap/css/*.min.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>AccessDenied</title>
+</head>
+<body>
+    <div class="navbar navbar-inverse" role="navigation">
+        <a class="navbar-brand" href="#">SmartPPA</a>
+    </div>
+    <div class="col-xs-12" style="text-align: center">
+        <h3 class="text-danger">@ViewBag.Message</h3>
+        <div>
+            <h4>You are not permitted to access this resource. Please contact the administrator for assistance.</h4>
+        </div>
+    </div>
+</body>
+</html>
