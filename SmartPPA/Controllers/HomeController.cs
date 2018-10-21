@@ -20,20 +20,20 @@ namespace SmartPPA.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        // TODO: I think the repo eliminates the need for the Hosting Environment?
-        private readonly IHostingEnvironment _hostingEnvironment;
         private IDocumentRepository _repository;
 
-        public HomeController(IHostingEnvironment hostingEnvironment, IDocumentRepository repo)
+        public HomeController( IDocumentRepository repo)
         {
-            _hostingEnvironment = hostingEnvironment;
             _repository = repo;
         }
         public ActionResult Choices()
         {
+            SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
+            generator.WriteTemplate();
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult About()
         {
             return View();
@@ -176,29 +176,38 @@ namespace SmartPPA.Controllers
 
         }
 
-        // GET: Home/Delete/5
-        public ActionResult Delete(int id)
+        // GET: SmartUsers/Delete/5
+        public IActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var smartPPA = _repository.PPAs.FirstOrDefault(m => m.PPAId == id);
+            if (smartPPA == null)
+            {
+                return NotFound();
+            }
+
+            return View(smartPPA);
         }
 
-        // POST: Home/Delete/5
-        [HttpPost]
+        // POST: SmartUsers/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var smartPPA = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);
+            _repository.RemoveSmartPPA(smartPPA);
+            return RedirectToAction(nameof(Index));
         }
-        
+
+        private bool SmartPPAExists(int id)
+        {
+            return _repository.PPAs.Any(e => e.PPAId == id);
+        }
+
         public IActionResult GetJobDescriptionViewComponent(int jobId)
         {
             JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == jobId));

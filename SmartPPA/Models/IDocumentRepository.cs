@@ -15,8 +15,13 @@ namespace SmartPPA.Models
 
         
         void SaveJob(SmartJob job);
-        // So Add the record here
+        void RemoveJob(SmartJob job);
+        void SaveTemplate(SmartTemplate template);
         void SaveSmartPPA(SmartPPA ppa);
+        void RemoveSmartPPA(SmartPPA ppa);
+        void SaveUser(SmartUser user);
+        void RemoveUser(SmartUser user);
+
         SmartUser GetCurrentUser();
     }
 }

@@ -2,45 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SmartPPA.Models;
+using SmartPPA.Models.ViewModels;
 
 namespace SmartPPA.Controllers
 {
+    [Authorize]
     public class SmartUsersController : Controller
     {
-        private readonly SmartDocContext _context;
+        private IDocumentRepository _repo;
 
-        public SmartUsersController(SmartDocContext context)
+        public SmartUsersController(IDocumentRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         // GET: SmartUsers
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchString)
         {
-            return View(await _context.Users.ToListAsync());
+            UserIndexListViewModel vm = new UserIndexListViewModel();
+            vm.CurrentFilter = searchString;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                vm.Users = _repo.Users.Where(x => x.DisplayName.Contains(searchString));
+            }
+            else
+            {
+                vm.Users = _repo.Users.ToList();
+            }
+            return View(vm);
         }
 
-        // GET: SmartUsers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var smartUser = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (smartUser == null)
-            {
-                return NotFound();
-            }
-
-            return View(smartUser);
-        }
 
         // GET: SmartUsers/Create
         public IActionResult Create()
@@ -57,8 +53,8 @@ namespace SmartPPA.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(smartUser);
-                await _context.SaveChangesAsync();
+                _repo.SaveUser(smartUser);
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(smartUser);
@@ -72,7 +68,7 @@ namespace SmartPPA.Controllers
                 return NotFound();
             }
 
-            var smartUser = await _context.Users.FindAsync(id);
+            var smartUser = _repo.Users.FirstOrDefault(x => x.UserId == id);
             if (smartUser == null)
             {
                 return NotFound();
@@ -85,7 +81,7 @@ namespace SmartPPA.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,BlueDeckId,LogonName,DisplayName")] SmartUser smartUser)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,DisplayName")] SmartUser smartUser)
         {
             if (id != smartUser.UserId)
             {
@@ -94,23 +90,8 @@ namespace SmartPPA.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(smartUser);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SmartUserExists(smartUser.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _repo.SaveUser(smartUser);                    
+                return RedirectToAction("Choices", "Home");
             }
             return View(smartUser);
         }
@@ -123,8 +104,8 @@ namespace SmartPPA.Controllers
                 return NotFound();
             }
 
-            var smartUser = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+            var smartUser = _repo.Users
+                .FirstOrDefault(m => m.UserId == id);
             if (smartUser == null)
             {
                 return NotFound();
@@ -138,15 +119,14 @@ namespace SmartPPA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var smartUser = await _context.Users.FindAsync(id);
-            _context.Users.Remove(smartUser);
-            await _context.SaveChangesAsync();
+            var smartUser = _repo.Users.FirstOrDefault(x => x.UserId == id);
+            _repo.RemoveUser(smartUser);
             return RedirectToAction(nameof(Index));
         }
 
         private bool SmartUserExists(int id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _repo.Users.Any(e => e.UserId == id);
         }
     }
 }

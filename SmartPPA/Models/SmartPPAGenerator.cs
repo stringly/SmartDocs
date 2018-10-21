@@ -130,8 +130,8 @@ namespace SmartPPA.Models
             var mem = new MemoryStream();
             int chunkCount = 1;
             try
-            { 
-                byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
+            {
+                byte[] byteArray = _repository.Templates.FirstOrDefault(t => t.TemplateId == 1).DataStream;
                 mem.Write(byteArray, 0, byteArray.Length);
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
                 {
@@ -307,7 +307,14 @@ namespace SmartPPA.Models
 
 
         // TESTING /////////////////////////////////////////////////////////////////////
-
+        public void WriteTemplate()
+        {
+            SmartTemplate temp = new SmartTemplate();
+            byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
+            temp.DocumentName = "SmartPPA XML v1.0";
+            temp.DataStream = byteArray;
+            _repository.SaveTemplate(temp);
+        }
         // HOLY SHIT IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!
         public MemoryStream TestAltChunkInsert()
         {

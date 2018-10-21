@@ -1,35 +1,16 @@
 ﻿@model SmartPPA.Models.SmartUser
 
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
-
-<h4>SmartUser</h4>
+<h4>Change Display Name</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="UserId" />
-            <div class="form-group">
-                <label asp-for="BlueDeckId" class="control-label"></label>
-                <input asp-for="BlueDeckId" class="form-control" />
-                <span asp-validation-for="BlueDeckId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LogonName" class="control-label"></label>
-                <input asp-for="LogonName" class="form-control" />
-                <span asp-validation-for="LogonName" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="DisplayName" class="control-label"></label>
                 <input asp-for="DisplayName" class="form-control" />
@@ -43,8 +24,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Choices" asp-controller="Home">Back to Home</a>
 </div>
 
-</body>
-</html>

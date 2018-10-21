@@ -39,6 +39,18 @@ namespace SmartPPA.Models
             context.SaveChanges();
         }
 
+        public void RemoveJob(SmartJob job)
+        {
+            context.Jobs.Remove(job);
+            context.SaveChanges();
+        }
+
+        public void SaveTemplate(SmartTemplate template)
+        {
+            context.Templates.Add(template);
+            context.SaveChanges();
+        }
+
         public void SaveSmartPPA(SmartPPA ppa)
         {
             if (ppa.PPAId == 0)
@@ -76,6 +88,35 @@ namespace SmartPPA.Models
                     dbPPA.Owner = currentUser;
                 }
             }
+            context.SaveChanges();
+        }
+
+        public void RemoveSmartPPA(SmartPPA ppa)
+        {
+            context.PPAs.Remove(ppa);
+            context.SaveChanges();
+        }
+
+        public void SaveUser(SmartUser user)
+        {
+            if (user.UserId == 0)
+            {
+                context.Users.Add(user);
+            }
+            else
+            {
+                SmartUser dbUser = context.Users.FirstOrDefault(u => u.UserId == user.UserId);
+                if (dbUser != null)
+                {
+                    dbUser.DisplayName = user.DisplayName;                    
+                }
+            }
+            context.SaveChanges();
+        }
+
+        public void RemoveUser(SmartUser user)
+        {
+            context.Users.Remove(user);
             context.SaveChanges();
         }
 
