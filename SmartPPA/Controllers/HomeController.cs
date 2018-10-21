@@ -72,11 +72,11 @@ namespace SmartPPA.Controllers
 
         // GET: Home/Create
         public ActionResult Create()
-        {
-            // TODO: Set the "vm.AuthorUserId" to the current application user
+        {            
             PPAFormViewModel vm = new PPAFormViewModel {
                 JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(),
-                Users = _repository.Users.Select(x => new UserListItem(x)).ToList()
+                Users = _repository.Users.Select(x => new UserListItem(x)).ToList(),
+                AuthorUserId = _repository.GetCurrentUser().UserId
             };
             return View(vm);
         }

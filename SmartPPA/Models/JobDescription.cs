@@ -10,6 +10,7 @@ namespace SmartPPA.Models
 {
     public class JobDescription
     {
+        public int SmartJobId { get; set; }
         public string ClassTitle { get; set; }
         public string WorkingTitle { get; set; }
         public string Grade { get; set; }
@@ -25,6 +26,7 @@ namespace SmartPPA.Models
         {
             List<JobDescriptionCategory> results = new List<JobDescriptionCategory>();
             XElement root = job.JobDataXml;
+            SmartJobId = job.JobId;
             ClassTitle = root.Element("ClassTitle").Value;
             WorkingTitle = root.Element("WorkingTitle").Value;
             Grade = root.Element("Grade").Value;

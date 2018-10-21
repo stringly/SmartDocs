@@ -40,6 +40,7 @@ namespace SmartPPA.Controllers
             JobDescriptionViewModel vm = new JobDescriptionViewModel(job);
             return View(vm);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
@@ -67,6 +68,7 @@ namespace SmartPPA.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+       
         // GET: JobDescription/Create
         public IActionResult Create()
         {
@@ -96,6 +98,55 @@ namespace SmartPPA.Controllers
                 _repository.SaveJob(DbJob);
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var SmartJob = _repository.Jobs.FirstOrDefault( j => j.JobId == id);
+            if (SmartJob == null)
+            {
+                return NotFound();
+            }
+            JobDescription vmJob = new JobDescription(SmartJob);
+            return View(vmJob);
+        }
+
+                // GET: SmartUsers/Delete/5
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var SmartJob = _repository.Jobs
+                .FirstOrDefault(m => m.JobId == id);
+            if (SmartJob == null)
+            {
+                return NotFound();
+            }
+
+            return View(SmartJob);
+        }
+
+        // POST: SmartUsers/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var smartJob = _repository.Jobs.FirstOrDefault(x => x.JobId == id);
+            _repository.RemoveJob(smartJob);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool SmartUserExists(int id)
+        {
+            return _repository.Jobs.Any(e => e.JobId == id);
         }
     }
 }

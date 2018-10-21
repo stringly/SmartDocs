@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using SmartPPA.Data;
+
 
 namespace SmartPPA
 {
@@ -35,8 +35,7 @@ namespace SmartPPA
                 options.Version = "0.01";
             });
 
-            services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
-            services.AddDbContext<OrgChartDevelopmentContext>(options => options.UseSqlServer(Configuration["Data:OrgChartDevelopment:ConnectionString"]));
+            services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));            
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<UserResolverService>();
