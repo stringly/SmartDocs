@@ -1,0 +1,30 @@
+﻿@model SmartDocs.Models.SmartPPA
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Confirm Deletion</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<h4>This action can not be undone.</h4>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        @Html.HiddenFor(model => model.PPAId)
+        <dt>
+            Document Name:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DocumentName)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-success">Cancel</a>
+    </form>
+</div>
+
+

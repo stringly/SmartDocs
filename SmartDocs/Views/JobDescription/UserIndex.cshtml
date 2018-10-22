@@ -1,0 +1,39 @@
+﻿@model SmartDocs.Models.ViewModels.JobDescriptionListViewModel
+@{
+    Layout = "_Layout";
+}
+<h2>Current Job Descriptions</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Job Name
+            </th>
+            <th>
+                Rank
+            </th>
+            <th>
+                Grade
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Jobs)
+        {
+            <tr>
+                <td>
+                    @item.JobName
+                </td>
+                <td>
+                    @item.Rank
+                </td>
+                <td>
+                    @item.Grade
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.JobId">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

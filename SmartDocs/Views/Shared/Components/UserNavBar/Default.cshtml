@@ -1,0 +1,18 @@
+﻿@model SmartDocs.Models.SmartUser;
+<div class="navbar navbar-inverse" role="navigation">
+    <a class="navbar-brand" href="@Url.Action("About","Home")">SmartDocs</a>
+    @Html.ActionLink("My PPAs", "Index", "SmartPPA", new { area = "" }, new { @class = "navbar-brand", @style = "font-size:14px" })
+    @Html.ActionLink("Create a Document", "Choices", "Home", new { area = "" }, new { @class = "navbar-brand", @style = "font-size:14px" })
+    @if (Model.UserId == 1)
+    {
+        @Html.ActionLink("Job Descriptions", "Index", "JobDescription", new { area = "" }, new { @class = "navbar-brand", @style = "font-size:14px" })
+        @Html.ActionLink("Users", "Index", "SmartUsers", new { area = "" }, new { @class = "navbar-brand", @style = "font-size:14px" })
+    }
+    else
+    {
+        @Html.ActionLink("Job Descriptions", "UserIndex", "JobDescription", new { area = "" }, new { @class = "navbar-brand", @style = "font-size:14px" })
+    }
+
+    <a href="@Url.Action("Edit", "SmartUsers", new { id = Model.UserId })" class="navbar-brand pull-right" style="padding-right:20px; font-size:14px">@Model.DisplayName</a>
+
+</div>
