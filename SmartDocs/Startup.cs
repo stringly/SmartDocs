@@ -56,6 +56,7 @@ namespace SmartDocs
             app.UseStatusCodePages();
             app.UseGoogleExceptionLogging();
             app.UseStaticFiles();
+            app.UseHttpsRedirection();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

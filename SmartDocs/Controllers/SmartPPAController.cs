@@ -35,7 +35,7 @@ namespace SmartDocs.Controllers
         public ActionResult Download(int id)
         {
             SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
-            generator.ReDownloadPPA(id);
+            generator.ReDownloadPPA(id);            
             string resultDocName = generator.dbPPA.DocumentName;
             return File(generator.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
         }
@@ -89,7 +89,8 @@ namespace SmartDocs.Controllers
 
         public ActionResult Edit(int id)
         {
-            PPAFormViewModel vm = new PPAFormViewModel(_repository.PPAs.FirstOrDefault(x => x.PPAId == id));
+            SmartPPA ppa = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);            
+            PPAFormViewModel vm = new PPAFormViewModel(ppa);
             vm.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
             vm.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
             return View(vm);
@@ -130,6 +131,12 @@ namespace SmartDocs.Controllers
         {
             JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == jobId));
             return ViewComponent("JobDescriptionCategoryList", job);
+        }
+
+        public IActionResult NotAuthorized()
+        {
+            ViewBag.Message = "You are not authorized to take this action";
+            return View();
         }
     }
 }

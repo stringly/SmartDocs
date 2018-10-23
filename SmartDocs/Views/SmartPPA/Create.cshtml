@@ -19,8 +19,8 @@
                 <li><a href="#Comments">Comments/Recommendations<br /><small>Provide your comments and recommendations</small></a></li>
             </ul>
             <div>
-                <div id="EmployeeInfo" class="">
-                    <div class="form-group row">
+                <div id="EmployeeInfo" class="container" >
+                    <div class="form-row">
                         <div class="form-group col-xs-3">
                             <label asp-for="FirstName" class="control-label"></label>
                             <input asp-for="FirstName" class="form-control" />
@@ -47,7 +47,7 @@
                             <span asp-validation-for="PositionNumber" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-row">
                         <div class="form-group col-xs-3">
                             <label asp-for="DepartmentDivision" class="control-label"></label>
                             <input asp-for="DepartmentDivision" class="form-control" />
@@ -64,7 +64,7 @@
                             <span asp-validation-for="WorkPlaceAddress" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-row">
                         <div class="form-group col-xs-4">
                             <label asp-for="AuthorUserId" class="control-label"></label>
                             @Html.DropDownListFor(model => model.AuthorUserId,

@@ -19,6 +19,10 @@ namespace SmartDocs.Controllers
         // GET: SmartUsers
         public IActionResult Index(string searchString)
         {
+            if (_repo.GetCurrentUser().UserId != 1)
+            {
+                return RedirectToAction("NotAuthorized", "SmartPPA");
+            }
             UserIndexListViewModel vm = new UserIndexListViewModel { CurrentFilter = searchString };
             
             if (!string.IsNullOrEmpty(searchString))
@@ -36,6 +40,10 @@ namespace SmartDocs.Controllers
         // GET: SmartUsers/Create
         public IActionResult Create()
         {
+            if (_repo.GetCurrentUser().UserId != 1)
+            {
+                return RedirectToAction("NotAuthorized", "SmartPPA");
+            }
             return View();
         }
 
@@ -62,7 +70,10 @@ namespace SmartDocs.Controllers
             {
                 return NotFound();
             }
-
+            if (_repo.GetCurrentUser().UserId != 1)
+            {
+                return RedirectToAction("NotAuthorized", "SmartPPA");
+            }
             var smartUser = _repo.Users.FirstOrDefault(x => x.UserId == id);
             if (smartUser == null)
             {
@@ -98,7 +109,10 @@ namespace SmartDocs.Controllers
             {
                 return NotFound();
             }
-
+            if (_repo.GetCurrentUser().UserId != 1)
+            {
+                return RedirectToAction("NotAuthorized", "SmartPPA");
+            }
             var smartUser = _repo.Users
                 .FirstOrDefault(m => m.UserId == id);
             if (smartUser == null)
