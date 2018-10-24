@@ -6,51 +6,50 @@
 <link href="~/lib/smart_wizard/css/smart_wizard.css" rel="stylesheet" type="text/css" />
 <link href="~/lib/smart_wizard/css/smart_wizard_theme_arrows.min.css" rel="stylesheet" type="text/css" />
 <script src="https://cdn.ckeditor.com/4.10.1/basic/ckeditor.js"></script>
-<form asp-action="Edit">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="PPAId" />
-    <div id="smartwizard">
-        <ul>
-            <li><a href="#EmployeeInfo">Employee<br /><small>Information about the employee you are rating.</small></a></li>
-            <li><a href="#PositionInfo">Position/Rating<br /><small>Information about the employee's job and rating.</small></a></li>
-            <li><a href="#Comments">Comments/Recommendations<br /><small>Provide your comments and recommendations</small></a></li>
-        </ul>
-        <div>
-            <div id="EmployeeInfo" class="">
-                <div class="form-group row">
-                    <div class="form-group col-xs-3">
+<div class="col-md-10 col-md-offset-1">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="PPAId" />
+        <div id="smartwizard"  class="container">
+            <ul>
+                <li><a href="#EmployeeInfo">Employee<br /><small>Information about the employee.</small></a></li>
+                <li><a href="#PositionInfo">Position/Rating<br /><small>Pick a Job and Rating.</small></a></li>
+                <li><a href="#Comments">Comments/Recommendations<br /><small>Provide your Comments</small></a></li>
+                <li><a href="#Done">Save<br /><small>Save changes</small></a></li>
+            </ul>
+            <div>
+                <div id="EmployeeInfo" class="">
+                    <div class="form-group col-md-3">
                         <label asp-for="FirstName" class="control-label"></label>
                         <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-3">
+                    <div class="form-group col-md-3">
                         <label asp-for="LastName" class="control-label"></label>
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-2">
+                    <div class="form-group col-md-2">
                         <label asp-for="DepartmentIdNumber" class="control-label"></label>
                         <input asp-for="DepartmentIdNumber" class="form-control" />
                         <span asp-validation-for="DepartmentIdNumber" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-2">
+                    <div class="form-group col-md-2">
                         <label asp-for="PayrollIdNumber" class="control-label"></label>
                         <input asp-for="PayrollIdNumber" class="form-control" />
                         <span asp-validation-for="PayrollIdNumber" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-2">
+                    <div class="form-group col-md-2">
                         <label asp-for="PositionNumber" class="control-label"></label>
                         <input asp-for="PositionNumber" class="form-control" />
                         <span asp-validation-for="PositionNumber" class="text-danger"></span>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <div class="form-group col-xs-3">
+                    <div class="form-group col-md-3">
                         <label asp-for="DepartmentDivision" class="control-label"></label>
                         <input asp-for="DepartmentDivision" class="form-control" />
                         <span asp-validation-for="DepartmentDivision" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-3">
+                    <div class="form-group col-md-3">
                         <label asp-for="DepartmentDivisionCode" class="control-label"></label>
                         <input asp-for="DepartmentDivisionCode" class="form-control" />
                         <span asp-validation-for="DepartmentDivisionCode" class="text-danger"></span>
@@ -60,38 +59,31 @@
                         <input asp-for="WorkPlaceAddress" class="form-control" />
                         <span asp-validation-for="WorkPlaceAddress" class="text-danger"></span>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <div class="form-group col-xs-4">
+                    <div class="form-group col-md-4">
                         <label asp-for="AuthorUserId" class="control-label"></label>
                         @Html.DropDownListFor(model => model.AuthorUserId,
                                 new SelectList(Model.Users, "UserId", "DisplayName"),
                                 new { @class = "form-control", id = "AuthorId" })
                         <span asp-validation-for="AuthorUserId" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-4">
+                    <div class="form-group col-md-4">
                         <label asp-for="SupervisedByEmployee" class="control-label"></label>
                         <input asp-for="SupervisedByEmployee" class="form-control" />
                         <span asp-validation-for="SupervisedByEmployee" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
-            <div id="PositionInfo" class="">
-                <div class="form-group row">
-                    <div class="form-group col-xs-2">
+                <div id="PositionInfo" class="">
+                    <div class="form-group col-md-3">
                         <label asp-for="StartDate" class="control-label"></label>
                         <input asp-for="StartDate" class="form-control" style="padding-top:0px" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-xs-2">
+                    <div class="form-group col-md-3">
                         <label asp-for="EndDate" class="control-label"></label>
                         <input asp-for="EndDate" class="form-control" style="padding-top:0px" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
                     </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="form-group col-xs-4">
+                    <div class="form-group col-md-4">
                         <label asp-for="JobId" class="control-label"></label>
                         <div class="input-group">
                             @Html.DropDownListFor(model => model.JobId,
@@ -102,33 +94,45 @@
                             <span class="input-group-btn"><button type="button" id="positionDetails" class="btn btn-default">Details</button></span>
                         </div>
                     </div>
+                    <div id="RatingInfo">
+                        @await Component.InvokeAsync("JobDescriptionCategoryList", Model.job)
+                    </div>
                 </div>
-                <div id="RatingInfo">
-                    @await Component.InvokeAsync("JobDescriptionCategoryList", Model.job)
+                <div id="Comments" class="">
+                    <div class="form-group">
+                        <label asp-for="Assessment" class="control-label"></label>
+                        <textarea asp-for="Assessment" class="form-control" id="comments"></textarea>
+                        <span asp-validation-for="Assessment" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Recommendation" class="control-label"></label>
+                        <textarea asp-for="Recommendation" class="form-control" id="recommendations"></textarea>
+                        <span asp-validation-for="Recommendation" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
-            <div id="Comments" class="">
-                <div class="form-group">
-                    <label asp-for="Assessment" class="control-label"></label>
-                    <textarea asp-for="Assessment" class="form-control" id="comments"></textarea>
-                    <span asp-validation-for="Assessment" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Recommendation" class="control-label"></label>
-                    <textarea asp-for="Recommendation" class="form-control" id="recommendations"></textarea>
-                    <span asp-validation-for="Recommendation" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default" />
+                <div id="Done" class="">
+                    <div class="form-group">
+                        <h3>Click "Save" to Generate a PPA from the information that you have provided.</h3>
+                        <p>You will be prompted to correct any items that you have missed. Once the PPA is generated, a copy will be available under "My PPAs" if you to re-download or edit it later.</p>
+                        <input type="submit" value="Save" class="btn btn-success" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 <script type="text/javascript" src="~/lib/smart_wizard/js/jquery.smartWizard.min.js"></script>
 <script>
         $(document).ready(function () {
-            $('#smartwizard').smartWizard();
+            $('#smartwizard').smartWizard({
+                theme: 'arrows',
+                anchorSettings: {
+                    markDoneStep: true
+                },
+                toolbarSettings: {
+                    toolbarPosition: 'top'
+                }
+            });
             CKEDITOR.replace('comments', {
                 fontSize_defaultLabel: '10px'});
             CKEDITOR.replace('recommendations');
@@ -147,7 +151,7 @@
             $("#positionDetails").click(function () {
                 var jobId = $("#JobDescription").val();
                 console.log("Job is: " + jobId);
-                if (jobId != 0) { $.get("/JobDescription/ShowJobDetails", { id: jobId }, function (data) { var w = window.open("", "_blank"); w.document.write(data); w.document.close(); }); }
+                if (jobId != 0) { $.get("/JobDescription/ShowJobDetails", { id: jobId }, function (data) { var w = window.open('', '_blank'); w.document.write(data); w.document.close(); }); }
 
             });
         });
