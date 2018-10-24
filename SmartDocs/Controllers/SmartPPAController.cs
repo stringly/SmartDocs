@@ -76,6 +76,7 @@ namespace SmartDocs.Controllers
             {
                 // Model Validation failed, so recreate the joblist and push back the VM
                 form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
+                form.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
                 return View(form);
             }
             else
@@ -86,7 +87,7 @@ namespace SmartDocs.Controllers
                 return File(generator.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
             }
         }
-
+        // TODO: Is the Edit POST missing? How the fuck did that happen?
         public ActionResult Edit(int id)
         {
             SmartPPA ppa = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);            
