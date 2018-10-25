@@ -61,17 +61,15 @@ namespace SmartDocs.Models
                 RecommendationComments = form.Recommendation,
                 Job = dbJob,
                 Owner = author,
-                CategoryScore_1 = form.Categories[0]?.SelectedScore ?? null,
-                CategoryScore_2 = form.Categories[1]?.SelectedScore ?? null,
-                CategoryScore_3 = form.Categories[2]?.SelectedScore ?? null,
-                CategoryScore_4 = form.Categories[3]?.SelectedScore ?? null,
-                CategoryScore_5 = form.Categories[4]?.SelectedScore ?? null,
-                CategoryScore_6 = form.Categories[5]?.SelectedScore ?? null,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 Template = _repository.Templates.FirstOrDefault(t => t.TemplateId == 1),
                 DocumentName = $"{form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")} Performance Appraisal.docx"
             };
+            for (int i = 0; i < form.Categories.Count(); i++)
+            {
+                dbPPA.GetType().GetProperty($"CategoryScore_{i + 1}").SetValue(dbPPA, form.Categories[i].SelectedScore);
+            }
             // writing to DB Moved to here from former place in GenerateDocument()
             _repository.SaveSmartPPA(dbPPA);
             job = new JobDescription(dbJob);
@@ -93,9 +91,9 @@ namespace SmartDocs.Models
             results.Add("PlaceOfWork", form.WorkPlaceAddress);
             results.Add("Supervisor", author.DisplayName);
             results.Add("Supervises", form?.SupervisedByEmployee ?? "N/A");
-            results.Add("ClassTitle", job.ClassTitle);
+            results.Add("ClassTitle", job.ClassTitle + " - " + job.WorkingTitle);
             results.Add("Grade", job.Grade);
-            results.Add("WorkingTitle", job.WorkingTitle);
+            results.Add("WorkingTitle", job.ClassTitle + " - " + job.WorkingTitle);
             
             for (int i = 0; i < form.Categories.Count(); i++)
             {
@@ -162,7 +160,7 @@ namespace SmartDocs.Models
                                         using (StreamWriter stringStream = new StreamWriter(chunkStream))
                                         {
                                             // TODO: Is this defaulted to the right font?
-                                            stringStream.Write($"<html style='font-size:11px'>{kvp.Value}</html>");
+                                            stringStream.Write($"<html>{kvp.Value}</html>");
                                         }
                                     }
                                     AltChunk altChunk = new AltChunk();
@@ -314,6 +312,15 @@ namespace SmartDocs.Models
             temp.DataStream = byteArray;
             _repository.SaveTemplate(temp);
         }
+
+        public void OverwriteTemplate()
+        {
+            SmartTemplate temp = _repository.Templates.FirstOrDefault(x => x.TemplateId == 1);
+            byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");            
+            temp.DataStream = byteArray;
+            _repository.SaveTemplate(temp);
+        }
+
         // HOLY SHIT IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!
         public MemoryStream TestAltChunkInsert()
         {

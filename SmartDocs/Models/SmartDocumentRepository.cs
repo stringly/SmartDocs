@@ -47,7 +47,16 @@ namespace SmartDocs.Models
 
         public void SaveTemplate(SmartTemplate template)
         {
-            context.Templates.Add(template);
+            if (template.TemplateId == 0)
+            {
+                context.Templates.Add(template);
+            }
+            else
+            {
+                SmartTemplate dbTemplate = context.Templates.FirstOrDefault(x => x.TemplateId == template.TemplateId);
+                dbTemplate.DocumentName = template.DocumentName;
+                dbTemplate.DataStream = template.DataStream;
+            }            
             context.SaveChanges();
         }
 

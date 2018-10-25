@@ -9,6 +9,7 @@ using SmartDocs.Models;
 using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
 
+
 namespace SmartDocs.Controllers
 {
     [Authorize]
@@ -22,7 +23,8 @@ namespace SmartDocs.Controllers
         }
         public ActionResult Choices()
         {
-            
+            //SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
+            //generator.OverwriteTemplate();
             if (_repository.GetCurrentUser() == null)
             {
                 // This is a LDAP-authenticated account without an associated SmartDocs account

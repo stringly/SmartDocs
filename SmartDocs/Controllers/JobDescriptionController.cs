@@ -46,7 +46,7 @@ namespace SmartDocs.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
+        public IActionResult Edit(int id, [Bind("JobId,WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
         {
             if (id != form.JobId)
             {
@@ -61,12 +61,12 @@ namespace SmartDocs.Controllers
                 JobDescription job = new JobDescription(form);
                 SmartJob DbJob = new SmartJob
                 {
+                    JobId = id,
                     JobName = $"{job.Rank}-{job.WorkingTitle}",
                     JobDataXml = job.JobDescriptionToXml()
                     
                 };
-                _repository.SaveJob(DbJob);
-                // job.WriteJobDescriptionToXml(_hostingEnvironment.ContentRootPath + @"\Resources\JobDescriptions\");
+                _repository.SaveJob(DbJob);                
 
                 return RedirectToAction(nameof(Index));
             }
