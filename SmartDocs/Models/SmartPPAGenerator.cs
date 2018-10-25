@@ -72,7 +72,8 @@ namespace SmartDocs.Models
                 Template = _repository.Templates.FirstOrDefault(t => t.TemplateId == 1),
                 DocumentName = $"{form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")} Performance Appraisal.docx"
             };
-
+            // writing to DB Moved to here from former place in GenerateDocument()
+            _repository.SaveSmartPPA(dbPPA);
             job = new JobDescription(dbJob);
             for (int i = 0; i < job.Categories.Count(); i++)
             {
@@ -202,9 +203,7 @@ namespace SmartDocs.Models
                 mem.Dispose();
                 throw;
             }
-            // If we get this far, we can save the Db entry
-            mem.Seek(0, SeekOrigin.Begin);
-            _repository.SaveSmartPPA(dbPPA);
+            mem.Seek(0, SeekOrigin.Begin);            
             return mem;
         }        
 

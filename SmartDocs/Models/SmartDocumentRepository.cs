@@ -86,6 +86,7 @@ namespace SmartDocs.Models
                     dbPPA.Template = ppa.Template;
                     dbPPA.Modified = DateTime.Now; 
                     dbPPA.Owner = currentUser;
+                    dbPPA.DocumentName = ppa.DocumentName;
                 }
             }
             context.SaveChanges();

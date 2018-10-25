@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -83,10 +84,18 @@ namespace SmartDocs.Controllers
             {
                 SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
                 generator.SeedFormInfo(form);
-                string resultDocName = generator.dbPPA.DocumentName;
-                return File(generator.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
+                return RedirectToAction("SaveSuccess", new { id = generator.dbPPA.PPAId });
             }
         }
+
+        public IActionResult SaveSuccess(int id)
+        {
+            ViewBag.PPAId = id;
+            ViewBag.FileName = _repository.PPAs.FirstOrDefault(x => x.PPAId == id).DocumentName;
+            return View();
+
+        }
+
         // TODO: Is the Edit POST missing? How the fuck did that happen?
         public ActionResult Edit(int id)
         {
@@ -96,7 +105,45 @@ namespace SmartDocs.Controllers
             vm.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
             return View(vm);
         }
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id,[Bind(
+            "PPAId," +
+            "FirstName," +
+            "LastName," +
+            "DepartmentIdNumber," +
+            "PayrollIdNumber," +
+            "PositionNumber," +
+            "DepartmentDivision," +
+            "DepartmentDivisionCode," +
+            "WorkPlaceAddress," +
+            "AuthorUserId," +
+            "SupervisedByEmployee," +
+            "StartDate," +
+            "EndDate," +
+            "JobId," +
+            "Categories," +
+            "Assessment," +
+            "Recommendation")] PPAFormViewModel form)
+        {
+            if (id != form.PPAId)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                // Model Validation failed, so recreate the joblist and push back the VM
+                form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
+                form.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
+                return View(form);
+            }
+            else
+            {
+                SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
+                generator.SeedFormInfo(form);
+                return RedirectToAction("SaveSuccess", new { id = generator.dbPPA.PPAId });
+            }
+        }
         public IActionResult Delete(int? id)
         {
             if (id == null)
