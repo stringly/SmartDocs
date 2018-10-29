@@ -5,12 +5,12 @@
 }
 <link href="~/lib/smart_wizard/css/smart_wizard.css" rel="stylesheet" type="text/css" />
 <link href="~/lib/smart_wizard/css/smart_wizard_theme_arrows.min.css" rel="stylesheet" type="text/css" />
-<script src="https://cdn.ckeditor.com/4.10.1/basic/ckeditor.js"></script>
-<div class="col-md-10">
+
+<div class="container-fluid" style="width: 100%">
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="PPAId" />
-        <div id="smartwizard"  class="container">
+        <div id="smartwizard" class="container-fluid" align="center">
             <ul>
                 <li><a href="#EmployeeInfo">Employee<br /><small>Information about the employee.</small></a></li>
                 <li><a href="#PositionInfo">Position/Rating<br /><small>Pick a Job and Rating.</small></a></li>
@@ -44,11 +44,6 @@
                         <input asp-for="PositionNumber" class="form-control" />
                         <span asp-validation-for="PositionNumber" class="text-danger"></span>
                     </div>
-                    @*<div class="form-group col-md-3">
-                        <label asp-for="DepartmentDivision" class="control-label"></label>
-                        <input asp-for="DepartmentDivision" class="form-control" />
-                        <span asp-validation-for="DepartmentDivision" class="text-danger"></span>
-                    </div>*@
                     <div class="form-group col-md-3">
                         <label asp-for="DepartmentDivision" class="control-label"></label>
                         <select name="@Html.NameFor(model => model.DepartmentDivision)"
@@ -132,6 +127,7 @@
         </div>
     </form>
 </div>
+<script src="https://cdn.ckeditor.com/4.10.1/basic/ckeditor.js"></script>
 <script type="text/javascript" src="~/lib/smart_wizard/js/jquery.smartWizard.min.js"></script>
 <script>
         $(document).ready(function () {
@@ -142,6 +138,31 @@
                 },
                 toolbarSettings: {
                     toolbarPosition: 'top'
+                }
+            });
+            $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
+                if (stepDirection == "forward") {
+                    var result = false;
+                    var message = "";
+                    switch (stepNumber) {
+                        case 0:
+                            result = ($("#EmployeeInfo :input").valid());
+                            break;
+                        case 1:
+                            result = ($("#PositionInfo :input").valid() && validateRating())
+                            break;
+                        case 2:
+                            result = ($("#Comments :input").valid());
+                            break;
+                    }
+                    if (!result) {
+                        message = "Please correct the indicated fields before proceeding.";
+                    }
+                    $("#pageMessage").text(message);
+                    return result;
+                }
+                else {
+                    $("#pageMessage").text("");
                 }
             });
             CKEDITOR.replace('comments', {
@@ -160,8 +181,6 @@
                 }
             });
             $("#DepartmentDivision").change(function () {
-                console.log("Changed");
-                console.log("Address: " + $(this).find(":selected").data("code"))
                 $("#DepartmentDivisionCode").val($(this).find(":selected").data("code"));
                 $("#WorkPlaceAddress").val($(this).find(":selected").data("address"));
             })
@@ -172,6 +191,24 @@
 
             });
         });
+        function validateRating() {
+            var categoryCount = 0;
+            var sumOfScores = 0;
+            var list = $(".total-col").toArray();
+            for (var i = 0; i < list.length; i++) {
+                categoryCount++;
+                sumOfScores = sumOfScores + parseFloat(list[i].innerHTML);
+            }
+            console.log(sumOfScores)
+            if (!sumOfScores > 0) {
+                $("#ratingValidator").show();
+                return false;
+            }
+            else {
+                $("#ratingValidator").hide();
+                return true;
+            }
+        }
         function ratingChange(weight, row, score) {
             $('#Row-Total-' + row).text(+((weight * 0.01) * score).toFixed(2));
             reCalcOverall();

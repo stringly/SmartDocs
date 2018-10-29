@@ -76,7 +76,21 @@ namespace SmartDocs.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Model Validation failed, so recreate the joblist and push back the VM
+                // Model Validation failed, so I need to re-constitute the VM with the Job and the selected categories
+                // This is done very clumsily, but I'm lazy...
+                // first, reform the VM JobDescription member from the JobId in the submitted form data
+                if (form.JobId != 0)
+                {
+                    JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == form.JobId));
+                    // next, loop through the submitted form categories and assign the JobDescription member's selected scores
+                    for (int i = 0; i < job.Categories.Count(); i++)
+                    {
+                        job.Categories[i].SelectedScore = form.Categories[i]?.SelectedScore ?? 0;
+                    }
+                    form.job = job;
+                }
+
+                // next, re-populate the VM drop down lists
                 form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
                 form.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
                 form.Components = _repository.Components.ToList();  
@@ -134,9 +148,23 @@ namespace SmartDocs.Controllers
             }
             if (!ModelState.IsValid)
             {
-                // Model Validation failed, so recreate the joblist and push back the VM
+                // Model Validation failed, so I need to re-constitute the VM with the Job and the selected categories
+                // This is done very clumsily, but I'm lazy...
+                // first, reform the VM JobDescription member from the JobId in the submitted form data
+                if (form.JobId != 0)
+                {
+                    JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == form.JobId));
+                    // next, loop through the submitted form categories and assign the JobDescription member's selected scores
+                    for (int i = 0; i < job.Categories.Count(); i++)
+                    {
+                        job.Categories[i].SelectedScore = form.Categories[i]?.SelectedScore ?? 0;
+                    }
+                    form.job = job;
+                }
+                // next, re-populate the VM drop down lists
                 form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
                 form.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
+                form.Components = _repository.Components.ToList();
                 return View(form);
             }
             else

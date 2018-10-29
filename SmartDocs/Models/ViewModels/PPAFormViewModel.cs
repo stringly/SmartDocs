@@ -13,40 +13,40 @@ namespace SmartDocs.Models.ViewModels
     public class PPAFormViewModel
     {
         public int PPAId { get; set; }
-        [Display(Name = "First Name:"), StringLength(50), Required]
+        [Display(Name = "First Name:"), StringLength(50), Required(ErrorMessage = "Please enter a Name.")]
         public string FirstName { get; set; }
-        [Display(Name = "Last Name:"), StringLength(50), Required]
+        [Display(Name = "Last Name:"), StringLength(50), Required(ErrorMessage = "Please enter a Name.")]
         public string LastName { get; set; }
-        [Display(Name = "ID#"), StringLength(5), Required]
+        [Display(Name = "ID#"), StringLength(5), Required(ErrorMessage = "Enter employees ID#")]
         public string DepartmentIdNumber { get; set; }
-        [Display(Name = "Payroll ID#"), StringLength(10), Required]
+        [Display(Name = "Payroll ID#"), StringLength(10), Required(ErrorMessage = "A Payroll number is required.")]
         public string PayrollIdNumber { get; set; }
-        [Display(Name = "Position Number"), StringLength(10), Required]
+        [Display(Name = "Position Number"), StringLength(10), Required(ErrorMessage = "Enter the employee's Position Number.")]
         public string PositionNumber { get; set; }
-        [Display(Name = "Department/Division:"), StringLength(50), Required]
+        [Display(Name = "Department/Division:"), StringLength(50), Required(ErrorMessage = "Please select the employee's assigned unit.")]
         public string DepartmentDivision {get;set;}
-        [Display(Name = "Department/Division Code:"), StringLength(50), Required]
+        [Display(Name = "Department/Division Code:"), StringLength(50), Required(ErrorMessage = "Please enter the Department Code.")]
         public string DepartmentDivisionCode { get; set; }
-        [Display(Name = "Work Location:"), StringLength(50), Required]
+        [Display(Name = "Work Location:"), StringLength(50), Required(ErrorMessage = "Enter the employee's work address.")]
         public string WorkPlaceAddress { get; set; } 
         [Display(Name = "Supervised by Employee:"), StringLength(50)]
         public string SupervisedByEmployee { get; set; }
-        [Display(Name = "Start Date:"), Required]
+        [Display(Name = "Start Date:"), Required(ErrorMessage = "Start Date is required.")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime StartDate { get; set; }
-        [Display(Name = "End Date:"), Required]
+        [Display(Name = "End Date:"), Required(ErrorMessage = "End Date is required.")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime EndDate { get; set; }        
-        [Display(Name = "Job Title"), Required]
+        [Display(Name = "Job Title"), Required(ErrorMessage = "Please choose a Job Description.")]
         public int JobId { get; set; }
         public JobDescription job { get; set; }
-        [Display(Name = "Immediate Supervisor"), Required]
+        [Display(Name = "Immediate Supervisor"), Required(ErrorMessage = "Please select your name from the list.")]
         public int AuthorUserId { get; set; }
-        [MaxLength(5000), Required, Display(Name ="Performance Assessment:")]
+        [MaxLength(5000), Required(ErrorMessage = "Please provide your comments."), Display(Name ="Performance Assessment:")]
         public string Assessment { get; set; }
-        [MaxLength(5000), Required, Display(Name = "Supervisor's Recommendations:")]
+        [MaxLength(5000), Required(ErrorMessage = "Please provide your recommendations."), Display(Name = "Supervisor's Recommendations:")]
         public string Recommendation { get; set; }
         public List<JobDescriptionCategory> Categories { get; set; }
         public List<JobDescriptionListItem> JobList { get; set; }
