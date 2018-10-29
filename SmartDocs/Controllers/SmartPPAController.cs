@@ -48,7 +48,8 @@ namespace SmartDocs.Controllers
             {
                 JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(),
                 Users = _repository.Users.Select(x => new UserListItem(x)).ToList(),
-                AuthorUserId = _repository.GetCurrentUser().UserId
+                AuthorUserId = _repository.GetCurrentUser().UserId,
+                Components = _repository.Components.ToList()                
             };
             return View(vm);
         }
@@ -78,6 +79,7 @@ namespace SmartDocs.Controllers
                 // Model Validation failed, so recreate the joblist and push back the VM
                 form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
                 form.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
+                form.Components = _repository.Components.ToList();  
                 return View(form);
             }
             else
@@ -102,6 +104,7 @@ namespace SmartDocs.Controllers
             PPAFormViewModel vm = new PPAFormViewModel(ppa);
             vm.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
             vm.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
+            vm.Components = _repository.Components.ToList();
             return View(vm);
         }
         [HttpPost]

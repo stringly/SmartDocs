@@ -21,6 +21,7 @@ namespace SmartDocs.Models
         public IEnumerable<SmartTemplate> Templates => context.Templates;
         public IEnumerable<SmartJob> Jobs => context.Jobs;
         public IEnumerable<SmartPPA> PPAs => context.PPAs.Where(x => x.Owner.UserId == currentUser.UserId).Include(y => y.Job).Include(z => z.Owner);
+        public IEnumerable<OrganizationComponent> Components => context.Components;
 
         public void SaveJob(SmartJob job)
         {
@@ -130,6 +131,26 @@ namespace SmartDocs.Models
             context.SaveChanges();
         }
 
+        public void SaveComponent(OrganizationComponent component)
+        {
+            if (component.ComponentId == 0)
+            {
+                context.Components.Add(component);
+            }
+            else
+            {
+                OrganizationComponent dbComponent = context.Components.FirstOrDefault(x => x.ComponentId == component.ComponentId);
+                dbComponent.Name = component.Name;
+                dbComponent.Address = component.Address;
+                dbComponent.DepartmentCode = component.DepartmentCode;               
+            }
+            context.SaveChanges();
+        }
+        public void RemoveComponent(OrganizationComponent component)
+        {
+            context.Components.Remove(component);
+            context.SaveChanges();
+        }
         public SmartUser GetCurrentUser()
         {
             return currentUser;

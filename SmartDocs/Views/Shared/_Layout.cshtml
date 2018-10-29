@@ -10,7 +10,7 @@
 </head>
 <body>
     @await Component.InvokeAsync("UserNavBar")
-    <div class="col-xs-12">
+    <div class="col-xs-12" style="position:relative">
         <h3 class="text-danger">@ViewBag.Message</h3>
         @RenderBody()
     </div>

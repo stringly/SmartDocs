@@ -29,5 +29,6 @@ namespace SmartDocs.Models
         public virtual DbSet<SmartTemplate> Templates { get; set; }
         public virtual DbSet<SmartJob> Jobs { get; set; }
         public virtual DbSet<SmartPPA> PPAs { get; set; }
+        public virtual DbSet<OrganizationComponent> Components { get; set; }
     }
 }

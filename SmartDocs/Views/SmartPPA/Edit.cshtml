@@ -6,7 +6,7 @@
 <link href="~/lib/smart_wizard/css/smart_wizard.css" rel="stylesheet" type="text/css" />
 <link href="~/lib/smart_wizard/css/smart_wizard_theme_arrows.min.css" rel="stylesheet" type="text/css" />
 <script src="https://cdn.ckeditor.com/4.10.1/basic/ckeditor.js"></script>
-<div class="col-md-10 col-md-offset-1">
+<div class="col-md-10">
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="PPAId" />
@@ -44,10 +44,21 @@
                         <input asp-for="PositionNumber" class="form-control" />
                         <span asp-validation-for="PositionNumber" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-md-3">
+                    @*<div class="form-group col-md-3">
                         <label asp-for="DepartmentDivision" class="control-label"></label>
                         <input asp-for="DepartmentDivision" class="form-control" />
                         <span asp-validation-for="DepartmentDivision" class="text-danger"></span>
+                    </div>*@
+                    <div class="form-group col-md-3">
+                        <label asp-for="DepartmentDivision" class="control-label"></label>
+                        <select name="@Html.NameFor(model => model.DepartmentDivision)"
+                                id="@Html.IdFor(model => model.DepartmentDivision)"
+                                class="form-control">
+                            @foreach (var division in Model.Components)
+                            {
+                                <option value="@division.Name" data-code="@division.DepartmentCode" data-address="@division.Address">@division.Name</option>
+                            }
+                        </select>
                     </div>
                     <div class="form-group col-md-3">
                         <label asp-for="DepartmentDivisionCode" class="control-label"></label>
@@ -148,6 +159,12 @@
                     $("#positionDetails").hide();
                 }
             });
+            $("#DepartmentDivision").change(function () {
+                console.log("Changed");
+                console.log("Address: " + $(this).find(":selected").data("code"))
+                $("#DepartmentDivisionCode").val($(this).find(":selected").data("code"));
+                $("#WorkPlaceAddress").val($(this).find(":selected").data("address"));
+            })
             $("#positionDetails").click(function () {
                 var jobId = $("#JobDescription").val();
                 console.log("Job is: " + jobId);

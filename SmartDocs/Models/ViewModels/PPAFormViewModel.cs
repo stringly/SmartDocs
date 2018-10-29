@@ -50,13 +50,17 @@ namespace SmartDocs.Models.ViewModels
         public string Recommendation { get; set; }
         public List<JobDescriptionCategory> Categories { get; set; }
         public List<JobDescriptionListItem> JobList { get; set; }
+        public List<OrganizationComponent> Components { get; set; }
         public List<UserListItem> Users { get; set; }
 
         public PPAFormViewModel()
         {
             StartDate = DateTime.Today.AddYears(-1);
             EndDate = DateTime.Today;
-            
+            Categories = new List<JobDescriptionCategory>();
+            JobList = new List<JobDescriptionListItem>();
+            Components = new List<OrganizationComponent>();
+            Users = new List<UserListItem>();            
         }
 
         /// <summary>
