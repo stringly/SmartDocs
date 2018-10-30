@@ -66,6 +66,7 @@ namespace SmartDocs.Controllers
         // GET: SmartUsers/Edit/5
         public IActionResult Edit(int? id)
         {
+            //TODO: Fix this returning NOTAUTH for users accessing their own info
             if (id == null)
             {
                 return NotFound();
