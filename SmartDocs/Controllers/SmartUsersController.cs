@@ -71,7 +71,7 @@ namespace SmartDocs.Controllers
             {
                 return NotFound();
             }
-            if (_repo.GetCurrentUser().UserId != 1)
+            if (_repo.GetCurrentUser().UserId != 1 || _repo.GetCurrentUser().UserId != id)
             {
                 return RedirectToAction("NotAuthorized", "SmartPPA");
             }

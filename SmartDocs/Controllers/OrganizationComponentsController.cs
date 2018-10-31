@@ -9,84 +9,125 @@ using SmartDocs.Models;
 
 namespace SmartDocs.Controllers
 {
+    /// <summary>
+    /// Controller for <see cref="T:SmartDocs.Models.OrganizationComponent"/> interactions
+    /// </summary>
+    /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
     public class OrganizationComponentsController : Controller
     {        
         private IDocumentRepository _repository;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.OrganizationComponentsController"/> class.
+        /// </summary>
+        /// <remarks>This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/></remarks>
+        /// <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         public OrganizationComponentsController(IDocumentRepository repo)
         {
             _repository = repo;
         }
 
-        // GET: OrganizationComponents
+        /// <summary>
+        /// Shows a view with a list of all <see cref="T:SmartDocs.Models.OrganizationComponent"/> in the DB
+        /// </summary>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Index()
         {
             return View(_repository.Components.ToList());
         }
 
-        // GET: OrganizationComponents/Details/5
+        /// <summary>
+        /// GET: OrganizationComponents/Details?id=""
+        /// </summary>
+        /// <remarks>Returns a view that shows the details for the <see cref="T:SmartDocs.Models.OrganizationComponent"/> with the provided id
+        /// </remarks>
+        /// <param name="id">The identifier for the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Details(int? id)
         {
             if (id == null)
             {
+                // querystring is empty
                 return NotFound();
             }
-
+            // find the Component with the provided id
             var organizationComponent = _repository.Components.FirstOrDefault(m => m.ComponentId == id);
             if (organizationComponent == null)
             {
+                // no Component with the provided id exists in the DB
                 return NotFound();
             }
 
             return View(organizationComponent);
         }
 
-        // GET: OrganizationComponents/Create
+        /// <summary>
+        /// Shows the view to create a new <see cref="T:SmartDocs.Models.OrganizationComponent"/>.
+        /// </summary>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: OrganizationComponents/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// POST: OrganizationComponents/Create
+        /// </summary>
+        /// <remarks>Creates the specified organization component.</remarks>
+        /// <param name="organizationComponent">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.OrganizationComponent"/> object.</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("ComponentId,Name,Address,DepartmentCode")] OrganizationComponent organizationComponent)
         {
             if (ModelState.IsValid)
             {
-                _repository.SaveComponent(organizationComponent);                
+                // model validation passed, save the component
+                // context updates are encapsulated in the repository
+                _repository.SaveComponent(organizationComponent);
+                // redirect to Index view
                 return RedirectToAction(nameof(Index));
             }
+            // model validation failed, return the object to the view with validation error messages
             return View(organizationComponent);
         }
 
-        // GET: OrganizationComponents/Edit/5
+        /// <summary>
+        /// GET: OrganizationComponent/Edit?id=""
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Edit(int? id)
         {
             if (id == null)
             {
+                // querystring is null
+                return NotFound();
+            }
+            // find an OrganizationComponent in the repo with the given id
+            var organizationComponent = _repository.Components.FirstOrDefault(x => x.ComponentId == id);
+
+            if (organizationComponent == null)
+            {
+                // no OrganizationComponent with the given id could be found
                 return NotFound();
             }
 
-            var organizationComponent = _repository.Components.FirstOrDefault(x => x.ComponentId == id);
-            if (organizationComponent == null)
-            {
-                return NotFound();
-            }
             return View(organizationComponent);
         }
 
-        // POST: OrganizationComponents/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// POST: OrganizationComponent/Edit
+        /// </summary>
+        /// <param name="id">The identifier for the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
+        /// <param name="organizationComponent">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("ComponentId,Name,Address,DepartmentCode")] OrganizationComponent organizationComponent)
         {
             if (id != organizationComponent.ComponentId)
             {
+                // form ComponentId doesn't match id parameeter
                 return NotFound();
             }
 
@@ -112,7 +153,12 @@ namespace SmartDocs.Controllers
             return View(organizationComponent);
         }
 
-        // GET: OrganizationComponents/Delete/5
+        /// <summary>
+        /// GET: OrganizationComponents/Delete
+        /// </summary>
+        /// <remarks>Displays the Delete confirmation page</remarks>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/> to be deleted.</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -130,16 +176,28 @@ namespace SmartDocs.Controllers
             return View(organizationComponent);
         }
 
-        // POST: OrganizationComponents/Delete/5
+        /// <summary>
+        /// POST: OrganizationComponents/Delete
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/> to be deleted</param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            // find the Component with the provided id
             var organizationComponent = _repository.Components.FirstOrDefault(x => x.ComponentId == id);
+            // context actions are encapsulated in the repository
             _repository.RemoveComponent(organizationComponent);
+            // redirect to OrganizationComponents/Index
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Determines whether a component exists with the provided id
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
+        /// <returns></returns>
         private bool OrganizationComponentExists(int id)
         {
             return _repository.Components.Any(e => e.ComponentId == id);

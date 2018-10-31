@@ -11,28 +11,57 @@ using SmartDocs.Models.ViewModels;
 
 namespace SmartDocs.Controllers
 {
+    /// <summary>
+    /// Controller for <see cref="T:SmartDocs.Models.SmartPPAController"/> interactions
+    /// </summary>
+    /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
     [Authorize]
     public class SmartPPAController : Controller
     {
         private IDocumentRepository _repository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartPPAController"/> class.
+        /// </summary>
+        /// <remarks>
+        /// This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/>
+        /// </remarks>
+        /// <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         public SmartPPAController(IDocumentRepository repo)
         {
             _repository = repo;
         }
+
+        /// <summary>
+        /// Shows a view with a list of all <see cref="T:SmartDocs.Models.SmartPPA"/> in the DB.
+        /// </summary>
+        /// <remarks>
+        /// The list returned from this method is created via <see cref="M:SmartDocs.Models.SmartDocumentRepository.PPAs"/>,
+        /// which limits the result set to the <see cref="T:SmartDocs.Models.SmartPPA"/> objects authored by the
+        /// <see cref="M:SmartDocs.Models.SmartDocumentRepository.GetCurrentUser"/>
+        /// </remarks>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Index()
         {
+            // Check if user is known to Windows Auth
             if (User.Identity.IsAuthenticated)
             {
+                // create a new view model
                 DocumentListViewModel vm = new DocumentListViewModel();
+                // assign the Documents property of the viewmodel to the a list of DocumentListViewModelItems
+                // that is created by passing each of the repository's PPAs to the DocumentListViewModelItem
+                // constructor that takes a SmartPPA parameter
                 vm.Documents = _repository.PPAs.Select(x => new DocumentListViewModelItem(x)).ToList();
                 return View(vm);
             }
             else
             {
+                // TODO: if windows auth fails, the application will return a 401 long before they get here? Shouldn't this check against a null _repo.GetCurrentUser()?
                 return RedirectToAction("Access Denied", "Home");
             }
         }
+
+
         public ActionResult Download(int id)
         {
             SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
