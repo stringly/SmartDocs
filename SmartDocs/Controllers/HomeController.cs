@@ -47,6 +47,8 @@ namespace SmartDocs.Controllers
                 // This is a LDAP-authenticated account without an associated SmartDocs account
                 return RedirectToAction(nameof(AccessDenied));
             }
+            //SmartPPAGenerator gen = new SmartPPAGenerator(_repository);
+            //gen.OverwriteTemplate();
             return View();
         }
         /// <summary>

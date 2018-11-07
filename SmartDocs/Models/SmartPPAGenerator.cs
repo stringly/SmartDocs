@@ -91,9 +91,9 @@ namespace SmartDocs.Models
             results.Add("PlaceOfWork", form.WorkPlaceAddress);
             results.Add("Supervisor", author.DisplayName);
             results.Add("Supervises", form?.SupervisedByEmployee ?? "N/A");
-            results.Add("ClassTitle", job.ClassTitle + " - " + job.WorkingTitle);
+            results.Add("ClassTitle", job.ClassTitle + " - " + job.Grade);
             results.Add("Grade", job.Grade);
-            results.Add("WorkingTitle", job.ClassTitle + " - " + job.WorkingTitle);
+            results.Add("WorkingTitle", job.ClassTitle);
             
             for (int i = 0; i < form.Categories.Count(); i++)
             {
@@ -212,7 +212,7 @@ namespace SmartDocs.Models
                 
                 new MappedField { FieldName = "EmployeeName_1", TableIndex = 0, RowIndex = 1, CellIndex = 1},                
                 new MappedField { FieldName = "PayrollId_1", TableIndex = 0, RowIndex = 1, CellIndex = 2},
-                new MappedField { FieldName = "ClassTitle_1", TableIndex = 0, RowIndex = 3, CellIndex = 1},
+                new MappedField { FieldName = "WorkingTitle_1", TableIndex = 0, RowIndex = 3, CellIndex = 1},
                 new MappedField { FieldName = "Grade_1", TableIndex = 0, RowIndex = 3, CellIndex = 2},
                 new MappedField { FieldName = "PositionNumber_1", TableIndex = 0, RowIndex = 3, CellIndex = 3},
                 new MappedField { FieldName = "StartDate_1", TableIndex = 0, RowIndex = 4, CellIndex = 0},
@@ -292,9 +292,9 @@ namespace SmartDocs.Models
                 new MappedField { FieldName = "DistrictDivision_2", TableIndex = 5, RowIndex = 1, CellIndex = 2 }, 
                 new MappedField { FieldName = "AgencyActivity_2", TableIndex = 5, RowIndex = 1, CellIndex = 3 },
                 new MappedField { FieldName = "PositionNumber_2", TableIndex = 5, RowIndex = 1, CellIndex = 4 }, 
-                new MappedField { FieldName = "ClassTitle_2", TableIndex = 5, RowIndex = 3, CellIndex = 1 },
+                new MappedField { FieldName = "WorkingTitle_2", TableIndex = 5, RowIndex = 3, CellIndex = 1 },
                 new MappedField { FieldName = "Grade_2", TableIndex = 5, RowIndex = 3, CellIndex = 2 },
-                new MappedField { FieldName = "WorkingTitle_1", TableIndex = 5, RowIndex = 5, CellIndex = 1 },
+                new MappedField { FieldName = "WorkingTitle_3", TableIndex = 5, RowIndex = 5, CellIndex = 1 },
                 new MappedField { FieldName = "PlaceOfWork_1", TableIndex = 5, RowIndex = 7, CellIndex = 0 },
                 new MappedField { FieldName = "WorkingHours", TableIndex = 5, RowIndex = 7, CellIndex = 1 },
                 new MappedField { FieldName = "Supervisor_1", TableIndex = 5, RowIndex = 9, CellIndex = 0 },
@@ -316,6 +316,7 @@ namespace SmartDocs.Models
         public void OverwriteTemplate()
         {
             SmartTemplate temp = _repository.Templates.FirstOrDefault(x => x.TemplateId == 1);
+            temp.DocumentName = $"SmartPPA XML {DateTime.Now}";
             byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");            
             temp.DataStream = byteArray;
             _repository.SaveTemplate(temp);

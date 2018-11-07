@@ -19,7 +19,7 @@ namespace SmartDocs.Models
 
         public IEnumerable<SmartUser> Users => context.Users;
         public IEnumerable<SmartTemplate> Templates => context.Templates;
-        public IEnumerable<SmartJob> Jobs => context.Jobs;
+        public IEnumerable<SmartJob> Jobs => context.Jobs.OrderBy(x => x.JobName);
         public IEnumerable<SmartPPA> PPAs => context.PPAs.Where(x => x.Owner.UserId == currentUser.UserId).Include(y => y.Job).Include(z => z.Owner);
         public IEnumerable<OrganizationComponent> Components => context.Components;
 
@@ -76,7 +76,7 @@ namespace SmartDocs.Models
                     dbPPA.EmployeeFirstName = ppa.EmployeeFirstName;
                     dbPPA.EmployeeLastName = ppa.EmployeeLastName;
                     dbPPA.DepartmentIdNumber = ppa.DepartmentIdNumber;
-                    dbPPA.PayrollIdNumber = ppa.DepartmentIdNumber;
+                    dbPPA.PayrollIdNumber = ppa.PayrollIdNumber;
                     dbPPA.PositionNumber = ppa.PositionNumber;
                     dbPPA.DepartmentDivision = ppa.DepartmentDivision;
                     dbPPA.DepartmentDivisionCode = ppa.DepartmentDivisionCode;

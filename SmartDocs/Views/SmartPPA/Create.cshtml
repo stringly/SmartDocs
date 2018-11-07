@@ -49,12 +49,16 @@
                             <label asp-for="DepartmentDivision" class="control-label"></label>
                             <select name="@Html.NameFor(model => model.DepartmentDivision)"
                                     id="@Html.IdFor(model => model.DepartmentDivision)"
-                                    class="form-control">
+                                    class="form-control"
+                                    data-val-required="Please select the employee's assignment."
+                                    data-val="true">
+                                <option value="" data-code="" data-address="" disabled selected>Choose Assignment</option>
                                 @foreach (var division in Model.Components)
                                 {
                                     <option value="@division.Name" data-code="@division.DepartmentCode" data-address="@division.Address">@division.Name</option>
                                 }
                             </select>
+                            <span asp-validation-for="DepartmentDivision" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md-3">
                             <label asp-for="DepartmentDivisionCode" class="control-label"></label>
@@ -236,7 +240,7 @@
             var titles = $(".category-title").toArray();
             var resultString = "";
             for (var i = 0; i < letters.length; i++) {
-                resultString = resultString + "<strong>" + letters[i].innerHTML + " - " + titles[i].innerHTML + ":</strong><p></p>"
+                resultString = resultString + "<p>" + letters[i].innerHTML + " - " + titles[i].innerHTML + ":</p>"
             }
             editor.insertHtml(resultString);
         }

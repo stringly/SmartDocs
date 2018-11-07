@@ -232,7 +232,7 @@
             var titles = $(".category-title").toArray();
             var resultString = "";
             for (var i = 0; i < letters.length; i++) {
-                resultString = resultString + "<strong>" + letters[i].innerHTML + " - " + titles[i].innerHTML + ":</strong><p></p>"
+                resultString = resultString + "<p>" + letters[i].innerHTML + " - " + titles[i].innerHTML + ":</p>"
             }
             editor.insertHtml(resultString);
         }

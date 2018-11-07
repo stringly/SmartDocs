@@ -61,28 +61,47 @@ namespace SmartDocs.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Downloads an existing SmartPPA.
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to be downloaded</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.FileStreamResult"/></returns>
         public ActionResult Download(int id)
         {
+            // create a generator, passing the repository as a parameter
             SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
-            generator.ReDownloadPPA(id);            
+            // call the ReDownload method with the querystring id parameter
+            generator.ReDownloadPPA(id);
+            // set the FileResult name 
             string resultDocName = generator.dbPPA.DocumentName;
+            // return the FileResult to the client
             return File(generator.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
         }
 
-        
+        /// <summary>
+        /// Shows the view to create a new SmartPPA.
+        /// </summary>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public ActionResult Create()
         {
+            // create a new, empty ViewModel
             PPAFormViewModel vm = new PPAFormViewModel
             {
+                // populate the ViewModel's lists that serve the <selects> on the form
                 JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(),
-                Users = _repository.Users.Select(x => new UserListItem(x)).ToList(),
-                AuthorUserId = _repository.GetCurrentUser().UserId,
-                Components = _repository.Components.ToList()                
+                Users = _repository.Users.Select(x => new UserListItem(x)).ToList(),                               
+                Components = _repository.Components.ToList(),
+                // default the "Author" <select> with the session user
+                AuthorUserId = _repository.GetCurrentUser().UserId
             };
             return View(vm);
         }
 
+        /// <summary>
+        /// Creates a <see cref="T:SmartDocs.Models.SmartPPA"/> from the POSTed form data.
+        /// </summary>
+        /// <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(
@@ -105,6 +124,7 @@ namespace SmartDocs.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // AS OF VERSION 1.1: Validation occurs clientside via jquery.validate
                 // Model Validation failed, so I need to re-constitute the VM with the Job and the selected categories
                 // This is done very clumsily, but I'm lazy...
                 // first, reform the VM JobDescription member from the JobId in the submitted form data
@@ -122,7 +142,8 @@ namespace SmartDocs.Controllers
                 // next, re-populate the VM drop down lists
                 form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
                 form.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
-                form.Components = _repository.Components.ToList();  
+                form.Components = _repository.Components.ToList();
+                // return the View with the validation messages
                 return View(form);
             }
             else

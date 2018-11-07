@@ -107,7 +107,7 @@ namespace SmartDocs.Models.ViewModels
         {
             List<string> results = new List<string>();
             results.Add("Police Officer");
-            results.Add("Police Officer First Class");
+            results.Add("POFC");
             results.Add("Police Corporal");
             results.Add("Police Sergeant");
             results.Add("Police Lieutenant");
