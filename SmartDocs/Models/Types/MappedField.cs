@@ -3,13 +3,51 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SmartDocs.Models.Types
 {
+    /// <summary>
+    /// Class used to map Table/Cell index and value
+    /// </summary>
     public class MappedField
     {
+        /// <summary>
+        /// Gets or sets the index of the table.
+        /// </summary>
+        /// <remarks>
+        /// This is the index of the table in the Template document
+        /// </remarks>
+        /// <value>
+        /// The index of the table.
+        /// </value>
         public int TableIndex { get; set; }
+    
+        /// <summary>
+        /// Gets or sets the index of the row.
+        /// </summary>
+        /// <value>
+        /// The index of the row.
+        /// </value>
         public int RowIndex { get; set; }
+
+        /// <summary>
+        /// Gets or sets the index of the cell.
+        /// </summary>
+        /// <value>
+        /// The index of the cell.
+        /// </value>
         public int CellIndex { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the field.
+        /// </summary>
+        /// <value>
+        /// The name of the field.
+        /// </value>
         public string FieldName { get; set; }
 
+        /// <summary>
+        /// Writes the data in the mapped field to the document.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <param name="newText">The new text.</param>
         public void Write(Table table, string newText)
         {            
             TableRow row = table.Elements<TableRow>().ElementAt(RowIndex);

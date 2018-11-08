@@ -12,7 +12,7 @@ using SmartDocs.Models.ViewModels;
 namespace SmartDocs.Controllers
 {
     /// <summary>
-    /// Controller for <see cref="T:SmartDocs.Models.SmartPPAController"/> interactions
+    /// Controller for <see cref="T:SmartDocs.Models.SmartPPA"/> interactions
     /// </summary>
     /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
     [Authorize]
@@ -148,29 +148,55 @@ namespace SmartDocs.Controllers
             }
             else
             {
+                // validation success, create new generator and pass repo
                 SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
+                // call generator method to pass form data
                 generator.SeedFormInfo(form);
+                // redirect to success view with PPA as querystring param
                 return RedirectToAction("SaveSuccess", new { id = generator.dbPPA.PPAId });
             }
         }
 
+        /// <summary>
+        /// View that shows success message and allows user to download file or navigate back to MyDocuments.
+        /// </summary>
+        /// <remarks>This method displays a link that invokes the <see cref="M:SmartDocs.Controllers.SmartPPAController.Download(int)"/> method.</remarks>
+        /// <param name="id">The id of the newly generated <see cref="T:SmartDocs.Models.SmartPPA"/></param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         public IActionResult SaveSuccess(int id)
         {
+            // this is a simple view, so use VB instead of a VM            
             ViewBag.PPAId = id;
             ViewBag.FileName = _repository.PPAs.FirstOrDefault(x => x.PPAId == id).DocumentName;
             return View();
 
         }
-                
+
+        /// <summary>
+        /// GET: SmartPPA/Edit?id="" 
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to edit.</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public ActionResult Edit(int id)
         {
-            SmartPPA ppa = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);            
+            // pull the PPA from the repo
+            SmartPPA ppa = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);
+            // pass the PPA to the VM constructor that takes a SmartPPA parameter
             PPAFormViewModel vm = new PPAFormViewModel(ppa);
+            // populate the VM <select> lists
             vm.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
             vm.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
             vm.Components = _repository.Components.ToList();
+            // return the view
             return View(vm);
         }
+
+        /// <summary>
+        /// POST: SmartPPA/Edit?=""
+        /// </summary>
+        /// <param name="id">The identifier for the <see cref="T:SmartDocs.Models.SmartPPA"/> to be edited.</param>
+        /// <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id,[Bind(
@@ -192,6 +218,7 @@ namespace SmartDocs.Controllers
             "Assessment," +
             "Recommendation")] PPAFormViewModel form)
         {
+            // if the querystring parameter id doesn't match the POSTed PPAId, return 404
             if (id != form.PPAId)
             {
                 return NotFound();
@@ -219,48 +246,84 @@ namespace SmartDocs.Controllers
             }
             else
             {
+                // validation success, create a new PPAGenerator and pass the repo as a parameter
                 SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
+                // populate the form info into the generator
                 generator.SeedFormInfo(form);
+                // redirect to the SaveSuccess view, passing the newly created PPA as a querystring param
                 return RedirectToAction("SaveSuccess", new { id = generator.dbPPA.PPAId });
             }
         }
+
+        /// <summary>
+        /// Shows the view to confirm deletion of a <see cref="T:SmartDocs.Models.SmartPPA"/>.
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         public IActionResult Delete(int? id)
         {
+            // query string is empty, return 404
             if (id == null)
             {
                 return NotFound();
             }
-
+            // retrieve the SmartPPA from the repo
             var smartPPA = _repository.PPAs.FirstOrDefault(m => m.PPAId == id);
+
             if (smartPPA == null)
             {
+                // no SmartPPA could be found with the provided id
                 return NotFound();
             }
-
+            // return the View (which uses the Domain Object as a model)
             return View(smartPPA);
         }
 
 
+        /// <summary>
+        /// Deletes <see cref="T:SmartDocs.Models.SmartPPA"/> with the provided ID.
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to be deleted.</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            // retrieve the SmartPPA from the repo
             var smartPPA = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);
+            // invoke the repo method to remove the SmartPPA
             _repository.RemoveSmartPPA(smartPPA);
+            // redirect to the Index
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Determines if a <see cref="T:SmartDocs.Models.SmartPPA"/> with a given id exists in the repo.
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+        /// <returns></returns>
         private bool SmartPPAExists(int id)
-        {
+        {            
             return _repository.PPAs.Any(e => e.PPAId == id);
         }
 
+        /// <summary>
+        /// Gets the <see cref="T:SmartDocs.ViewComponents.JobDescriptionCategoryListViewComponent"/> for a specified JobId.
+        /// </summary>
+        /// <param name="jobId">The identifier of a <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         public IActionResult GetJobDescriptionViewComponent(int jobId)
         {
+            // retrieve the SmartJob from the repo
             JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == jobId));
+            // return the ViewComponent
             return ViewComponent("JobDescriptionCategoryList", job);
         }
 
+        /// <summary>
+        /// View that is returned when a user attempts an action for which they are not authorized.
+        /// </summary>
+        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         public IActionResult NotAuthorized()
         {
             ViewBag.Message = "You are not authorized to take this action";

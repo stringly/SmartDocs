@@ -7,16 +7,72 @@ using System.Threading.Tasks;
 
 namespace SmartDocs.Models.Types
 {
+    /// <summary>
+    /// A class used to build Categories for a Job Description
+    /// </summary>
     public class JobDescriptionCategory
     {
+        /// <summary>
+        /// Gets or sets the Category's letter heading.
+        /// </summary>
+        /// <value>
+        /// The letter.
+        /// </value>
         public string Letter { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the Weight percentage of the category.
+        /// </summary>
+        /// <value>
+        /// The weight.
+        /// </value>
         public int Weight { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the category's title.
+        /// </summary>
+        /// <value>
+        /// The title.
+        /// </value>
         public string Title { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the category rating.
+        /// </summary>
+        /// <value>
+        /// The selected score.
+        /// </value>
         public int SelectedScore {get; set;}
+        
+        /// <summary>
+        /// Gets or sets the array of possible scores.
+        /// </summary>
+        /// <value>
+        /// The scores.
+        /// </value>
         public int[] Scores { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the position description items.
+        /// </summary>
+        /// <value>
+        /// The position description items.
+        /// </value>
+        /// <seealso cref="T:SmartDocs.Models.Types.PositionDescriptionItem"/>
         public List<PositionDescriptionItem> PositionDescriptionItems { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the performance standard items.
+        /// </summary>
+        /// <value>
+        /// The performance standard items.
+        /// </value>
+        /// <seealso cref="T:SmartDocs.Models.Types.PerformanceStandardItem"/>
         public List<PerformanceStandardItem> PerformanceStandardItems { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobDescriptionCategory"/> class.
+        /// </summary>
         public JobDescriptionCategory()
         {
             PositionDescriptionItems = new List<PositionDescriptionItem>();
@@ -24,12 +80,25 @@ namespace SmartDocs.Models.Types
             Scores = new int[] {0,1,2,3,4};
         }
 
+        /// <summary>
+        /// Gets the category rated score.
+        /// </summary>
+        /// <remarks>
+        /// This calculates based on the Category's weight and the selected rating
+        /// </remarks>
+        /// <returns>A double representing the category's rated score</returns>
         public double GetCategoryRatedScore()
         {
             return Math.Round((Weight * SelectedScore * 0.01), 2);
         }
 
-        // Creates a Header Row for the Category instance and adds its children.
+        /// <summary>
+        /// Gets a category header row.
+        /// </summary>
+        /// <remarks>
+        /// This method is used in Document assembly to create the first row for a category on the job description page
+        /// </remarks>
+        /// <returns>An assembled <see cref="T:DocumentFormat.OpenXml.Wordprocessing.TableRow"/></returns>
         public TableRow GetCategoryHeaderRow()
         {
             TableRow tableRow1 = new TableRow();
@@ -286,11 +355,16 @@ namespace SmartDocs.Models.Types
             return tableRow1;
         }
 
-        // Creates an TableRow instance and adds its children.
+        /// <summary>
+        /// Gets a category header row.
+        /// </summary>
+        /// <remarks>
+        /// This method is used in Document assembly to create the details row for a category on the job description page
+        /// </remarks>
+        /// <returns>An assembled <see cref="T:DocumentFormat.OpenXml.Wordprocessing.TableRow"/></returns>
         public TableRow GenerateDetailsRow()
         {
             TableRow tableRow1 = new TableRow();
-
             TableRowProperties tableRowProperties1 = new TableRowProperties();
             CantSplit cantSplit1 = new CantSplit();
             TableRowHeight tableRowHeight1 = new TableRowHeight() { Val = (UInt32Value)1063U };
