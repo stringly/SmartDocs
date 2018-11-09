@@ -6,9 +6,17 @@ using System.Threading.Tasks;
 
 namespace SmartDocs.Models
 {
+    /// <summary>
+    /// Repository that implements DB interactions
+    /// </summary>
+    /// <seealso cref="T:SmartDocs.Models.IDocumentRepository" />
     public class SmartDocumentRepository : IDocumentRepository
     {
         private SmartDocContext context;
+
+        /// <summary>
+        /// The current HttpContext User
+        /// </summary>
         public SmartUser currentUser;
 
         public SmartDocumentRepository(SmartDocContext ctx, UserResolverService userService)

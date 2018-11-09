@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace SmartDocs.Models
 {
+    /// <summary>
+    /// Interface that encompasses Database Interactions
+    /// </summary>
     public interface IDocumentRepository
-    {   
-        
+    {
         IEnumerable<SmartUser> Users { get; }        
         IEnumerable<SmartTemplate> Templates { get; }
         IEnumerable<SmartJob> Jobs { get; }

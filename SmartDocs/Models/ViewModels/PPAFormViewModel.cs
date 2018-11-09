@@ -279,54 +279,9 @@ namespace SmartDocs.Models.ViewModels
             
         }
 
-        // contentPath deprecated with SQL persistence
-        public PPAFormViewModel(string contentPath)
-        {
-            StartDate = DateTime.Today.AddYears(-1);
-            EndDate = DateTime.Today;
-            List<JobDescriptionListItem> results = new List<JobDescriptionListItem>();
-            DirectoryInfo dir = new DirectoryInfo(contentPath);
-            var files = dir.GetFiles();
-            foreach (FileInfo f in files)
-            {
-                if (f.Extension == ".xml")
-                {
-                    XElement root = XElement.Load(f.FullName);
-                    JobDescriptionListItem item = new JobDescriptionListItem
-                    {
-                        JobId = Convert.ToInt32(root.Element("JobId").Value),
-                        Rank = root.Element("Rank").Value,
-                        Grade = root.Element("Grade").Value,
-                        DisplayName = $"{root.Element("Rank").Value} ({root.Element("Grade").Value}) - {root.Element("WorkingTitle").Value}"                                             
-                    };
-                    results.Add(item);
-                }
-            }
-            JobList = results;
-        }
+        
 
-        public void RepopulateJobList(string contentPath)
-        {
-            List<JobDescriptionListItem> results = new List<JobDescriptionListItem>();
-            DirectoryInfo dir = new DirectoryInfo(contentPath);
-            var files = dir.GetFiles();
-            foreach (FileInfo f in files)
-            {
-                if (f.Extension == ".xml")
-                {
-                    XElement root = XElement.Load(f.FullName);
-                    JobDescriptionListItem item = new JobDescriptionListItem
-                    {
-                        JobId = Convert.ToInt32(root.Element("JobId").Value),
-                        Rank = root.Element("Rank").Value,
-                        Grade = root.Element("Grade").Value,
-                        DisplayName = $"{root.Element("Rank").Value} ({root.Element("Grade").Value}) - {root.Element("WorkingTitle").Value}",                        
-                    };
-                    results.Add(item);
-                }
-            }
-            JobList = results;
-        }
+        
 
 
     }
