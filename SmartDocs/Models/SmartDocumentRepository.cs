@@ -15,22 +15,73 @@ namespace SmartDocs.Models
         private SmartDocContext context;
 
         /// <summary>
-        /// The current HttpContext User
+        /// The current <see cref="T:SmartDocs.Models.SmartUser"/>
         /// </summary>
+        /// <remarks>
+        /// This is assigned in the Constructor
+        /// </remarks>
         public SmartUser currentUser;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartDocumentRepository"/> class.
+        /// </summary>
+        /// <param name="ctx">An injected <see cref="T:SmartDocs.Models.SmartDocContext"/> database context.</param>
+        /// <param name="userService">An injected <see cref="T:SmartDocs.Models.UserResolverService"/>.</param>
         public SmartDocumentRepository(SmartDocContext ctx, UserResolverService userService)
         {
             context = ctx;
             currentUser = context.Users.FirstOrDefault(u => u.LogonName == userService.GetUserName());
         }
-
+        /// <summary>
+        /// Gets the Users.
+        /// </summary>
+        /// <value>
+        /// The <see cref="T:SmartDocs.Models.SmartUser"/>s.
+        /// </value>
         public IEnumerable<SmartUser> Users => context.Users;
+
+        /// <summary>
+        /// Gets the Templates.
+        /// </summary>
+        /// <value>
+        /// The <see cref="T:SmartDocs.Models.SmartTemplate"/>s.
+        /// </value>
         public IEnumerable<SmartTemplate> Templates => context.Templates;
+
+        /// <summary>
+        /// Gets the Jobs.
+        /// </summary>
+        /// <value>
+        /// The <see cref="SmartDocs.Models.SmartJob"/>s.
+        /// </value>
         public IEnumerable<SmartJob> Jobs => context.Jobs.OrderBy(x => x.JobName);
+
+        /// <summary>
+        /// Gets the PPAs.
+        /// </summary>
+        /// <value>
+        /// The <see cref="T:SmartDocs.Models.SmartPPA"/>s.
+        /// </value>
+        /// <remarks>
+        /// This list will return only the PPA records that belong to the Repo's currentUser
+        /// </remarks>
         public IEnumerable<SmartPPA> PPAs => context.PPAs.Where(x => x.Owner.UserId == currentUser.UserId).Include(y => y.Job).Include(z => z.Owner);
+
+        /// <summary>
+        /// Gets the Components.
+        /// </summary>
+        /// <value>
+        /// The <see cref="T:SmartDocs.Models.OrganizationComponent"/>s.
+        /// </value>
         public IEnumerable<OrganizationComponent> Components => context.Components;
 
+        /// <summary>
+        /// Saves/Updates the <see cref="T:SmartDocs.Models.SmartJob"/>.
+        /// </summary>
+        /// <remarks>
+        /// If this method is passed a SmartJob with a non-zero SmartJob.JobId, it will update the corresponding SmartJob in the repo. If this method is passed a SmartJob with a SmartJob.JobId = 0, then it will create a new SmartJob in the repo.
+        /// </remarks>
+        /// <param name="job">The <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
         public void SaveJob(SmartJob job)
         {
             if (job.JobId == 0)
@@ -48,12 +99,23 @@ namespace SmartDocs.Models
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Removes the <see cref="T:SmartDocs.Models.RemoveJob"/> from the repo.
+        /// </summary>
+        /// <param name="job">The <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
         public void RemoveJob(SmartJob job)
         {
             context.Jobs.Remove(job);
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Saves/Updates a <see cref="T:SmartDocs.Models.SmartTemplate"/>
+        /// </summary>
+        /// <remarks>
+        /// If this method is passed a SmartTemplate with a non-zero SmartTemplate.TemplateId, it will update the corresponding SmartTemplate in the repo. If this method is passed a SmartJob with a SmartTemplate.TemplateId = 0, then it will create a new SmartTemplate in the repo.
+        /// </remarks>
+        /// <param name="template">A <see cref="T:SmartDocs.Models.SmartTemplate"/> to add/update.</param>
         public void SaveTemplate(SmartTemplate template)
         {
             if (template.TemplateId == 0)
@@ -69,6 +131,13 @@ namespace SmartDocs.Models
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Saves/Updates a <see cref="T:SmartDocs.Models.SmartPPA"/>
+        /// </summary>
+        /// <remarks>
+        /// If this method is passed a SmartPPA with a non-zero SmartPPA.PPAId, it will update the corresponding SmartPPA in the repo. If this method is passed a SmartJob with a SmartPPA.PPAId = 0, then it will create a new SmartPPA in the repo.
+        /// </remarks>
+        /// <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/> to add/update.</param>
         public void SaveSmartPPA(SmartPPA ppa)
         {
             if (ppa.PPAId == 0)
@@ -110,12 +179,23 @@ namespace SmartDocs.Models
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Removes a <see cref="T:SmartDocs.Models.SmartPPA"/>.
+        /// </summary>
+        /// <param name="ppa">The <see cref="T:SmartDocs.Models.SmartPPA"/> to remove.</param>
         public void RemoveSmartPPA(SmartPPA ppa)
         {
             context.PPAs.Remove(ppa);
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Saves/Updates a <see cref="T:SmartDocs.Models.SmartUser"/> the user.
+        /// </summary>
+        /// <remarks>
+        /// If this method is passed a SmartUser with a non-zero SmartUser.UserId, it will update the corresponding SmartUser in the repo. If this method is passed a SmartUser with a SmartUser.UserId = 0, then it will create a new SmartUser in the repo.
+        /// </remarks>
+        /// <param name="user">The <see cref="T:SmartDocs.Models.SmartUser"/> to be added/updated.</param>
         public void SaveUser(SmartUser user)
         {
             if (user.UserId == 0)
@@ -133,12 +213,23 @@ namespace SmartDocs.Models
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Removes a <see cref="T:SmartDocs.Models.SmartUser"/>.
+        /// </summary>
+        /// <param name="user">The <see cref="T:SmartDocs.Models.SmartUser"/> to remove.</param>
         public void RemoveUser(SmartUser user)
         {
             context.Users.Remove(user);
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Saves/Updates a <see cref="T:SmartDocs.Models.OrganizationComponent"/> the user.
+        /// </summary>
+        /// <remarks>
+        /// If this method is passed a SmartUser with a non-zero OrganizationComponent.ComponentId, it will update the corresponding OrganizationComponent in the repo. If this method is passed a OrganizationComponent with a OrganizationComponent.ComponentId = 0, then it will create a new OrganizationComponent in the repo.
+        /// </remarks>
+        /// <param name="component">The <see cref="T:SmartDocs.Models.OrganizationComponent"/> to be added/updated.</param>
         public void SaveComponent(OrganizationComponent component)
         {
             if (component.ComponentId == 0)
@@ -154,11 +245,21 @@ namespace SmartDocs.Models
             }
             context.SaveChanges();
         }
+
+        /// <summary>
+        /// Removes a <see cref="T:SmartDocs.Models.OrganizationComponent"/>.
+        /// </summary>
+        /// <param name="component">The <see cref="T:SmartDocs.Models.OrganizationComponent"/> to remove.</param>
         public void RemoveComponent(OrganizationComponent component)
         {
             context.Components.Remove(component);
             context.SaveChanges();
         }
+
+        /// <summary>
+        /// Gets the current user.
+        /// </summary>
+        /// <returns>A <see cref="T:SmartDocs.Models.SmartUser"/></returns>
         public SmartUser GetCurrentUser()
         {
             return currentUser;

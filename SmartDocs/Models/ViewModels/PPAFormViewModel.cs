@@ -32,7 +32,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The first name.
         /// </value>
-        [Display(Name = "First Name:"), StringLength(50), Required(ErrorMessage = "Please enter a Name.")]
+        [Display(Name = "First Name:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer."), Required(ErrorMessage = "Please enter a Name.")]
         public string FirstName { get; set; }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The last name.
         /// </value>
-        [Display(Name = "Last Name:"), StringLength(50), Required(ErrorMessage = "Please enter a Name.")]
+        [Display(Name = "Last Name:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer."), Required(ErrorMessage = "Please enter a Name.")]
         public string LastName { get; set; }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The department identifier number.
         /// </value>
-        [Display(Name = "ID#"), StringLength(5), Required(ErrorMessage = "Enter employees ID#")]
+        [Display(Name = "ID#"), StringLength(5, ErrorMessage = "Must be 5 characters or fewer."), Required(ErrorMessage = "Enter employees ID#")]
         public string DepartmentIdNumber { get; set; }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The payroll identifier number.
         /// </value>
-        [Display(Name = "Payroll ID#"), StringLength(10), Required(ErrorMessage = "A Payroll number is required.")]
+        [Display(Name = "Payroll ID#"), StringLength(10, ErrorMessage = "Must be 10 characters or fewer."), Required(ErrorMessage = "A Payroll number is required.")]
         public string PayrollIdNumber { get; set; }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The position number.
         /// </value>
-        [Display(Name = "Position Number"), StringLength(10), Required(ErrorMessage = "Enter the employee's Position Number.")]
+        [Display(Name = "Position Number"), StringLength(10, ErrorMessage = "Must be 10 characters or fewer."), Required(ErrorMessage = "Enter the employee's Position Number.")]
         public string PositionNumber { get; set; }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The department division.
         /// </value>
-        [Display(Name = "Department/Division:"), StringLength(50), Required(ErrorMessage = "Please select the employee's assigned unit.")]
+        [Display(Name = "Department/Division:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer."), Required(ErrorMessage = "Please select the employee's assigned unit.")]
         public string DepartmentDivision {get;set;}
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The department division code.
         /// </value>
-        [Display(Name = "Department/Division Code:"), StringLength(50), Required(ErrorMessage = "Please enter the Department Code.")]
+        [Display(Name = "Department/Division Code:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer."), Required(ErrorMessage = "Please enter the Department Code.")]
         public string DepartmentDivisionCode { get; set; }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The work place address.
         /// </value>
-        [Display(Name = "Work Location:"), StringLength(50), Required(ErrorMessage = "Enter the employee's work address.")]
+        [Display(Name = "Work Location:"), StringLength(100, ErrorMessage = "Must be 100 characters or fewer."), Required(ErrorMessage = "Enter the employee's work address.")]
         public string WorkPlaceAddress { get; set; }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The supervised by employee.
         /// </value>
-        [Display(Name = "Supervised by Employee:"), StringLength(50)]
+        [Display(Name = "Supervised by Employee:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer.")]
         public string SupervisedByEmployee { get; set; }
 
         /// <summary>
@@ -161,7 +161,8 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The assessment.
         /// </value>
-        [MaxLength(5000), Required(ErrorMessage = "Please provide your comments."), Display(Name ="Performance Assessment:")]
+        [MaxLength(5000, ErrorMessage = "This field is limited to 5000 characters."), Display(Name ="Performance Assessment:")]
+        [DataType(DataType.MultilineText)]
         public string Assessment { get; set; }
 
         /// <summary>
@@ -170,7 +171,8 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The recommendation.
         /// </value>
-        [MaxLength(5000), Required(ErrorMessage = "Please provide your recommendations."), Display(Name = "Supervisor's Recommendations:")]
+        [MaxLength(5000, ErrorMessage = "This field is limited to 5000 characters."), Display(Name = "Supervisor's Recommendations:")]
+        [DataType(DataType.MultilineText)]
         public string Recommendation { get; set; }
 
         /// <summary>

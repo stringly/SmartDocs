@@ -6,7 +6,7 @@
 <link href="~/lib/smart_wizard/css/smart_wizard.css" rel="stylesheet" type="text/css" />
 <link href="~/lib/smart_wizard/css/smart_wizard_theme_arrows.min.css" rel="stylesheet" type="text/css" />
 <div class="container-fluid" style="width: 100%">
-    <form asp-action="Create">
+    <form asp-action="Create" id="ppaForm">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div id="smartwizard" class="container-fluid" align="center">
             <ul>
@@ -123,6 +123,7 @@
                     <div class="form-group">
                         <label asp-for="Assessment" class="control-label"></label>
                         <textarea asp-for="Assessment" class="form-control" id="comments"></textarea>
+                       
                         <span asp-validation-for="Assessment" class="text-danger"></span>
                     </div>                    
                     <div class="form-group">
@@ -167,7 +168,8 @@
                             result = ($("#PositionInfo :input").valid() && validateRating())
                             break;
                         case 2:
-                            result = ($("#Comments :input").valid());
+                            console.log("Validator Called");
+                            result = ($("#Comments :input").valid());                            
                             break;
                     }
                     if (!result) {
@@ -201,6 +203,7 @@
                 disableNativeSpellChecker: false,
                 contentsCss: '/lib/ckeditor/appraisalEditorStyle.css'
             });
+ 
             reCalcOverall();
             $("#positionDetails").hide();
             $("#JobDescription").change(function () {
