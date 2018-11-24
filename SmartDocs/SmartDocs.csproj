@@ -3,9 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>4809cdc8-2996-40a5-b5d5-dc8250ea605d</UserSecretsId>
+    <FileVersion>1.0.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\jcsmith1\source\repos\SmartDocs\SmartDocs\SmartDocs.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>C:\Users\jcsmith1\source\repos\SmartDocs\SmartDocs\SmartDocs.xml</DocumentationFile>
   </PropertyGroup>
 

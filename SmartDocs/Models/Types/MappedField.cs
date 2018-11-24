@@ -46,7 +46,11 @@ namespace SmartDocs.Models.Types
         /// <summary>
         /// Writes the data in the mapped field to the document.
         /// </summary>
-        /// <param name="table">The table.</param>
+        /// <param name="table">
+        /// The target <see cref="T:DocumentFormat.OpenXml.Wordprocessing.Table"/>. 
+        /// This parameter is required because the Table index depends on whether the MappedField is in a Header/Footer or in the document's mainpart, which means that the TableIndex is not
+        /// sufficient to target the proper table. 
+        /// </param>
         /// <param name="newText">The new text.</param>
         public void Write(Table table, string newText)
         {            

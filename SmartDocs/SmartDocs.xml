@@ -227,7 +227,7 @@
         </member>
         <member name="T:SmartDocs.Controllers.SmartPPAController">
             <summary>
-            Controller for <see cref="T:SmartDocs.Models.SmartPPAController"/> interactions
+            Controller for <see cref="T:SmartDocs.Models.SmartPPA"/> interactions
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
         </member>
@@ -251,6 +251,327 @@
             </remarks>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.Download(System.Int32)">
+            <summary>
+            Downloads an existing SmartPPA.
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to be downloaded</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.FileStreamResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.Create">
+            <summary>
+            Shows the view to create a new SmartPPA.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.Create(SmartDocs.Models.ViewModels.PPAFormViewModel)">
+            <summary>
+            Creates a <see cref="T:SmartDocs.Models.SmartPPA"/> from the POSTed form data.
+            </summary>
+            <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.SaveSuccess(System.Int32)">
+            <summary>
+            View that shows success message and allows user to download file or navigate back to MyDocuments.
+            </summary>
+            <remarks>This method displays a link that invokes the <see cref="M:SmartDocs.Controllers.SmartPPAController.Download(int)"/> method.</remarks>
+            <param name="id">The id of the newly generated <see cref="T:SmartDocs.Models.SmartPPA"/></param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.Edit(System.Int32)">
+            <summary>
+            GET: SmartPPA/Edit?id="" 
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to edit.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.Edit(System.Int32,SmartDocs.Models.ViewModels.PPAFormViewModel)">
+            <summary>
+            POST: SmartPPA/Edit?=""
+            </summary>
+            <param name="id">The identifier for the <see cref="T:SmartDocs.Models.SmartPPA"/> to be edited.</param>
+            <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.Delete(System.Nullable{System.Int32})">
+            <summary>
+            Shows the view to confirm deletion of a <see cref="T:SmartDocs.Models.SmartPPA"/>.
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.DeleteConfirmed(System.Int32)">
+            <summary>
+            Deletes <see cref="T:SmartDocs.Models.SmartPPA"/> with the provided ID.
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to be deleted.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.SmartPPAExists(System.Int32)">
+            <summary>
+            Determines if a <see cref="T:SmartDocs.Models.SmartPPA"/> with a given id exists in the repo.
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.GetJobDescriptionViewComponent(System.Int32)">
+            <summary>
+            Gets the <see cref="T:SmartDocs.ViewComponents.JobDescriptionCategoryListViewComponent"/> for a specified JobId.
+            </summary>
+            <param name="jobId">The identifier of a <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPPAController.NotAuthorized">
+            <summary>
+            View that is returned when a user attempts an action for which they are not authorized.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="T:SmartDocs.Controllers.SmartUsersController">
+            <summary>
+            Controller for <see cref="T:SmartDocs.Models.SmartUser"/> interactions
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Controllers.SmartUsersController"/> class.
+            </summary>
+            <param name="repo">A <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.Index(System.String)">
+            <summary>
+            GET: SmartUsers/Index
+            </summary>
+            <remarks>
+            This is an admin only view.
+            </remarks>
+            <param name="searchString">The search string that limits the list.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> list of users in the repo.</returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.Create">
+            <summary>
+            GET: SmartUsers/Create
+            </summary>
+            <remarks>
+            View that allows Admin to create a new SmartUser
+            </remarks>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.Create(SmartDocs.Models.SmartUser)">
+            <summary>
+            POST: SmartUsers/Create
+            </summary>
+            <param name="smartUser">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.SmartUser"/></param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.Edit(System.Nullable{System.Int32})">
+            <summary>
+            GET: SmartUsers/Edit?id=""
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/></param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.Edit(System.Int32,SmartDocs.Models.SmartUser)">
+            <summary>
+            POST: SmartUsers/Edit?id=""
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/> to edit.</param>
+            <param name="smartUser">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.SmartUser"/> object.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.Delete(System.Nullable{System.Int32})">
+            <summary>
+            GET: SmartUsers/Delete?id=""
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.DeleteConfirmed(System.Int32)">
+            <summary>
+            POST: SmartUsers/Delete?id=""
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/> to be deleted.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartUsersController.SmartUserExists(System.Int32)">
+            <summary>
+            Determines if a <see cref="T:SmartDocs.Models.SmartUser"/> exists in the repo.
+            </summary>
+            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartDocs.Models.IDocumentRepository">
+            <summary>
+            Interface that encompasses Database Interactions
+            </summary>
+        </member>
+        <member name="T:SmartDocs.Models.JobDescription">
+            <summary>
+            Class that manages Job Description interactions
+            </summary>
+            <remarks>
+            This class expands the data contained in a <see cref="T:SmartDocs.Models.SmartJob"/>
+            </remarks>
+        </member>
+        <member name="P:SmartDocs.Models.JobDescription.SmartJobId">
+            <summary>
+            Gets or sets the identifier for the associated <see cref="T:SmartDocs.Models.SmartJob"/>.
+            </summary>
+            <value>
+            The smart job identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.JobDescription.ClassTitle">
+            <summary>
+            Gets or sets the Class Title.
+            </summary>
+            <value>
+            The class title.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.JobDescription.WorkingTitle">
+            <summary>
+            Gets or sets the Working Title.
+            </summary>
+            <value>
+            The working title.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.JobDescription.Grade">
+            <summary>
+            Gets or sets the Job Grade.
+            </summary>
+            <remarks>
+            The Job Grade is the PG Personnel code for class of the position, i.e "L01"
+            </remarks>
+            <value>
+            The grade.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.JobDescription.WorkingHours">
+            <summary>
+            Gets or sets the working hours for the position.
+            </summary>
+            <value>
+            The working hours.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.JobDescription.Rank">
+            <summary>
+            Gets or sets the Rank associated with the position.
+            </summary>
+            <value>
+            The rank.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.JobDescription.Categories">
+            <summary>
+            Gets or sets the Job's Categories.
+            </summary>
+            <value>
+            The categories.
+            </value>
+            <seealso cref="T:SmartDocs.Models.Types.JobDescriptionCategory"/>
+        </member>
+        <member name="M:SmartDocs.Models.JobDescription.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.JobDescription"/> class.
+            </summary>
+            <remarks>
+            Parameterless class constructor
+            </remarks>
+        </member>
+        <member name="M:SmartDocs.Models.JobDescription.#ctor(SmartDocs.Models.SmartJob)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.JobDescription"/> class.
+            </summary>
+            <remarks>
+            Class constructor that requires a <see cref="T:SmartDocs.Models.SmartJob"/>
+            </remarks>
+            <param name="job">A <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+        </member>
+        <member name="M:SmartDocs.Models.JobDescription.#ctor(SmartDocs.Models.ViewModels.JobDescriptionViewModel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.JobDescription"/> class.
+            </summary>
+            <remarks>
+            This method is used to create a Job Description Object from the form data in a <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/>
+            </remarks>
+            <param name="formData">The <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/>.</param>
+        </member>
+        <member name="M:SmartDocs.Models.JobDescription.GetOverallScore">
+            <summary>
+            Gets the overall score.
+            </summary>
+            <remarks>
+            This method calculates the overall numerical score based on the Categories property.
+            </remarks>
+            <returns>A double representing the Calculated overall rating</returns>
+        </member>
+        <member name="M:SmartDocs.Models.JobDescription.GetOverallRating">
+            <summary>
+            Gets the overall rating.
+            </summary>
+            <remarks>
+            This method calculates the overall rating based on the scores in the Job Description's Categories property
+            </remarks>
+            <returns>A string representing the associated rating keyword.</returns>
+        </member>
+        <member name="M:SmartDocs.Models.JobDescription.WriteJobDescriptionToXml(System.String)">
+            <summary>
+            Writes the job description to an external XML file.
+            </summary>
+            <remarks>
+            This method writes an external XML file. For writing XML to the XML data column of a <see cref="T:SmartDocs.Models.SmartJob"/>, 
+            see <see cref="M:SmartDocs.Models.JobDescription.JobDescriptionToXml"/>
+            </remarks>
+            <param name="filePath">The file path to write the resulting file.</param>
+        </member>
+        <member name="M:SmartDocs.Models.JobDescription.JobDescriptionToXml">
+            <summary>
+            Writes the Job Description data to an XML XElement.
+            </summary>
+            <returns>An <see cref="T:System.Xml.Linq.XElement"/></returns>
+        </member>
+        <member name="T:SmartDocs.Models.OrganizationComponent">
+            <summary>
+            Entity Class that represents an Organizational Component
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.OrganizationComponent.ComponentId">
+            <summary>
+            Gets or sets the component identifier.
+            </summary>
+            <value>
+            The component identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.OrganizationComponent.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.OrganizationComponent.Address">
+            <summary>
+            Gets or sets the address.
+            </summary>
+            <value>
+            The address.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.OrganizationComponent.DepartmentCode">
+            <summary>
+            Gets or sets the department code.
+            </summary>
+            <value>
+            The department code.
+            </value>
+        </member>
         <member name="M:SmartDocs.Models.SmartDocContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{SmartDocs.Models.SmartDocContext})">
             <summary>
             Initializes a new instance of the <see cref="T:SmartPPA.Models.SmartDocContext"/> class.
@@ -265,6 +586,1363 @@
             Parameterless Constructor
             </remarks>
         </member>
+        <member name="P:SmartDocs.Models.SmartDocContext.Users">
+            <summary>
+            Gets or sets the Users.
+            </summary>
+            <value>
+            The users.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocContext.Templates">
+            <summary>
+            Gets or sets the Templates.
+            </summary>
+            <value>
+            The templates.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocContext.Jobs">
+            <summary>
+            Gets or sets the Jobs.
+            </summary>
+            <value>
+            The jobs.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocContext.PPAs">
+            <summary>
+            Gets or sets the PPAs.
+            </summary>
+            <value>
+            The pp as.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocContext.Components">
+            <summary>
+            Gets or sets the Components.
+            </summary>
+            <value>
+            The components.
+            </value>
+        </member>
+        <member name="T:SmartDocs.Models.SmartDocumentRepository">
+            <summary>
+            Repository that implements DB interactions
+            </summary>
+            <seealso cref="T:SmartDocs.Models.IDocumentRepository" />
+        </member>
+        <member name="F:SmartDocs.Models.SmartDocumentRepository.currentUser">
+            <summary>
+            The current <see cref="T:SmartDocs.Models.SmartUser"/>
+            </summary>
+            <remarks>
+            This is assigned in the Constructor
+            </remarks>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.#ctor(SmartDocs.Models.SmartDocContext,SmartDocs.Models.UserResolverService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartDocumentRepository"/> class.
+            </summary>
+            <param name="ctx">An injected <see cref="T:SmartDocs.Models.SmartDocContext"/> database context.</param>
+            <param name="userService">An injected <see cref="T:SmartDocs.Models.UserResolverService"/>.</param>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.Users">
+            <summary>
+            Gets the Users.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartUser"/>s.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.Templates">
+            <summary>
+            Gets the Templates.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartTemplate"/>s.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.Jobs">
+            <summary>
+            Gets the Jobs.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartJob"/>s.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.PPAs">
+            <summary>
+            Gets the PPAs.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartPPA"/>s.
+            </value>
+            <remarks>
+            This list will return only the PPA records that belong to the Repo's currentUser
+            </remarks>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.Components">
+            <summary>
+            Gets the Components.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.OrganizationComponent"/>s.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveJob(SmartDocs.Models.SmartJob)">
+            <summary>
+            Saves/Updates the <see cref="T:SmartDocs.Models.SmartJob"/>.
+            </summary>
+            <remarks>
+            If this method is passed a SmartJob with a non-zero SmartJob.JobId, it will update the corresponding SmartJob in the repo. If this method is passed a SmartJob with a SmartJob.JobId = 0, then it will create a new SmartJob in the repo.
+            </remarks>
+            <param name="job">The <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.RemoveJob(SmartDocs.Models.SmartJob)">
+            <summary>
+            Removes the <see cref="T:SmartDocs.Models.RemoveJob"/> from the repo.
+            </summary>
+            <param name="job">The <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveTemplate(SmartDocs.Models.SmartTemplate)">
+            <summary>
+            Saves/Updates a <see cref="T:SmartDocs.Models.SmartTemplate"/>
+            </summary>
+            <remarks>
+            If this method is passed a SmartTemplate with a non-zero SmartTemplate.TemplateId, it will update the corresponding SmartTemplate in the repo. If this method is passed a SmartJob with a SmartTemplate.TemplateId = 0, then it will create a new SmartTemplate in the repo.
+            </remarks>
+            <param name="template">A <see cref="T:SmartDocs.Models.SmartTemplate"/> to add/update.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveSmartPPA(SmartDocs.Models.SmartPPA)">
+            <summary>
+            Saves/Updates a <see cref="T:SmartDocs.Models.SmartPPA"/>
+            </summary>
+            <remarks>
+            If this method is passed a SmartPPA with a non-zero SmartPPA.PPAId, it will update the corresponding SmartPPA in the repo. If this method is passed a SmartJob with a SmartPPA.PPAId = 0, then it will create a new SmartPPA in the repo.
+            </remarks>
+            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/> to add/update.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.RemoveSmartPPA(SmartDocs.Models.SmartPPA)">
+            <summary>
+            Removes a <see cref="T:SmartDocs.Models.SmartPPA"/>.
+            </summary>
+            <param name="ppa">The <see cref="T:SmartDocs.Models.SmartPPA"/> to remove.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveUser(SmartDocs.Models.SmartUser)">
+            <summary>
+            Saves/Updates a <see cref="T:SmartDocs.Models.SmartUser"/> the user.
+            </summary>
+            <remarks>
+            If this method is passed a SmartUser with a non-zero SmartUser.UserId, it will update the corresponding SmartUser in the repo. If this method is passed a SmartUser with a SmartUser.UserId = 0, then it will create a new SmartUser in the repo.
+            </remarks>
+            <param name="user">The <see cref="T:SmartDocs.Models.SmartUser"/> to be added/updated.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.RemoveUser(SmartDocs.Models.SmartUser)">
+            <summary>
+            Removes a <see cref="T:SmartDocs.Models.SmartUser"/>.
+            </summary>
+            <param name="user">The <see cref="T:SmartDocs.Models.SmartUser"/> to remove.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveComponent(SmartDocs.Models.OrganizationComponent)">
+            <summary>
+            Saves/Updates a <see cref="T:SmartDocs.Models.OrganizationComponent"/> the user.
+            </summary>
+            <remarks>
+            If this method is passed a SmartUser with a non-zero OrganizationComponent.ComponentId, it will update the corresponding OrganizationComponent in the repo. If this method is passed a OrganizationComponent with a OrganizationComponent.ComponentId = 0, then it will create a new OrganizationComponent in the repo.
+            </remarks>
+            <param name="component">The <see cref="T:SmartDocs.Models.OrganizationComponent"/> to be added/updated.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.RemoveComponent(SmartDocs.Models.OrganizationComponent)">
+            <summary>
+            Removes a <see cref="T:SmartDocs.Models.OrganizationComponent"/>.
+            </summary>
+            <param name="component">The <see cref="T:SmartDocs.Models.OrganizationComponent"/> to remove.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.GetCurrentUser">
+            <summary>
+            Gets the current user.
+            </summary>
+            <returns>A <see cref="T:SmartDocs.Models.SmartUser"/></returns>
+        </member>
+        <member name="T:SmartDocs.Models.SmartJob">
+            <summary>
+            The SmartJob Entity
+            </summary>
+            <remarks>
+            This class represents a DB Job Description object
+            </remarks>
+        </member>
+        <member name="P:SmartDocs.Models.SmartJob.JobId">
+            <summary>
+            Gets or sets the SmartJob identifier.
+            </summary>
+            <value>
+            The SmartJob identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartJob.JobName">
+            <summary>
+            Gets or sets the name of the SmartJob.
+            </summary>
+            <value>
+            The name of the SmartJob.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartJob.JobData">
+            <summary>
+            Gets or sets the Job XML data column.
+            </summary>
+            <value>
+            <remarks>
+            The XML formatting for this column is set in <see cref="M:SmartDocs.Models.JobDescription.JobDescriptionToXml"/>
+            </remarks>
+            The SmartJob Data in XML Format.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartJob.JobDataXml">
+            <summary>
+            Gets or sets the job data XML via XElement.
+            </summary>
+            <value>
+            The job data XML in an XElement Object.
+            </value>
+        </member>
+        <member name="T:SmartDocs.Models.SmartPPA">
+            <summary>
+            Class that represents the data in a PPA document stored in the DB
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.PPAId">
+            <summary>
+            Gets or sets the SmartPPA identifier.
+            </summary>
+            <value>
+            The SmartPPA identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.Created">
+            <summary>
+            Gets or sets the Date the record was created.
+            </summary>
+            <value>
+            The date the record was created.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.Modified">
+            <summary>
+            Gets or sets the date the record was last modified.
+            </summary>
+            <value>
+            The date the record was last modified.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.Owner">
+            <summary>
+            Gets or sets the SmartUser that authored the record.
+            </summary>
+            <value>
+            The SmartUser listed as the record's author.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.Template">
+            <summary>
+            Gets or sets the <see cref="T:SmartDocs.Models.SmartTemplate"/> on which the document is built.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartTemplate"/> template.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.EmployeeFirstName">
+            <summary>
+            Gets or sets the first name of the employee who is the subject of the PPA record.
+            </summary>
+            <value>
+            The first name of the employee.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.EmployeeLastName">
+            <summary>
+            Gets or sets the last name of the employee.
+            </summary>
+            <value>
+            The last name of the employee.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.DepartmentIdNumber">
+            <summary>
+            Gets or sets the PGPD Department ID number for the subject employee.
+            </summary>
+            <value>
+            The department identifier number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.PayrollIdNumber">
+            <summary>
+            Gets or sets the payroll identifier number for the subject employee.
+            </summary>
+            <value>
+            The payroll identifier number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.PositionNumber">
+            <summary>
+            Gets or sets the subject employee's position number.
+            </summary>
+            <value>
+            The position number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.DepartmentDivision">
+            <summary>
+            Gets or sets the subject employee's Department/Division.
+            </summary>
+            <value>
+            The subject employee's Department/Division.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.DepartmentDivisionCode">
+            <summary>
+            Gets or sets the department division code.
+            </summary>
+            <value>
+            The department division code.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.WorkplaceAddress">
+            <summary>
+            Gets or sets the subject employee's workplace address.
+            </summary>
+            <value>
+            The workplace address of the subject employee.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.SupervisedByEmployee">
+            <summary>
+            Gets or sets the name of any component that is supervised by the subject employee.
+            </summary>
+            <value>
+            The name of any component that the subject employee supervises.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.StartDate">
+            <summary>
+            Gets or sets the Start Date for the rating period documented in the PPA.
+            </summary>
+            <value>
+            The rating period start date.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.EndDate">
+            <summary>
+            Gets or sets the End Date for the rating period documented in the PPA.
+            </summary>
+            <value>
+            The end date.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.AssessmentComments">
+            <summary>
+            Gets or sets the supervisor's assessment comments.
+            </summary>
+            <value>
+            The assessment comments.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.RecommendationComments">
+            <summary>
+            Gets or sets the supervisor's recommendation comments.
+            </summary>
+            <value>
+            The recommendation comments.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_1">
+            <summary>
+            Gets or sets the score assigned to Job Description Category 1.
+            </summary>
+            <value>
+            The score assigned to Job Description Category 1.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_2">
+            <summary>
+            Gets or sets the score assigned to Job Description Category 2.
+            </summary>
+            <value>
+            The score assigned to Job Description Category 2.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_3">
+            <summary>
+            Gets or sets the score assigned to Job Description Category 3.
+            </summary>
+            <value>
+            The score assigned to Job Description Category 3.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_4">
+            <summary>
+            Gets or sets the score assigned to Job Description Category 4.
+            </summary>
+            <value>
+            The score assigned to Job Description Category 4.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_5">
+            <summary>
+            Gets or sets the score assigned to Job Description Category 5.
+            </summary>
+            <value>
+            The score assigned to Job Description Category 5.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_6">
+            <summary>
+            Gets or sets the score assigned to Job Description Category 6.
+            </summary>
+            <value>
+            The score assigned to Job Description Category 6.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.Job">
+            <summary>
+            Gets or sets the <see cref="T:SmartDocs.Models.SmartJob"/> associated with this PPA record.
+            </summary>
+            <value>
+            The associated <see cref="T:SmartDocs.Models.SmartJob"/>.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartPPA.DocumentName">
+            <summary>
+            Gets or sets the name of the document.
+            </summary>
+            <value>
+            The name of the document.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.SmartPPA.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartPPA"/> class.
+            </summary>
+        </member>
+        <member name="T:SmartDocs.Models.SmartPPAGenerator">
+            <summary>
+            Class that handles repo CRUD and Word Document Assembly for the SmartPPA document type
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartPPAGenerator._repository">
+            <summary>
+            The injected repository
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartPPAGenerator.Fields">
+            <summary>
+            A List of <see cref="T:SmartDocs.Models.Types.MappedField"/> that represent form data bookmarks in the template document
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartPPAGenerator.formData">
+            <summary>
+            The form data mapped to Key-Value, because I was too lazy to re-write the code that worked for testing
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartPPAGenerator.job">
+            <summary>
+            The <see cref="T:SmartDocs.Models.JobDescription"/> associated with this SmartPPA instance.
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartPPAGenerator.dbPPA">
+            <summary>
+            The <see cref="T:SmartDocs.Models.SmartPPA"/> generated from the Database instance.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartPPAGenerator.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartPPAGenerator"/> class.
+            </summary>
+            <param name="repo">An injected <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartPPAGenerator.ReDownloadPPA(System.Int32)">
+            <summary>
+            Method that re-assembles a SmartPPA from the database
+            </summary>
+            <param name="PPAid">The Identifier of the desired <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartPPAGenerator.SeedFormInfo(SmartDocs.Models.ViewModels.PPAFormViewModel)">
+            <summary>
+            Seeds the form information from a PPAFormViewModel into a Dictionary that can then be used in the field mapping.
+            </summary>
+            <param name="form">A <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartPPAGenerator.GenerateDocument">
+            <summary>
+            Generates the Document by assembling the Template Datastream, PPA Form data, and Job Description data.
+            </summary>
+            <remarks>
+            As of this version, the SmartPPAGenerator is implemented poorly, so the class must be constructed and then 
+            the <see cref="M:SmartDocs.Models.SmartPPAGenerator.SeedFormInfo(PPAFormViewModel)"/> method must be called before this method is called. Otherwise, the 
+            <see cref="P:SmartDocs.Models.SmartPPAGenerator.formData"/> property will be empty, and this method will fail.
+            </remarks>
+            <returns>A <see cref="T:System.IO.MemoryStream"/> of the assembled SmartPPA.</returns>
+        </member>
+        <member name="M:SmartDocs.Models.SmartPPAGenerator.initializeFieldMap">
+            <summary>
+            Initializes the field map.
+            </summary>
+            <remarks>
+            The template document contains several tables with indexed cells into which specific data will be injected.
+            The <see cref="T:SmartDocs.Models.Types.MappedField"/> encapsulates the Name of the field and the Table, Row, and Cell index.
+            </remarks>
+        </member>
+        <member name="M:SmartDocs.Models.SmartPPAGenerator.WriteTemplate">
+            <summary>
+            Writes a new template to the Database.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartPPAGenerator.OverwriteTemplate">
+            <summary>
+            Overwrites the first template in the database.
+            </summary>
+            <remarks>
+            SmartDocs v1.x only uses the SmartPPA template, which must be index 1.
+            </remarks>
+        </member>
+        <member name="T:SmartDocs.Models.SmartTemplate">
+            <summary>
+            Class that represents the Template documents in the database
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartTemplate.TemplateId">
+            <summary>
+            Gets or sets the Template identifier.
+            </summary>
+            <value>
+            The identifier for the Template.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartTemplate.DocumentName">
+            <summary>
+            Gets or sets the name of the Template Document.
+            </summary>
+            <value>
+            The name of the template document.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartTemplate.DataStream">
+            <summary>
+            Gets or sets the serialized data stream of the template document.
+            </summary>
+            <value>
+            The serialized data stream of the template document.
+            </value>
+        </member>
+        <member name="T:SmartDocs.Models.SmartUser">
+            <summary>
+            Class that represents a SmartDocs application user in the database
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartUser.UserId">
+            <summary>
+            Gets or sets the User identifier.
+            </summary>
+            <value>
+            The User's identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartUser.BlueDeckId">
+            <summary>
+            Gets or sets the user's BlueDeck identifier.
+            </summary>
+            <value>
+            The SmartUser's associated BlueDeck user id
+            </value>
+            <remarks>
+            Not implemented as of SmartDocs v1.0
+            </remarks>
+        </member>
+        <member name="P:SmartDocs.Models.SmartUser.LogonName">
+            <summary>
+            Gets or sets the User's Logon name
+            </summary>
+            <value>
+            The user's logon name
+            </value>
+            <remarks>
+            This is the User's LDAP username
+            </remarks>
+        </member>
+        <member name="P:SmartDocs.Models.SmartUser.DisplayName">
+            <summary>
+            Gets or sets the user's in-application display name.
+            </summary>
+            <value>
+            The user's in-application display name.
+            </value>
+        </member>
+        <member name="T:SmartDocs.Models.Types.DocumentListViewModelItem">
+            <summary>
+            Class that is used to in views that show a list of Documents in the repo
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.Types.DocumentListViewModelItem.DocumentId">
+            <summary>
+            Gets or sets the document identifier.
+            </summary>
+            <value>
+            The document identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.DocumentListViewModelItem.DocumentName">
+            <summary>
+            Gets or sets the name of the document.
+            </summary>
+            <value>
+            The name of the document.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.DocumentListViewModelItem.DocumentType">
+            <summary>
+            Gets or sets the type of the document.
+            </summary>
+            <value>
+            The type of the document.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.DocumentListViewModelItem.CreatedDate">
+            <summary>
+            Gets or sets the date the document was created.
+            </summary>
+            <value>
+            The created date.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.Types.DocumentListViewModelItem.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.DocumentListViewModelItem"/> class.
+            <remarks>
+            Parameterless constructor
+            </remarks>
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.Types.DocumentListViewModelItem.#ctor(SmartDocs.Models.SmartPPA)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.DocumentListViewModelItem"/> class.
+            </summary>
+            <remarks>
+            Builds a viewmodel from an existing <see cref="T:SmartDocs.Models.SmartPPA"/>
+            </remarks>
+            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+        </member>
+        <member name="T:SmartDocs.Models.Types.JobDescriptionCategory">
+            <summary>
+            A class used to build Categories for a Job Description
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionCategory.Letter">
+            <summary>
+            Gets or sets the Category's letter heading.
+            </summary>
+            <value>
+            The letter.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionCategory.Weight">
+            <summary>
+            Gets or sets the Weight percentage of the category.
+            </summary>
+            <value>
+            The weight.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionCategory.Title">
+            <summary>
+            Gets or sets the category's title.
+            </summary>
+            <value>
+            The title.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionCategory.SelectedScore">
+            <summary>
+            Gets or sets the category rating.
+            </summary>
+            <value>
+            The selected score.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionCategory.Scores">
+            <summary>
+            Gets or sets the array of possible scores.
+            </summary>
+            <value>
+            The scores.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionCategory.PositionDescriptionItems">
+            <summary>
+            Gets or sets the position description items.
+            </summary>
+            <value>
+            The position description items.
+            </value>
+            <seealso cref="T:SmartDocs.Models.Types.PositionDescriptionItem"/>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionCategory.PerformanceStandardItems">
+            <summary>
+            Gets or sets the performance standard items.
+            </summary>
+            <value>
+            The performance standard items.
+            </value>
+            <seealso cref="T:SmartDocs.Models.Types.PerformanceStandardItem"/>
+        </member>
+        <member name="M:SmartDocs.Models.Types.JobDescriptionCategory.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.Types.JobDescriptionCategory"/> class.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.Types.JobDescriptionCategory.GetCategoryRatedScore">
+            <summary>
+            Gets the category rated score.
+            </summary>
+            <remarks>
+            This calculates based on the Category's weight and the selected rating
+            </remarks>
+            <returns>A double representing the category's rated score</returns>
+        </member>
+        <member name="M:SmartDocs.Models.Types.JobDescriptionCategory.GetCategoryHeaderRow">
+            <summary>
+            Gets a category header row.
+            </summary>
+            <remarks>
+            This method is used in Document assembly to create the first row for a category on the job description page
+            </remarks>
+            <returns>An assembled <see cref="T:DocumentFormat.OpenXml.Wordprocessing.TableRow"/></returns>
+        </member>
+        <member name="M:SmartDocs.Models.Types.JobDescriptionCategory.GenerateDetailsRow">
+            <summary>
+            Gets a category header row.
+            </summary>
+            <remarks>
+            This method is used in Document assembly to create the details row for a category on the job description page
+            </remarks>
+            <returns>An assembled <see cref="T:DocumentFormat.OpenXml.Wordprocessing.TableRow"/></returns>
+        </member>
+        <member name="T:SmartDocs.Models.Types.JobDescriptionListItem">
+            <summary>
+            Class used in Views that display a list of Job Descripitons
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionListItem.JobId">
+            <summary>
+            Gets or sets the identifier of the item.
+            </summary>
+            <value>
+            The job identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionListItem.Rank">
+            <summary>
+            Gets or sets the rank.
+            </summary>
+            <value>
+            The rank.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionListItem.DisplayName">
+            <summary>
+            Gets or sets the display name.
+            </summary>
+            <value>
+            The display name.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.JobDescriptionListItem.Grade">
+            <summary>
+            Gets or sets the grade.
+            </summary>
+            <value>
+            The grade.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.Types.JobDescriptionListItem.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.Types.JobDescriptionListItem"/> class.
+            </summary>
+            <remarks>
+            Parameterless constructor
+            </remarks>
+        </member>
+        <member name="M:SmartDocs.Models.Types.JobDescriptionListItem.#ctor(SmartDocs.Models.SmartJob)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.Types.JobDescriptionListItem"/> class.
+            </summary>
+            <remarks>
+            Constructor that takes a <see cref="T:SmartDocs.Models.SmartJob"/> parameter
+            </remarks>
+            <param name="dBJob">A <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+        </member>
+        <member name="T:SmartDocs.Models.Types.MappedField">
+            <summary>
+            Class used to map Table/Cell index and value
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.Types.MappedField.TableIndex">
+            <summary>
+            Gets or sets the index of the table.
+            </summary>
+            <remarks>
+            This is the index of the table in the Template document
+            </remarks>
+            <value>
+            The index of the table.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.MappedField.RowIndex">
+            <summary>
+            Gets or sets the index of the row.
+            </summary>
+            <value>
+            The index of the row.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.MappedField.CellIndex">
+            <summary>
+            Gets or sets the index of the cell.
+            </summary>
+            <value>
+            The index of the cell.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.MappedField.FieldName">
+            <summary>
+            Gets or sets the name of the field.
+            </summary>
+            <value>
+            The name of the field.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.Types.MappedField.Write(DocumentFormat.OpenXml.Wordprocessing.Table,System.String)">
+            <summary>
+            Writes the data in the mapped field to the document.
+            </summary>
+            <param name="table">
+            The target <see cref="T:DocumentFormat.OpenXml.Wordprocessing.Table"/>. 
+            This parameter is required because the Table index depends on whether the MappedField is in a Header/Footer or in the document's mainpart, which means that the TableIndex is not
+            sufficient to target the proper table. 
+            </param>
+            <param name="newText">The new text.</param>
+        </member>
+        <member name="T:SmartDocs.Models.Types.PerformanceStandardItem">
+            <summary>
+            Class used to populate collection of Performance Standards in a Job Description Category
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.Types.PerformanceStandardItem.Initial">
+            <summary>
+            Gets or sets the initial.
+            </summary>
+            <value>
+            The initial.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.PerformanceStandardItem.Detail">
+            <summary>
+            Gets or sets the detail.
+            </summary>
+            <value>
+            The detail.
+            </value>
+        </member>
+        <member name="T:SmartDocs.Models.Types.PositionDescriptionItem">
+            <summary>
+            Class used to populate lists of Position details in a Job Description category
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.Types.PositionDescriptionItem.Detail">
+            <summary>
+            Gets or sets the details.
+            </summary>
+            <value>
+            The detail.
+            </value>
+        </member>
+        <member name="T:SmartDocs.Models.Types.UserListItem">
+            <summary>
+            Class used to populate a dropdown list of <see cref="T:SmartDocs.Models.SmartUser"/>
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.Types.UserListItem.UserId">
+            <summary>
+            Gets or sets the user identifier.
+            </summary>
+            <value>
+            The user identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.Types.UserListItem.DisplayName">
+            <summary>
+            Gets or sets the display name.
+            </summary>
+            <value>
+            The display name.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.Types.UserListItem.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.Types.UserListItem"/> class.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.Types.UserListItem.#ctor(SmartDocs.Models.SmartUser)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.Types.UserListItem"/> class.
+            </summary>
+            <remarks>
+            Constructor that takes a <see cref="T:SmartDocs.Models.SmartUser"/> parameter.
+            </remarks>
+            <param name="user">The user.</param>
+        </member>
+        <member name="T:SmartDocs.Models.UserResolverService">
+            <summary>
+            Class that extracts the User's LDAP name from the HttpContext
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.UserResolverService.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.UserResolverService"/> class.
+            </summary>
+            <param name="httpContext">The HTTP context.</param>
+        </member>
+        <member name="M:SmartDocs.Models.UserResolverService.GetUserName">
+            <summary>
+            Extracts the User's LDAP name from the context User.Identity.Name 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartDocs.Models.ViewModels.DocumentListViewModel">
+            <summary>
+            ViewModel that displays a list of Documents
+            </summary>    
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.DocumentListViewModel.Documents">
+            <summary>
+            Gets or sets a list of <see cref="T:SmartDocs.Models.Types.DocumentListViewModelItem"/>.
+            </summary>
+            <value>
+            The documents.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.DocumentListViewModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.Types.DocumentListViewModel"/> class.
+            </summary>
+        </member>
+        <member name="T:SmartDocs.Models.ViewModels.ErrorModel">
+            <summary>
+            Class used as a viewmodel for error pages
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.ErrorModel.RequestId">
+            <summary>
+            Gets or sets the request identifier.
+            </summary>
+            <value>
+            The request identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.ErrorModel.ShowRequestId">
+            <summary>
+            Gets a value indicating whether [show request identifier].
+            </summary>
+            <value>
+              <c>true</c> if [show request identifier]; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.ErrorModel.OnGet">
+            <summary>
+            Called when [get].
+            </summary>
+        </member>
+        <member name="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModel">
+            <summary>
+            Viewmodel to display a list of <see cref="T:SmartDocs.Models.SmartJob"/> in the repo
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionListViewModel.Jobs">
+            <summary>
+            Gets or sets an IEnumerable list of <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem"/>.
+            </summary>
+            <value>
+            The jobs.
+            </value>
+        </member>
+        <member name="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem">
+            <summary>
+            Class used to populate <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModel"/>
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem.JobId">
+            <summary>
+            Gets or sets the job identifier.
+            </summary>
+            <value>
+            The job identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem.JobName">
+            <summary>
+            Gets or sets the name of the job.
+            </summary>
+            <value>
+            The name of the job.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem.Rank">
+            <summary>
+            Gets or sets the rank.
+            </summary>
+            <value>
+            The rank.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem.Grade">
+            <summary>
+            Gets or sets the grade.
+            </summary>
+            <value>
+            The grade.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem"/> class.
+            </summary>
+            <remarks>
+            Parameterless class constructor.
+            </remarks>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem.#ctor(SmartDocs.Models.SmartJob)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem"/> class.
+            </summary>
+            <remarks>
+            Class constructor that takes a <see cref="T:SmartDocs.Models.SmartJob"/> parameter
+            </remarks>
+            <param name="dbJob">The <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+        </member>
+        <member name="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel">
+            <summary>
+            View Model for Job Description screens: Create/Edit
+            </summary>
+            <remarks>
+            This View Model displays a single Job Description
+            </remarks>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionViewModel.JobId">
+            <summary>
+            Gets or sets the Job Description Identifier.
+            </summary>
+            <value>
+            The job identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionViewModel.WorkingTitle">
+            <summary>
+            Gets or sets the Job's Working Title.
+            </summary>
+            <remarks>
+            Working title is "Patrol Officer" or "NED Investigator," which is distinct from the Jobs' Rank or Class Title
+            </remarks>
+            <value>
+            The working title.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionViewModel.Grade">
+            <summary>
+            Gets or sets the Grade for the Job Description.
+            </summary>
+            <remarks>
+            The grade is the PG Classified Position designation, such as "L01" or "P10"
+            </remarks>
+            <value>
+            The grade.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionViewModel.WorkingHours">
+            <summary>
+            Gets or sets the working hours for the specified Job.
+            </summary>
+            <remarks>
+            The vast majority of the Jobs have "Varied" working hours. In the event a job has specific hours,
+            they should be entered here in plaintext. They will be displayed on generated documents exactly as entered.
+            </remarks>
+            <value>
+            The working hours.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionViewModel.Rank">
+            <summary>
+            Gets or sets the rank associated with the Job.
+            </summary>
+            <value>
+            The rank.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionViewModel.FilePath">
+            <summary>
+            Gets or sets the file path.
+            </summary>
+            <remarks>
+            This was deprecated prior to 1.0, when persistance was moved to SQL Server
+            </remarks>
+            <value>
+            The file path.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionViewModel.Categories">
+            <summary>
+            Gets or sets the list of categories in the Job Description.
+            </summary>
+            <remarks>
+            This is a list of <see cref="T:SmartDocs.Models.Types.JobDescriptionCategory"/>
+            </remarks>
+            <value>
+            The categories.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.JobDescriptionViewModel.Ranks">
+            <summary>
+            Gets or sets the ranks.
+            </summary>
+            <remarks>
+            This list is used to populate a Rank selection drop-down list on the View
+            </remarks>
+            <value>
+            The ranks.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.JobDescriptionViewModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/> class.
+            </summary>
+            <remarks>
+            Parameterless class constructor.
+            </remarks>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.JobDescriptionViewModel.#ctor(SmartDocs.Models.SmartJob)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/> class.
+            </summary>
+            <remarks>
+            Class Constructor that takes a <see cref="T:SmartDocs.Models.SmartJob"/> parameter.
+            </remarks>
+            <param name="job">A <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.JobDescriptionViewModel.DefaultRankList">
+            <summary>
+            Creates a default rank list.
+            </summary>
+            <returns>A list of string Rank Names.</returns>
+        </member>
+        <member name="T:SmartDocs.Models.ViewModels.PPAFormViewModel">
+            <summary>
+            The View Model used to Create/Edit a PPA Document
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.PPAId">
+            <summary>
+            Gets or sets the ppa identifier.
+            </summary>
+            <remarks>
+            This is the Id of the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            </remarks>
+            <value>
+            The ppa identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.FirstName">
+            <summary>
+            Gets or sets the First Name of the employee who is the subject of the PPA.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.LastName">
+            <summary>
+            Gets or sets the Last Name of the employee who is the subject of the PPA.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.DepartmentIdNumber">
+            <summary>
+            Gets or sets the PGPD Id Number (Badge Number) of the employee who is the subject of the PPA
+            </summary>
+            <value>
+            The department identifier number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.PayrollIdNumber">
+            <summary>
+            Gets or sets the Payroll Identifier Number (EIS) of the employee who is the subject of the PPA.
+            </summary>
+            <value>
+            The payroll identifier number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.PositionNumber">
+            <summary>
+            Gets or sets the Position Number of the employee who is the subject of the PPA.
+            </summary>
+            <value>
+            The position number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.DepartmentDivision">
+            <summary>
+            Gets or sets the Department or Division to which the subject employee is assigned.
+            </summary>
+            <value>
+            The department division.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.DepartmentDivisionCode">
+            <summary>
+            Gets or sets the Code for the Department or Division to which the subject employee is assigned.
+            </summary>
+            <value>
+            The department division code.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.WorkPlaceAddress">
+            <summary>
+            Gets or sets the subject employee's work place address.
+            </summary>
+            <value>
+            The work place address.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.SupervisedByEmployee">
+            <summary>
+            Gets or sets the component for which the subject employee is a supervisor.
+            </summary>
+            <value>
+            The supervised by employee.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.StartDate">
+            <summary>
+            Gets or sets the Start Date for the rating period of the PPA.
+            </summary>
+            <value>
+            The start date.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.EndDate">
+            <summary>
+            Gets or sets the End Date for the rating period of the PPA.
+            </summary>
+            <value>
+            The end date.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.JobId">
+            <summary>
+            Gets or sets the identifier for the <see cref="T:SmartDocs.Models.SmartJob"/> associated with the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            </summary>
+            <value>
+            The job identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.job">
+            <summary>
+            Gets or sets the <see cref="T:SmartDocs.Models.JobDescription"/> associated with the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            </summary>
+            <value>
+            The job.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.AuthorUserId">
+            <summary>
+            Gets or sets the id of the <see cref="T:SmartDocs.Models.SmartUser"/> who is the author of the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            </summary>
+            <value>
+            The author user identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.Assessment">
+            <summary>
+            Gets or sets the Assessment narrative field text.
+            </summary>
+            <value>
+            The assessment.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.Recommendation">
+            <summary>
+            Gets or sets the Recommendation narrative field text.
+            </summary>
+            <value>
+            The recommendation.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.Categories">
+            <summary>
+            Gets or sets the list of categories associated with the Job Description for the PPA.
+            </summary>
+            <remarks>
+            I *think* this has been deprecated, now that the VM object contains a <see cref="T:SmartDocs.Models.SmartJob"/> property.
+            As I recall, I was using this to invoke the JobDescriptionCategoryList view component, but I changed the ViewComponent to invoke directly from a
+            <see cref="T:SmartDocs.Models.JobDescription"/> instead of a List of <see cref="T:SmartDocs.Models.Types.JobDescriptionCategory"/>
+            </remarks>
+            <value>
+            The categories.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.JobList">
+            <summary>
+            Gets or sets the list of Job Descriptions available in the database.
+            </summary>
+            <remarks>
+            This builds a list of <see cref="T:SmartDocs.Models.Types.JobDescriptionListItem"/> from the available <see cref="T:SmartDocs.Models.SmartJob"/>s.
+            </remarks>
+            <value>
+            The job list.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.Components">
+            <summary>
+            Gets or sets the components.
+            </summary>
+            <remarkds>
+            This shows a list of <see cref="T:SmartDocs.Models.OrganizationComponent"/> in the database.
+            </remarkds>
+            <value>
+            The components.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.Users">
+            <summary>
+            Gets or sets the Users list.
+            </summary>
+            <remarks>
+            This assembles a List of <see cref="T:SmartDocs.Models.Types.UserListItem"/> from the available <see cref="T:SmartDocs.Models.SmartUser"/>s.
+            </remarks>
+            <value>
+            The users.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.PPAFormViewModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/> class.
+            <remarks>
+            This constructor is used when a new PPA is being created.
+            </remarks>
+            </summary>
+        </member>
         <member name="M:SmartDocs.Models.ViewModels.PPAFormViewModel.#ctor(SmartDocs.Models.SmartPPA)">
             <summary>
             Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/> class.
@@ -272,7 +1950,53 @@
             <remarks>
             This method is designed to facilitate editing an existing PPA in the Db.
             </remarks>
-            <param name="ppa">A <see cref="!:"/> </param>
+            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/></param>
+        </member>
+        <member name="T:SmartDocs.Models.ViewModels.UserIndexListViewModel">
+            <summary>
+            View Model class used to display a list of <see cref="T:SmartDocs.Models.SmartUser"/>
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.Users">
+            <summary>
+            Gets or sets the list of <see cref="T:SmartDocs.Models.SmartUser"/>.
+            </summary>
+            <value>
+            The users.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.CurrentFilter">
+            <summary>
+            Gets or sets the current filter string being applied to the list.
+            </summary>
+            <value>
+            The current filter.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.CurrentSort">
+            <summary>
+            Gets or sets the current sort string being applied to the list.
+            </summary>
+            <value>
+            The current sort.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.UserIndexListViewModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.UserIndexListViewModel"/> class.
+            </summary>
+            <remarks>
+            Parameterless class constructor
+            </remarks>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.UserIndexListViewModel.#ctor(System.Collections.Generic.IEnumerable{SmartDocs.Models.SmartUser})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.UserIndexListViewModel"/> class.
+            </summary>
+            <remarks>
+            Class constructor that requires an IEnumerable list of <see cref="T:SmartDocs.Models.SmartUser"/> as a parameter.
+            </remarks>
+            <param name="users">An IEnumerable list of <see cref="T:SmartDocs.Models.SmartUser"/>s.</param>
         </member>
         <member name="T:SmartDocs.Startup">
             <summary>
@@ -298,6 +2022,50 @@
             <param name="app">An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> object.</param>
             <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
             <param name="service">An <see cref="T:System.IServiceProvider"/> object.</param>
+        </member>
+        <member name="T:SmartDocs.ViewComponents.JobDescriptionCategoryEditorViewComponent">
+            <summary>
+            ViewComponent class that displays Job Description information to facilitate Adding/Editing a Job Description's Categories
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ViewComponent" />
+        </member>
+        <member name="M:SmartDocs.ViewComponents.JobDescriptionCategoryEditorViewComponent.InvokeAsync(System.Collections.Generic.List{SmartDocs.Models.Types.JobDescriptionCategory})">
+            <summary>
+            Builds and Returns the ViewComponent from a list of <see cref="T:SmartDocs.Models.Types.JobDescriptionCategory"/>
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartDocs.ViewComponents.JobDescriptionCategoryListViewComponent">
+            <summary>
+            ViewComponent that allows a user to assign ratings to a Job Description's categories
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ViewComponent" />
+        </member>
+        <member name="M:SmartDocs.ViewComponents.JobDescriptionCategoryListViewComponent.InvokeAsync(SmartDocs.Models.JobDescription)">
+            <summary>
+            Generates the ViewComponent from a <see cref="T:SmartDocs.Models.JobDescription"/> job.
+            </summary>
+            <param name="job"></param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> task with the ViewComponent.</returns>
+        </member>
+        <member name="T:SmartDocs.ViewComponents.UserNavBarViewComponent">
+            <summary>
+            Class that generates the Navigation Bar  ViewComponent
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ViewComponent" />
+        </member>
+        <member name="M:SmartDocs.ViewComponents.UserNavBarViewComponent.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewComponents.UserNavBarViewComponent"/> class.
+            </summary>
+            <param name="repo">An injected <see cref="T:SmartDocs.Models.IDocumentRepository"/> repository</param>
+        </member>
+        <member name="M:SmartDocs.ViewComponents.UserNavBarViewComponent.InvokeAsync">
+            <summary>
+            Invokes the Default Component
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> task with the ViewComponent.</returns>
         </member>
     </members>
 </doc>

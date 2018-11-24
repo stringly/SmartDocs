@@ -208,8 +208,7 @@ namespace SmartDocs.Models
                                     using (Stream chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
                                     {
                                         using (StreamWriter stringStream = new StreamWriter(chunkStream))
-                                        {
-                                            // TODO: Is this defaulted to the right font?
+                                        {                                            
                                             stringStream.Write($"<html>{kvp.Value}</html>");
                                         }
                                     }
