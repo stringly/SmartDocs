@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace SmartDocs.ViewComponents
 {
+    /// <summary>
+    /// ViewComponent class that displays Job Description information to facilitate Adding/Editing a Job Description's Categories
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ViewComponent" />
     public class JobDescriptionCategoryEditorViewComponent : ViewComponent
     {
+        /// <summary>
+        /// Builds and Returns the ViewComponent from a list of <see cref="T:SmartDocs.Models.Types.JobDescriptionCategory"/>
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IViewComponentResult> InvokeAsync(List<JobDescriptionCategory> list)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

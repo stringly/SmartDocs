@@ -1,44 +1,82 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.AspNetCore.Http;
 using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace SmartDocs.Models
 {
+    /// <summary>
+    /// Class that handles repo CRUD and Word Document Assembly for the SmartPPA document type
+    /// </summary>
     public class SmartPPAGenerator
     {
+        /// <summary>
+        /// The injected repository
+        /// </summary>
         private IDocumentRepository _repository;
+
+        /// <summary>
+        /// A List of <see cref="T:SmartDocs.Models.Types.MappedField"/> that represent form data bookmarks in the template document
+        /// </summary>
         private List<MappedField> Fields;
+
+        /// <summary>
+        /// The form data mapped to Key-Value, because I was too lazy to re-write the code that worked for testing
+        /// </summary>
         private Dictionary<string, string> formData;
+
+        /// <summary>
+        /// The <see cref="T:SmartDocs.Models.JobDescription"/> associated with this SmartPPA instance.
+        /// </summary>
         private JobDescription job;
+
+        /// <summary>
+        /// The <see cref="T:SmartDocs.Models.SmartPPA"/> generated from the Database instance.
+        /// </summary>
         public SmartPPA dbPPA;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartPPAGenerator"/> class.
+        /// </summary>
+        /// <param name="repo">An injected <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         public SmartPPAGenerator(IDocumentRepository repo)
         {
             _repository = repo;
+            // call the function containing the hard-coded fieldmapping for the SmartPPA template
             initializeFieldMap();
         }
-        
+
+        /// <summary>
+        /// Method that re-assembles a SmartPPA from the database
+        /// </summary>
+        /// <param name="PPAid">The Identifier of the desired <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
         public void ReDownloadPPA(int PPAid)
         {
+            // retrieve the PPA data from the repo
             SmartPPA dbPPA = _repository.PPAs.FirstOrDefault(x => x.PPAId == PPAid);
+            // use the PPAFormViewModel constructor that accepts a SmartPPA object as a parameter to 
+            // "re-create" a ViewModel object and mock data entry
             PPAFormViewModel vm = new PPAFormViewModel(dbPPA);
+            // call the SeedFormInfo method using the mocked ViewModel
+            // from this line, the process of re-assembly works exactly like it does for a newly created SmartPPA
             SeedFormInfo(vm);
         }
 
+        /// <summary>
+        /// Seeds the form information from a PPAFormViewModel into a Dictionary that can then be used in the field mapping.
+        /// </summary>
+        /// <param name="form">A <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
         public void SeedFormInfo(PPAFormViewModel form)
         {            
-
+            // create a new, empty Dict
             Dictionary<string, string> results = new Dictionary<string, string>();
-            SmartJob  dbJob = _repository.Jobs.FirstOrDefault(j => j.JobId == form.JobId);            
+            // find the SmartJob with the ID of the Job Description in the form parameter
+            SmartJob  dbJob = _repository.Jobs.FirstOrDefault(j => j.JobId == form.JobId);
+            // find the SmartUser with the ID of the Author in the form parameter
             SmartUser author = _repository.Users.FirstOrDefault(u => u.UserId == form.AuthorUserId);
             // I think this is the point I want to save the FormData XML...
             // The idea is that I can reconsitute the VM Form and re-enter here to re-create the document
@@ -66,11 +104,14 @@ namespace SmartDocs.Models
                 Template = _repository.Templates.FirstOrDefault(t => t.TemplateId == 1),
                 DocumentName = $"{form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")} Performance Appraisal.docx"
             };
+
+            // loop through the form parameter's categories and assign the selected score value to the dbPPA SmartPPA's associated category
             for (int i = 0; i < form.Categories.Count(); i++)
             {
                 dbPPA.GetType().GetProperty($"CategoryScore_{i + 1}").SetValue(dbPPA, form.Categories[i].SelectedScore);
             }
-            // writing to DB Moved to here from former place in GenerateDocument()
+            
+            // save the dbPPA
             _repository.SaveSmartPPA(dbPPA);
             job = new JobDescription(dbJob);
             for (int i = 0; i < job.Categories.Count(); i++)
@@ -122,8 +163,17 @@ namespace SmartDocs.Models
             results.Add("OverallAppraisal", job.GetOverallRating());
             formData = results;
             
-        }        
+        }
 
+        /// <summary>
+        /// Generates the Document by assembling the Template Datastream, PPA Form data, and Job Description data.
+        /// </summary>
+        /// <remarks>
+        /// As of this version, the SmartPPAGenerator is implemented poorly, so the class must be constructed and then 
+        /// the <see cref="M:SmartDocs.Models.SmartPPAGenerator.SeedFormInfo(PPAFormViewModel)"/> method must be called before this method is called. Otherwise, the 
+        /// <see cref="P:SmartDocs.Models.SmartPPAGenerator.formData"/> property will be empty, and this method will fail.
+        /// </remarks>
+        /// <returns>A <see cref="T:System.IO.MemoryStream"/> of the assembled SmartPPA.</returns>
         public MemoryStream GenerateDocument()
         {
             var mem = new MemoryStream();
@@ -203,8 +253,15 @@ namespace SmartDocs.Models
             }
             mem.Seek(0, SeekOrigin.Begin);            
             return mem;
-        }        
+        }
 
+        /// <summary>
+        /// Initializes the field map.
+        /// </summary>
+        /// <remarks>
+        /// The template document contains several tables with indexed cells into which specific data will be injected.
+        /// The <see cref="T:SmartDocs.Models.Types.MappedField"/> encapsulates the Name of the field and the Table, Row, and Cell index.
+        /// </remarks>
         private void initializeFieldMap()
         {
             Fields = new List<MappedField>
@@ -303,7 +360,9 @@ namespace SmartDocs.Models
         }
 
 
-        // TESTING /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Writes a new template to the Database.
+        /// </summary>
         public void WriteTemplate()
         {
             SmartTemplate temp = new SmartTemplate();
@@ -313,6 +372,12 @@ namespace SmartDocs.Models
             _repository.SaveTemplate(temp);
         }
 
+        /// <summary>
+        /// Overwrites the first template in the database.
+        /// </summary>
+        /// <remarks>
+        /// SmartDocs v1.x only uses the SmartPPA template, which must be index 1.
+        /// </remarks>
         public void OverwriteTemplate()
         {
             SmartTemplate temp = _repository.Templates.FirstOrDefault(x => x.TemplateId == 1);
@@ -320,37 +385,6 @@ namespace SmartDocs.Models
             byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");            
             temp.DataStream = byteArray;
             _repository.SaveTemplate(temp);
-        }
-
-        // HOLY SHIT IT WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!
-        public MemoryStream TestAltChunkInsert()
-        {
-            var mem = new MemoryStream();
-            string altChunkId = "AltChunkId1";
-            byte[] byteArray = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx");
-            mem.Write(byteArray, 0, byteArray.Length);
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
-            {
-                MainDocumentPart mainPart = wordDocument.MainDocumentPart;
-                AlternativeFormatImportPart chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html, altChunkId);
-                using (Stream chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
-                {
-                    using (StreamWriter stringStream = new StreamWriter(chunkStream))
-                    {
-                        stringStream.Write("<html><p><strong>In the merry month of June</strong></p><ul><li><strong><em>From me home I started</em></strong></li><li><strong><em>Left the girls of Tume</em></strong></li><li><strong><em>Merely brok-en hearted</em></strong></li></ul><p>Test.</p></html>");
-                    }
-                }
-                AltChunk altChunk = new AltChunk();
-                altChunk.Id = altChunkId;
-                Table table = mainPart.Document.Body.Elements<Table>().ElementAt(3);
-                TableRow row = table.Elements<TableRow>().ElementAt(1);
-                TableCell cell = row.Elements<TableCell>().ElementAt(0);
-                Paragraph p = cell.Elements<Paragraph>().First();
-                p.InsertBeforeSelf(altChunk);
-                mainPart.Document.Save();
-            }
-            mem.Seek(0, SeekOrigin.Begin);
-            return mem;
-        }
+        }                
     }
 }

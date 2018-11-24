@@ -33,10 +33,24 @@ namespace SmartDocs.Models
         /// </value>
         public string JobName { get; set; }
 
-
+        /// <summary>
+        /// Gets or sets the Job XML data column.
+        /// </summary>
+        /// <value>
+        /// <remarks>
+        /// The XML formatting for this column is set in <see cref="M:SmartDocs.Models.JobDescription.JobDescriptionToXml"/>
+        /// </remarks>
+        /// The SmartJob Data in XML Format.
+        /// </value>
         [Column(TypeName="xml")]
         public string JobData { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job data XML via XElement.
+        /// </summary>
+        /// <value>
+        /// The job data XML in an XElement Object.
+        /// </value>
         [NotMapped]
         public XElement JobDataXml {
             get { return XElement.Parse(JobData); }
