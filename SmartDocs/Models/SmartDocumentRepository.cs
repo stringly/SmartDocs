@@ -11,25 +11,17 @@ namespace SmartDocs.Models
     /// <seealso cref="T:SmartDocs.Models.IDocumentRepository" />
     public class SmartDocumentRepository : IDocumentRepository
     {
-        private SmartDocContext context;
-
-        /// <summary>
-        /// The current <see cref="T:SmartDocs.Models.SmartUser"/>
-        /// </summary>
-        /// <remarks>
-        /// This is assigned in the Constructor
-        /// </remarks>
-        public SmartUser currentUser;
-
+        private SmartDocContext context;        
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartDocumentRepository"/> class.
         /// </summary>
         /// <param name="ctx">An injected <see cref="T:SmartDocs.Models.SmartDocContext"/> database context.</param>
         /// <param name="userService">An injected <see cref="T:SmartDocs.Models.UserResolverService"/>.</param>
-        public SmartDocumentRepository(SmartDocContext ctx, UserResolverService userService)
+        public SmartDocumentRepository(SmartDocContext ctx)
         {
             context = ctx;
-            currentUser = context.Users.FirstOrDefault(u => u.LogonName == userService.GetUserName());
+
+            
         }
 
         /// <summary>
@@ -65,7 +57,7 @@ namespace SmartDocs.Models
         /// <remarks>
         /// This list will return only the PPA records that belong to the Repo's currentUser
         /// </remarks>
-        public IEnumerable<SmartPPA> PPAs => context.PPAs.Where(x => x.Owner.UserId == currentUser.UserId).Include(y => y.Job).Include(z => z.Owner);
+        public IEnumerable<SmartPPA> PPAs => context.PPAs.Include(y => y.Job).Include(z => z.Owner).Include(x => x.Template);
 
         /// <summary>
         /// Gets the Components.
@@ -142,7 +134,6 @@ namespace SmartDocs.Models
         {
             if (ppa.PPAId == 0)
             {
-                ppa.Owner = currentUser;
                 context.PPAs.Add(ppa);
             }
             else
@@ -172,7 +163,7 @@ namespace SmartDocs.Models
                     dbPPA.Job = ppa.Job;
                     dbPPA.Template = ppa.Template;
                     dbPPA.Modified = DateTime.Now; 
-                    dbPPA.Owner = currentUser;
+                    //dbPPA.Owner = currentUser; they shouldnt be able to change the owner
                     dbPPA.DocumentName = ppa.DocumentName;
                 }
             }
@@ -260,9 +251,9 @@ namespace SmartDocs.Models
         /// Gets the current user.
         /// </summary>
         /// <returns>A <see cref="T:SmartDocs.Models.SmartUser"/></returns>
-        public SmartUser GetCurrentUser()
+        public SmartUser GetUserByLogonName(string logonName)
         {
-            return currentUser;
+            return context.Users.FirstOrDefault(x => x.LogonName == logonName);
         }
     }
 }

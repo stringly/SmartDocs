@@ -2,16 +2,15 @@
 
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link asp-href-include="lib/bootstrap/css/*.min.css" rel="stylesheet" />
-    <style>
-        .text-danger {
-            font-size: 10px;
-        }
 
-    </style>
-    <title>@ViewBag.Title</title>
+    <link asp-href-include="lib/bootstrap/css/*.min.css" rel="stylesheet" />
+    <link asp-href-include="lib/SmartDocs.css" asp-append-version="true" rel="stylesheet"/>
+    <title>@ViewData["Title"]</title>
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
@@ -19,7 +18,16 @@
     @RenderSection("Head", false)
 </head>
 <body>
-    @await Component.InvokeAsync("UserNavBar")
+
+    @if(ViewData["ActiveNavBarMenuLink"] != null)
+    {
+        @await Component.InvokeAsync("UserNavBar", new { activeLink = ViewData["ActiveNavBarMenuLink"] })
+    }
+    else
+    {
+        @await Component.InvokeAsync("UserNavBar", new { activeLink = "" })
+    }
+
     <div class="col-xs-12" style="position:relative">
         <h3 id="pageMessage" class="text-danger" style="font-size:14px">@ViewBag.Message</h3>
         @RenderBody()

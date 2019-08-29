@@ -1,0 +1,76 @@
+﻿html, body {
+    /*font-family: 'Roboto', sans-serif;*/
+    /*font-family: 'IBM Plex Sans', sans-serif;*/
+    font-family: Segoe UI,SegoeUI,Segoe WP,Helvetica Neue,Helvetica,Tahoma,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    width: 100%;
+    overflow: auto;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.navbar-inverse {
+    background-color: #24292e;
+    border-radius: 0px;
+    background-image: none;
+}
+
+.text-danger {
+    font-size: 10px;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    margin: 10px;
+    padding: 10px;
+    max-width: 300px;
+    max-height: 330px;
+    min-width: 300px;
+    min-height: 330px;
+}
+
+    /* On mouse-over, add a deeper shadow */
+    .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+/* Add some padding inside the card container */
+.container {
+    padding: 2px 2px;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 4px 8px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fafbfc;
+    background-image: none;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(27,31,35,.075);
+}
+
+select.form-control {
+    background-color: #eff3f6;
+    background-image: linear-gradient(-180deg,#fafbfc,#eff3f6 90%);
+    color: #24292e;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+    select.form-control:hover {
+        background-color: #e6ebf1;
+        background-image: linear-gradient(-180deg,#f0f3f6,#e6ebf1 90%);
+        background-position: -.5em;
+        border-color: rgba(27,31,35,.35);
+    }

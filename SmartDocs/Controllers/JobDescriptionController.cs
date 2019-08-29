@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
@@ -10,6 +11,7 @@ namespace SmartDocs.Controllers
     /// Controller for "Job Description" views interactions
     /// </summary>
     /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+    [Authorize(Roles = "User, Administrator")]
     public class JobDescriptionController : Controller
     {        
         private IDocumentRepository _repository;
@@ -18,7 +20,6 @@ namespace SmartDocs.Controllers
         /// Initializes a new instance of the <see cref="JobDescriptionController"/> class.
         /// </summary>
         /// <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/></remarks>
-        /// <param name="hostingEnvironment">An <see cref="T:IHostingEnvironment"/></param>
         /// <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         public JobDescriptionController(IDocumentRepository repo)
         {
@@ -35,11 +36,13 @@ namespace SmartDocs.Controllers
         /// <seealso cref="T:SmartDocs.Models.Types.JobDescriptionListViewModelItem"/>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         public IActionResult Index()
-        {            
+        {   
             JobDescriptionListViewModel vm = new JobDescriptionListViewModel
             {
                 Jobs = _repository.Jobs.Select(x => new JobDescriptionListViewModeltem(x)).ToList()
             };
+            ViewData["Title"] = "Job Descriptions List";
+            ViewData["ActiveNavBarMenuLink"] = "Job Descriptions";
             return View(vm);
         }
 
@@ -66,10 +69,12 @@ namespace SmartDocs.Controllers
         /// <remarks>Shows a view to allow editing an existing Job Description.</remarks>
         /// <param name="id">The id of the <see cref="T:SmartDocs.Models.SmartJob"/> to edit.</param>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)
         {
             SmartJob job = _repository.Jobs.FirstOrDefault(j => j.JobId == id);
             JobDescriptionViewModel vm = new JobDescriptionViewModel(job);
+            ViewData["Title"] = "Edit Job Description";
             return View(vm);
         }
 
@@ -81,6 +86,7 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id, [Bind("JobId,WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
         {
             if (id != form.JobId)
@@ -91,6 +97,7 @@ namespace SmartDocs.Controllers
             if (!ModelState.IsValid)
             {
                 // model binding validation failed, return the VM to the view with validation messages
+                ViewData["Title"] = "Edit Job Description: Error";
                 return View(form);
             }
             else
@@ -121,9 +128,11 @@ namespace SmartDocs.Controllers
         /// <remarks>Shows a view to allow creation of a Job Description.</remarks>        
         /// <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             JobDescriptionViewModel vm = new JobDescriptionViewModel();
+            ViewData["Title"] = "Create a Job Description";
             return View(vm);
         }
 
@@ -134,11 +143,13 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create([Bind("WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
         {
             if (!ModelState.IsValid)
             {
                 // model state validation failed, return VM to user with validation error messages
+                ViewData["Title"] = "Create a Job Description: Error";
                 return View(form);
             }
             else
@@ -185,6 +196,7 @@ namespace SmartDocs.Controllers
             // so the View uses the Models.JobDescription as a model
             // the Models.JobDescription object has a constructor that takes a Models.SmartJob Object as a param
             JobDescription vmJob = new JobDescription(SmartJob);
+            ViewData["Title"] = "Job Description Details";
             return View(vmJob);
         }
 
@@ -207,6 +219,7 @@ namespace SmartDocs.Controllers
                 return NotFound();
             }
             JobDescription vmJob = new JobDescription(SmartJob);
+            ViewData["Title"] = "Job Description Details";
             return View(vmJob);
         }
 
@@ -216,6 +229,7 @@ namespace SmartDocs.Controllers
         /// <remarks>This shows a view that asks the user to confirm deletion of the Job Description</remarks>
         /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartJob"/> to be deleted.</param>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -229,11 +243,7 @@ namespace SmartDocs.Controllers
             {
                 return NotFound();
             }
-            if (_repository.GetCurrentUser().UserId != 1)
-            {
-                return RedirectToAction("AccessDenied", "Home", new { area = "" });
-            }
-
+            ViewData["Title"] = "Delete Job Description";
             return View(SmartJob);
         }
 
@@ -245,6 +255,7 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public IActionResult DeleteConfirmed(int id)
         {
             var smartJob = _repository.Jobs.FirstOrDefault(x => x.JobId == id);

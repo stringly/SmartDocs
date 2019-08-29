@@ -27,6 +27,6 @@ namespace SmartDocs.Models
         void SaveComponent(OrganizationComponent component);
         void RemoveComponent(OrganizationComponent component);
 
-        SmartUser GetCurrentUser();
+        SmartUser GetUserByLogonName(string logonName);
     }
 }

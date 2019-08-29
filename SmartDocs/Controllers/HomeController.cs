@@ -16,7 +16,7 @@ namespace SmartDocs.Controllers
     /// Controller for "Home" interactions
     /// </summary>
     /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
-    [Authorize]
+    [Authorize(Roles = "User, Administrator")]
     public class HomeController : Controller
     {
         private IDocumentRepository _repository;
@@ -41,14 +41,9 @@ namespace SmartDocs.Controllers
         /// </remarks>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public ActionResult Choices()
-        {            
-            if (_repository.GetCurrentUser() == null)
-            {
-                // This is a LDAP-authenticated account without an associated SmartDocs account
-                return RedirectToAction(nameof(AccessDenied));
-            }
-            //SmartPPAGenerator gen = new SmartPPAGenerator(_repository);
-            //gen.OverwriteTemplate();
+        {
+            ViewData["Title"] = "Document Menu";
+            ViewData["ActiveNavBarMenuLink"] = "Choices";
             return View();
         }
         /// <summary>
@@ -59,6 +54,7 @@ namespace SmartDocs.Controllers
         [AllowAnonymous]
         public ActionResult About()
         {
+            ViewData["Title"] = "About SmartDocs";
             return View();
         }
 
@@ -70,6 +66,7 @@ namespace SmartDocs.Controllers
         [AllowAnonymous]
         public ActionResult AccessDenied()
         {
+            ViewData["Title"] = "Access Denied";
             return View();
         }
     }

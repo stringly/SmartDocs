@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace SmartDocs.Controllers
     /// Controller for <see cref="T:SmartDocs.Models.SmartPPA"/> interactions
     /// </summary>
     /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
-    [Authorize]
+    [Authorize(Roles = "User, Administrator")]
     public class SmartPPAController : Controller
     {
         private IDocumentRepository _repository;
@@ -43,15 +44,17 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Index()
         {
-            // Check if user is known to Windows Auth
-            if (User.Identity.IsAuthenticated)
+            if (User.HasClaim(x => x.Type == "UserId"))
             {
+                int UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
                 // create a new view model
                 DocumentListViewModel vm = new DocumentListViewModel();
                 // assign the Documents property of the viewmodel to the a list of DocumentListViewModelItems
                 // that is created by passing each of the repository's PPAs to the DocumentListViewModelItem
                 // constructor that takes a SmartPPA parameter
-                vm.Documents = _repository.PPAs.Select(x => new DocumentListViewModelItem(x)).ToList();
+                vm.Documents = _repository.PPAs.Where(x => x.OwnerUserId == UserId).ToList().ConvertAll(x => new DocumentListViewModelItem(x));
+                ViewData["Title"] = "My Documents";
+                ViewData["ActiveNavBarMenuLink"] = "My Documents";
                 return View(vm);
             }
             else
@@ -84,17 +87,28 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public ActionResult Create()
         {
-            // create a new, empty ViewModel
-            PPAFormViewModel vm = new PPAFormViewModel
+            int UserId = 0;
+            if (User.HasClaim(x => x.Type == "UserId"))
             {
-                // populate the ViewModel's lists that serve the <selects> on the form
-                JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(),
-                Users = _repository.Users.Select(x => new UserListItem(x)).ToList(),                               
-                Components = _repository.Components.ToList(),
-                // default the "Author" <select> with the session user
-                AuthorUserId = _repository.GetCurrentUser().UserId
-            };
-            return View(vm);
+                UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
+                // create a new, empty ViewModel
+                PPAFormViewModel vm = new PPAFormViewModel
+                {
+                    // populate the ViewModel's lists that serve the <selects> on the form
+                    JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(),
+                    Users = _repository.Users.Select(x => new UserListItem(x)).ToList(),
+                    Components = _repository.Components.ToList(),
+                    // default the "Author" <select> with the session user
+                    AuthorUserId = UserId
+                };
+                ViewData["Title"] = "Create PPA";
+                return View(vm);
+            }
+            else
+            {
+                return RedirectToAction("Access Denied", "Home");
+            }
+
         }
 
         /// <summary>
@@ -144,6 +158,7 @@ namespace SmartDocs.Controllers
                 form.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
                 form.Components = _repository.Components.ToList();
                 // return the View with the validation messages
+                ViewData["Title"] = "Create PPA: Error";
                 return View(form);
             }
             else
@@ -168,6 +183,7 @@ namespace SmartDocs.Controllers
             // this is a simple view, so use VB instead of a VM            
             ViewBag.PPAId = id;
             ViewBag.FileName = _repository.PPAs.FirstOrDefault(x => x.PPAId == id).DocumentName;
+            ViewData["Title"] = "Success!";
             return View();
 
         }
@@ -188,6 +204,7 @@ namespace SmartDocs.Controllers
             vm.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
             vm.Components = _repository.Components.ToList();
             // return the view
+            ViewData["Title"] = "Edit PPA";
             return View(vm);
         }
 
@@ -242,6 +259,7 @@ namespace SmartDocs.Controllers
                 form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
                 form.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
                 form.Components = _repository.Components.ToList();
+                ViewData["Title"] = "Edit PPA: Error";
                 return View(form);
             }
             else
@@ -276,6 +294,7 @@ namespace SmartDocs.Controllers
                 return NotFound();
             }
             // return the View (which uses the Domain Object as a model)
+            ViewData["Title"] = "Delete PPA";
             return View(smartPPA);
         }
 

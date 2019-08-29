@@ -32,7 +32,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The first name.
         /// </value>
-        [Display(Name = "First Name:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer."), Required(ErrorMessage = "Please enter a Name.")]
+        [Display(Name = "First Name:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer."), Required(ErrorMessage = "Please enter a First Name.")]
         public string FirstName { get; set; }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The last name.
         /// </value>
-        [Display(Name = "Last Name:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer."), Required(ErrorMessage = "Please enter a Name.")]
+        [Display(Name = "Last Name:"), StringLength(50, ErrorMessage = "Must be 50 characters or fewer."), Required(ErrorMessage = "Please enter a Last Name.")]
         public string LastName { get; set; }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The department identifier number.
         /// </value>
-        [Display(Name = "ID#"), StringLength(5, ErrorMessage = "Must be 5 characters or fewer."), Required(ErrorMessage = "Enter employees ID#")]
+        [Display(Name = "ID#"), StringLength(5, ErrorMessage = "Must be 5 characters or fewer."), Required(ErrorMessage = "Enter employees ID Number")]
         public string DepartmentIdNumber { get; set; }
 
         /// <summary>

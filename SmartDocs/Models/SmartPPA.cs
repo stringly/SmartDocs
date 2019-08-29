@@ -39,7 +39,12 @@ namespace SmartDocs.Models
         /// <value>
         /// The SmartUser listed as the record's author.
         /// </value>
-        public SmartUser Owner { get; set; }
+        public virtual SmartUser Owner { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserId of the SmartUser that authored the Document
+        /// </summary>
+        public int OwnerUserId { get; set;}
 
         /// <summary>
         /// Gets or sets the <see cref="T:SmartDocs.Models.SmartTemplate"/> on which the document is built.
@@ -47,7 +52,11 @@ namespace SmartDocs.Models
         /// <value>
         /// The <see cref="T:SmartDocs.Models.SmartTemplate"/> template.
         /// </value>
-        public SmartTemplate Template { get; set; }
+        public virtual SmartTemplate Template { get; set; }
+        /// <summary>
+        /// Gets or sets the TemplateId of the Associated Document Template
+        /// </summary>
+        public int TemplateId { get;set;}
 
         /// <summary>
         /// Gets or sets the first name of the employee who is the subject of the PPA record.
@@ -207,8 +216,11 @@ namespace SmartDocs.Models
         /// <value>
         /// The associated <see cref="T:SmartDocs.Models.SmartJob"/>.
         /// </value>
-        public SmartJob Job { get; set;}
-
+        public virtual SmartJob Job { get; set;}
+        /// <summary>
+        /// Gets or sets the JobId of the Job Description associated with this Document
+        /// </summary>
+        public int JobId {get;set;}
         /// <summary>
         /// Gets or sets the name of the document.
         /// </summary>

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.AspNetCore.Authentication;
 
 namespace SmartDocs
 {
@@ -42,10 +42,10 @@ namespace SmartDocs
                 options.Version = "0.01";
             });
 
-            services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));            
+            services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
+            services.AddScoped<IClaimsTransformation, ClaimsLoader>();
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
-            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<UserResolverService>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();            
             services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
             services.AddMvc();
         }

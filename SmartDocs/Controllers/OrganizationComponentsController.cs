@@ -32,6 +32,8 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Index()
         {
+            ViewData["Title"] = "Component List";
+            ViewData["ActiveNavBarMenuLink"] = "Components";
             return View(_repository.Components.ToList());
         }
 
@@ -56,7 +58,7 @@ namespace SmartDocs.Controllers
                 // no Component with the provided id exists in the DB
                 return NotFound();
             }
-
+            ViewData["Title"] = "Component Details";
             return View(organizationComponent);
         }
 
@@ -66,6 +68,7 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         public IActionResult Create()
         {
+            ViewData["Title"] = "Create a Component";
             return View();
         }
 
@@ -88,6 +91,7 @@ namespace SmartDocs.Controllers
                 return RedirectToAction(nameof(Index));
             }
             // model validation failed, return the object to the view with validation error messages
+            ViewData["Title"] = "Create a Component: Error";
             return View(organizationComponent);
         }
 
@@ -111,7 +115,7 @@ namespace SmartDocs.Controllers
                 // no OrganizationComponent with the given id could be found
                 return NotFound();
             }
-
+            ViewData["Title"] = "Edit Component";
             return View(organizationComponent);
         }
 
@@ -150,6 +154,7 @@ namespace SmartDocs.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["Title"] = "Edit Component: Error";
             return View(organizationComponent);
         }
 
@@ -172,7 +177,7 @@ namespace SmartDocs.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["Title"] = "Delete Component";
             return View(organizationComponent);
         }
 

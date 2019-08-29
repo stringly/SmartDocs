@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
@@ -10,7 +12,7 @@ namespace SmartDocs.Controllers
     /// Controller for <see cref="T:SmartDocs.Models.SmartUser"/> interactions
     /// </summary>
     /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public class SmartUsersController : Controller
     {
         private IDocumentRepository _repo;
@@ -34,12 +36,6 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> list of users in the repo.</returns>
         public IActionResult Index(string searchString)
         {
-            // check if the user is the Admin
-            if (_repo.GetCurrentUser().UserId != 1)
-            {
-                // redirect to NotAuth if not the admin
-                return RedirectToAction("NotAuthorized", "SmartPPA");
-            }            
             UserIndexListViewModel vm = new UserIndexListViewModel { CurrentFilter = searchString };
             
             // if the searchstring isn't empty, sort the user list against the string
@@ -52,6 +48,8 @@ namespace SmartDocs.Controllers
                 vm.Users = _repo.Users.ToList();
             }
             // return the view
+            ViewData["Title"] = "Current User List";
+            ViewData["ActiveNavBarMenuLink"] = "Users";
             return View(vm);
         }
 
@@ -65,11 +63,7 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         public IActionResult Create()
         {
-            // check if the user is the admin, return NotAuth if not
-            if (_repo.GetCurrentUser().UserId != 1)
-            {
-                return RedirectToAction("NotAuthorized", "SmartPPA");
-            }
+            ViewData["Title"] = "Create User";
             return View();
         }
 
@@ -89,6 +83,7 @@ namespace SmartDocs.Controllers
                 
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["Title"] = "Create User: Error";
             return View(smartUser);
         }
 
@@ -97,27 +92,40 @@ namespace SmartDocs.Controllers
         /// </summary>
         /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/></param>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        [Authorize(Roles = "User, Administrator")]
         public IActionResult Edit(int? id)
         {            
+            SmartUser smartUser = null;
             if (id == null)
             {
                 // querystring is null, return 404
                 return NotFound();
             }
-            // check if user is admin, OR is accessing their own info
-            if (_repo.GetCurrentUser().UserId != 1 || _repo.GetCurrentUser().UserId != id)
+            if (User.IsInRole("Administrator"))
             {
-                // redirect to NotAuth
-                return RedirectToAction("NotAuthorized", "SmartPPA");
+                // retrieve the SmartUser from the repo
+                smartUser = _repo.Users.FirstOrDefault(x => x.UserId == id);
+                if (smartUser == null)
+                {
+                    // no SmartUser with the given id exists in the repo
+                    return NotFound();
+                }
             }
-            // retrieve the SmartUser from the repo
-            var smartUser = _repo.Users.FirstOrDefault(x => x.UserId == id);
-            if (smartUser == null)
+            else
+            {                
+                if (User.HasClaim(x => x.Type == "UserId"))
+                {
+                    int UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
+                    smartUser = _repo.Users.FirstOrDefault(x => x.UserId == UserId);
+                }
+            }
+            if(smartUser == null)
             {
-                // no SmartUser with the given id exists in the repo
-                return NotFound();
+                return RedirectToAction("Not Authorized", "Home");
             }
             // return the view
+            ViewData["Title"] = "Edit User";
+            ViewData["ActiveNavBarMenuLink"] = "Edit User";
             return View(smartUser);
         }
 
@@ -129,6 +137,7 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User, Administrator")]
         public IActionResult Edit(int id, [Bind("UserId,DisplayName")] SmartUser smartUser)
         {
             // if querystring id doesn't match the POSTed form UserId
@@ -145,6 +154,8 @@ namespace SmartDocs.Controllers
                 return RedirectToAction("Choices", "Home");
             }
             // modelstate invalid, return the view with the VM with validation errors showing
+            ViewData["Title"] = "Edit User: Error";
+            ViewData["ActiveNavBarMenuLink"] = "Edit User";
             return View(smartUser);
         }
 
@@ -159,12 +170,7 @@ namespace SmartDocs.Controllers
             {
                 // querystring is null, return 404
                 return NotFound();
-            }
-            if (_repo.GetCurrentUser().UserId != 1)
-            {
-                // user is not Admin, redirect to NotAuth
-                return RedirectToAction("NotAuthorized", "SmartPPA");
-            }
+            }            
             // retrieve the SmartUser from the repo
             var smartUser = _repo.Users.FirstOrDefault(m => m.UserId == id);            
             if (smartUser == null)
@@ -173,6 +179,7 @@ namespace SmartDocs.Controllers
                 return NotFound();
             }
             // return the view
+            ViewData["Title"] = "Delete User";
             return View(smartUser);
         }
 

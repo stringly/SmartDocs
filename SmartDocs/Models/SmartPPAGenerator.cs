@@ -98,10 +98,13 @@ namespace SmartDocs.Models
                 AssessmentComments = form.Assessment,
                 RecommendationComments = form.Recommendation,
                 Job = dbJob,
+                JobId = dbJob.JobId,
+                OwnerUserId = author.UserId,
                 Owner = author,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 Template = _repository.Templates.FirstOrDefault(t => t.TemplateId == 1),
+                TemplateId = 1,
                 DocumentName = $"{form.LastName}, {form.FirstName} {form.DepartmentIdNumber} {form.EndDate.ToString("yyyy")} Performance Appraisal.docx"
             };
 
@@ -123,6 +126,7 @@ namespace SmartDocs.Models
             results.Add("EmployeeName", $"{form.LastName}, {form.FirstName}");
             results.Add("PayrollId", form.PayrollIdNumber);
             results.Add("PositionNumber", form.PositionNumber);
+            results.Add("PPAClass", $"{job.ClassTitle}/{job.WorkingTitle}");
             results.Add("StartDate", form.StartDate.ToShortDateString());
             results.Add("EndDate", form.EndDate.ToShortDateString());
             results.Add("DistrictDivision", form.DepartmentDivision);
@@ -132,9 +136,10 @@ namespace SmartDocs.Models
             results.Add("PlaceOfWork", form.WorkPlaceAddress);
             results.Add("Supervisor", author.DisplayName);
             results.Add("Supervises", form?.SupervisedByEmployee ?? "N/A");
-            results.Add("ClassTitle", job.ClassTitle + " - " + job.Grade);
+            results.Add("HeaderClass", job.ClassTitle + " - " + job.Grade);
+            results.Add("JobClass", job.ClassTitle);
             results.Add("Grade", job.Grade);
-            results.Add("WorkingTitle", job.ClassTitle);
+            results.Add("JobWorking", job.WorkingTitle);            
             
             for (int i = 0; i < form.Categories.Count(); i++)
             {
@@ -268,7 +273,7 @@ namespace SmartDocs.Models
                 
                 new MappedField { FieldName = "EmployeeName_1", TableIndex = 0, RowIndex = 1, CellIndex = 1},                
                 new MappedField { FieldName = "PayrollId_1", TableIndex = 0, RowIndex = 1, CellIndex = 2},
-                new MappedField { FieldName = "WorkingTitle_1", TableIndex = 0, RowIndex = 3, CellIndex = 1},
+                new MappedField { FieldName = "PPAClass_1", TableIndex = 0, RowIndex = 3, CellIndex = 1},
                 new MappedField { FieldName = "Grade_1", TableIndex = 0, RowIndex = 3, CellIndex = 2},
                 new MappedField { FieldName = "PositionNumber_1", TableIndex = 0, RowIndex = 3, CellIndex = 3},
                 new MappedField { FieldName = "StartDate_1", TableIndex = 0, RowIndex = 4, CellIndex = 0},
@@ -337,7 +342,7 @@ namespace SmartDocs.Models
                 new MappedField { FieldName = "PayrollId_Header", TableIndex = 0, RowIndex = 3, CellIndex = 3 },
                 new MappedField { FieldName = "StartDate_Header", TableIndex = 0, RowIndex = 4, CellIndex = 1 },
                 new MappedField { FieldName = "EndDate_Header", TableIndex = 0, RowIndex = 4, CellIndex = 3 },
-                new MappedField { FieldName = "ClassTitle_Header", TableIndex = 0, RowIndex = 4, CellIndex = 5 },
+                new MappedField { FieldName = "HeaderClass_Header", TableIndex = 0, RowIndex = 4, CellIndex = 5 },
                 new MappedField { FieldName = "DistrictDivision_Header", TableIndex = 0, RowIndex = 5, CellIndex = 1 },
                 // PAF Performance Assessment Field
                 new MappedField { FieldName = "Assessment", TableIndex = 3, RowIndex = 1, CellIndex = 0 },
@@ -348,9 +353,9 @@ namespace SmartDocs.Models
                 new MappedField { FieldName = "DistrictDivision_2", TableIndex = 5, RowIndex = 1, CellIndex = 2 }, 
                 new MappedField { FieldName = "AgencyActivity_2", TableIndex = 5, RowIndex = 1, CellIndex = 3 },
                 new MappedField { FieldName = "PositionNumber_2", TableIndex = 5, RowIndex = 1, CellIndex = 4 }, 
-                new MappedField { FieldName = "WorkingTitle_2", TableIndex = 5, RowIndex = 3, CellIndex = 1 },
+                new MappedField { FieldName = "JobClass_2", TableIndex = 5, RowIndex = 3, CellIndex = 1 },
                 new MappedField { FieldName = "Grade_2", TableIndex = 5, RowIndex = 3, CellIndex = 2 },
-                new MappedField { FieldName = "WorkingTitle_3", TableIndex = 5, RowIndex = 5, CellIndex = 1 },
+                new MappedField { FieldName = "JobWorking_3", TableIndex = 5, RowIndex = 5, CellIndex = 1 },
                 new MappedField { FieldName = "PlaceOfWork_1", TableIndex = 5, RowIndex = 7, CellIndex = 0 },
                 new MappedField { FieldName = "WorkingHours", TableIndex = 5, RowIndex = 7, CellIndex = 1 },
                 new MappedField { FieldName = "Supervisor_1", TableIndex = 5, RowIndex = 9, CellIndex = 0 },
