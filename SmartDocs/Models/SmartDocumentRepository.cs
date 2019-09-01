@@ -117,7 +117,8 @@ namespace SmartDocs.Models
             else
             {
                 SmartTemplate dbTemplate = context.Templates.FirstOrDefault(x => x.TemplateId == template.TemplateId);
-                dbTemplate.DocumentName = template.DocumentName;
+                dbTemplate.Name = template.Name;
+                dbTemplate.Description = template.Description;
                 dbTemplate.DataStream = template.DataStream;
             }            
             context.SaveChanges();
@@ -180,6 +181,32 @@ namespace SmartDocs.Models
             context.SaveChanges();
         }
 
+        public void SaveSmartDoc(SmartDocument doc)
+        {
+            if (doc.DocumentId == 0)
+            {
+                context.Documents.Add(doc);
+            }
+            else
+            {
+                SmartDocument toEdit = context.Documents.Where(x => x.DocumentId == doc.DocumentId).FirstOrDefault();
+                if (toEdit != null)
+                {
+                    toEdit.AuthorUserId = doc.AuthorUserId;
+                    toEdit.TemplateId = doc.TemplateId;
+                    toEdit.Created = doc.Created;
+                    toEdit.Edited = DateTime.Now;
+                    toEdit.FileName = doc.FileName;
+                    toEdit.FormData = doc.FormData;
+                }
+            }
+            context.SaveChanges();
+        }
+        public void RemoveSmartDoc(SmartDocument doc)
+        {
+            context.Documents.Remove(doc);
+            context.SaveChanges();
+        }
         /// <summary>
         /// Saves/Updates a <see cref="T:SmartDocs.Models.SmartUser"/> the user.
         /// </summary>

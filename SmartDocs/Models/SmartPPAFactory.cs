@@ -1,7 +1,9 @@
-﻿using SmartDocs.Models.Types;
+﻿using DocumentFormat.OpenXml.Packaging;
+using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -11,18 +13,45 @@ namespace SmartDocs.Models
 {
     public class SmartPPAFactory
     {
-        public SmartDocument CreatePPA(PPAFormViewModel vm)
+        private IDocumentRepository _repository { get; set; }
+        public SmartDocument _PPA { get; private set; }
+        public SmartPPAFactory(IDocumentRepository repo, SmartDocument PPA)
+        {
+            _repository = repo;
+            _PPA = PPA;
+
+        } 
+
+        public void CreatePPA(PPAFormViewModel vm)
         {
             SmartDocument newDoc = new SmartDocument
             {
                 AuthorUserId = vm.AuthorUserId,
                 Created = DateTime.Now,
                 Edited = DateTime.Now,
-
-
-            }
+                FileName = $"{vm.LastName}, {vm.FirstName} PPA {vm.StartDate.ToString("MM-dd-yy")} to {vm.EndDate.ToString("MM-dd-yy")}.docx",
+                FormDataXml = ViewModelToXML(vm),
+                Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartPPA")                
+            };
+            _repository.SaveSmartDoc(newDoc);
+            _PPA = newDoc;
         }
-        public XElement ViewModelToXML(PPAFormViewModel vm)
+        public void UpdatePPA(PPAFormViewModel vm)
+        {
+            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.PPAId);
+            if (toEdit != null)
+            {
+                toEdit.FormDataXml = ViewModelToXML(vm);
+                toEdit.AuthorUserId = vm.AuthorUserId;
+                toEdit.Edited = DateTime.Now;
+                toEdit.FileName = $"{vm.LastName}, {vm.FirstName} PPA {vm.StartDate.ToString("MM-dd-yy")} to {vm.EndDate.ToString("MM-dd-yy")}.docx";
+                toEdit.FormDataXml = ViewModelToXML(vm);
+                toEdit.Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartPPA");
+                _repository.SaveSmartDoc(toEdit);
+            }
+            _PPA = toEdit;
+        }
+        private XElement ViewModelToXML(PPAFormViewModel vm)
         {
             XElement root = new XElement("SmartPPA");
             PropertyInfo[] properties = typeof(PPAFormViewModel).GetProperties();
@@ -62,14 +91,13 @@ namespace SmartDocs.Models
 
             }
             job.Add(categories);
-            root.Add(job);
-            root.Save("C:/Users/jcs30/Desktop/Test.xml");
+            root.Add(job);            
             return(root);
         }
-        public PPAFormViewModel GetViewModelFromXML(SmartPPA ppa)
+        public PPAFormViewModel GetViewModelFromXML()
         {
             
-            XElement root = ppa.FormDataXml;
+            XElement root = _PPA.FormDataXml;
             PPAFormViewModel vm = new PPAFormViewModel{
                 PPAId = Convert.ToInt32(root.Element("PPAId").Value),
                 FirstName = root.Element("FirstName").Value,
@@ -132,5 +160,16 @@ namespace SmartDocs.Models
             }
             return vm;
         }
+
+        public MemoryStream GenerateDocument()
+        {
+
+        }
+        private void InjectXMLFormData(MainDocumentPart mainPart)
+        {
+
+        }
+
+
     }
 }

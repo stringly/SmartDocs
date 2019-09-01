@@ -12,6 +12,7 @@ namespace SmartDocs.Models
     {
         IEnumerable<SmartUser> Users { get; }        
         IEnumerable<SmartTemplate> Templates { get; }
+        IEnumerable<SmartDocument> Documents { get; }
         IEnumerable<SmartJob> Jobs { get; }
         IEnumerable<SmartPPA> PPAs { get; }
         IEnumerable<OrganizationComponent> Components { get; }
@@ -22,6 +23,8 @@ namespace SmartDocs.Models
         void SaveTemplate(SmartTemplate template);
         void SaveSmartPPA(SmartPPA ppa);
         void RemoveSmartPPA(SmartPPA ppa);
+        void SaveSmartDoc(SmartDocument doc);
+        void RemoveSmartDoc(SmartDocument doc);
         void SaveUser(SmartUser user);
         void RemoveUser(SmartUser user);
         void SaveComponent(OrganizationComponent component);
