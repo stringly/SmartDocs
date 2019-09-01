@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace SmartDocs.Models
 {
@@ -229,6 +231,13 @@ namespace SmartDocs.Models
         /// </value>
         public string DocumentName { get; set; }
 
+        [Column(TypeName = "xml")]
+        public string FormData { get; set; }
+        [NotMapped]
+        public XElement FormDataXml {
+            get { return XElement.Parse(FormData); }
+            set { FormData = value.ToString(); }
+        }
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartPPA"/> class.
         /// </summary>

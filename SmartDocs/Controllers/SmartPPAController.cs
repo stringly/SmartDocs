@@ -197,12 +197,15 @@ namespace SmartDocs.Controllers
         {
             // pull the PPA from the repo
             SmartPPA ppa = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);
-            // pass the PPA to the VM constructor that takes a SmartPPA parameter
-            PPAFormViewModel vm = new PPAFormViewModel(ppa);
+            SmartPPAFactory factory = new SmartPPAFactory();
+            // pass the PPA to the factory method takes a SmartPPA parameter
+            PPAFormViewModel vm = factory.GetViewModelFromXML(ppa);
             // populate the VM <select> lists
             vm.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
             vm.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
             vm.Components = _repository.Components.ToList();
+            
+            
             // return the view
             ViewData["Title"] = "Edit PPA";
             return View(vm);

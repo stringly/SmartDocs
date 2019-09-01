@@ -1,0 +1,136 @@
+﻿using SmartDocs.Models.Types;
+using SmartDocs.Models.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace SmartDocs.Models
+{
+    public class SmartPPAFactory
+    {
+        public SmartDocument CreatePPA(PPAFormViewModel vm)
+        {
+            SmartDocument newDoc = new SmartDocument
+            {
+                AuthorUserId = vm.AuthorUserId,
+                Created = DateTime.Now,
+                Edited = DateTime.Now,
+
+
+            }
+        }
+        public XElement ViewModelToXML(PPAFormViewModel vm)
+        {
+            XElement root = new XElement("SmartPPA");
+            PropertyInfo[] properties = typeof(PPAFormViewModel).GetProperties();
+            foreach(PropertyInfo property in properties)
+            {
+                if (property.Name != "Categories" && property.Name != "Components" && property.Name != "job")
+                root.Add(new XElement(property.Name, property.GetValue(vm), new XAttribute("id", property.Name)));
+            }
+            XElement job = new XElement("JobDescription");
+            job.Add(new XElement("ClassTitle", vm.job.ClassTitle, new XAttribute("id", "ClassTitle")));
+            job.Add(new XElement("WorkingTitle", vm.job.WorkingTitle, new XAttribute("id", "WorkingTitle")));
+            job.Add(new XElement("Grade", vm.job.Grade, new XAttribute("id", "Grade")));
+            job.Add(new XElement("WorkingHours", vm.job.WorkingHours, new XAttribute("id", "WorkingHours")));
+
+
+            XElement categories = new XElement("Categories", new XAttribute("id", "Categories"));
+            foreach (JobDescriptionCategory c in vm.Categories)
+            {
+                XElement category = new XElement("Category", new XAttribute("id", "Category"));
+                category.Add(new XElement("Letter", c.Letter, new XAttribute("id", "Letter")));
+                category.Add(new XElement("Weight", c.Weight, new XAttribute("id", "Weight")));
+                category.Add(new XElement("Title", c.Title, new XAttribute("id", "Title")));
+                category.Add(new XElement("SelectedScore", c.SelectedScore, new XAttribute("id", "SelectedScore")));
+                XElement positionDescriptionFields = new XElement("PositionDescriptionFields", new XAttribute("id", "PositionDescriptionFields"));
+                foreach(PositionDescriptionItem p in c.PositionDescriptionItems)
+                {
+                    positionDescriptionFields.Add(new XElement("PositionDescriptionItem", p.Detail));
+                }
+                category.Add(positionDescriptionFields);
+                XElement performanceStandardFields = new XElement("PerformanceStandardFields", new XAttribute("id", "PerformanceStandardFields"));
+                foreach(PerformanceStandardItem p in c.PerformanceStandardItems)
+                {
+                    performanceStandardFields.Add(new XElement("PerformanceStandardItem", p.Detail, new XAttribute("initial", p.Initial)));
+                }
+                category.Add(performanceStandardFields);
+                categories.Add(category);
+
+            }
+            job.Add(categories);
+            root.Add(job);
+            root.Save("C:/Users/jcs30/Desktop/Test.xml");
+            return(root);
+        }
+        public PPAFormViewModel GetViewModelFromXML(SmartPPA ppa)
+        {
+            
+            XElement root = ppa.FormDataXml;
+            PPAFormViewModel vm = new PPAFormViewModel{
+                PPAId = Convert.ToInt32(root.Element("PPAId").Value),
+                FirstName = root.Element("FirstName").Value,
+                LastName = root.Element("LastName").Value,
+                DepartmentIdNumber = root.Element("DepartmentIdNumber").Value,
+                PayrollIdNumber = root.Element("PayrollIdNumber").Value,
+                PositionNumber = root.Element("PositionNumber").Value,
+                DepartmentDivision = root.Element("DepartmentDivision").Value,
+                DepartmentDivisionCode = root.Element("DepartmentDivisionCode").Value,
+                WorkPlaceAddress = root.Element("WorkPlaceAddress").Value,
+                SupervisedByEmployee = root.Element("SupervisedByEmployee").Value,
+                StartDate = DateTime.Parse(root.Element("StartDate").Value),
+                EndDate = DateTime.Parse(root.Element("EndDate").Value),
+                JobId = Convert.ToInt32(root.Element("JobId").Value),
+                AuthorUserId = Convert.ToInt32(root.Element("AuthorUserId").Value),
+                Assessment = root.Element("Assessment").Value,
+                Recommendation = root.Element("Recommendation").Value,
+            };
+            vm.Categories = new List<JobDescriptionCategory>();
+            vm.job = new JobDescription();
+                        
+            XElement job = root.Element("JobDescription");
+            vm.job.ClassTitle = job.Element("ClassTitle").Value;
+            vm.job.WorkingTitle = job.Element("WorkingTitle").Value;
+            vm.job.Grade = job.Element("Grade").Value;
+            vm.job.WorkingHours = job.Element("WorkingHours").Value;            
+            IEnumerable<XElement> CategoryList = job.Element("Categories").Elements("Category");
+            foreach(XElement category in CategoryList)
+            {
+                JobDescriptionCategory cat = new JobDescriptionCategory
+                {
+                    Letter = category.Element("Letter").Value,
+                    Weight = Convert.ToInt32(category.Element("Weight").Value),
+                    Title = category.Element("Title").Value, 
+                    SelectedScore = Convert.ToInt32(category.Element("SelectedScore").Value)
+                };
+                // each category contains a child element named "PositionDescriptionFields" that contains children named "PositionDescriptionItem"
+                IEnumerable<XElement> positionDescriptionFields = category.Element("PositionDescriptionFields").Elements("PositionDescriptionItem");
+
+                // loop through the PositionDescriptionItems and map to PositionDescriptionItem class objects
+                foreach (XElement positionDescriptionItem in positionDescriptionFields)
+                {
+                    PositionDescriptionItem item = new PositionDescriptionItem { Detail = positionDescriptionItem.Value };
+                    // add each object to the Category Object's collection
+                    cat.PositionDescriptionItems.Add(item);
+                }
+
+                // each category contains a child element named "PerformanceStandardFields" that contains children named "PerformanceStandardItem"
+                IEnumerable<XElement> performanceStandardFields = category.Element("PerformanceStandardFields").Elements("PerformanceStandardItem");
+
+                // loop through the PerformanceStandardItems and map to PerformanceStandardItem class objects
+                foreach (XElement performanceStandardItem in performanceStandardFields)
+                {
+                    PerformanceStandardItem item = new PerformanceStandardItem { Initial = performanceStandardItem.Attribute("initial").Value, Detail = performanceStandardItem.Value };
+                    // add each object to the Category Object's collection
+                    cat.PerformanceStandardItems.Add(item);
+                }
+                vm.Categories.Add(cat);
+                vm.job.Categories.Add(cat);
+            }
+            return vm;
+        }
+    }
+}

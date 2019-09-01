@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartDocs.Models
 {
@@ -46,5 +47,6 @@ namespace SmartDocs.Models
         /// </value>
         [Display(Name = "Display Name")]
         public string DisplayName { get; set; }
+        public virtual ICollection<SmartDocument> Documents { get;set;}
     }
 }

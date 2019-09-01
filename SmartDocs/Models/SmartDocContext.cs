@@ -29,7 +29,7 @@ namespace SmartDocs.Models
         /// The users.
         /// </value>
         public virtual DbSet<SmartUser> Users { get; set; }
-
+        public virtual DbSet<SmartDocument> Documents { get; set; }
         /// <summary>
         /// Gets or sets the Templates.
         /// </summary>
