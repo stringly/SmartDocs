@@ -11,6 +11,15 @@ namespace SmartDocs.Models
         public SmartDocContext(DbContextOptions<SmartDocContext> options) : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<SmartDocument>(d =>
+            {
+                d.Property(e => e.Type)
+                .HasConversion<string>();
+            });
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SmartPPA.Models.SmartDocContext"/> class.
@@ -45,14 +54,6 @@ namespace SmartDocs.Models
         /// The jobs.
         /// </value>
         public virtual DbSet<SmartJob> Jobs { get; set; }
-
-        /// <summary>
-        /// Gets or sets the PPAs.
-        /// </summary>
-        /// <value>
-        /// The pp as.
-        /// </value>
-        public virtual DbSet<SmartPPA> PPAs { get; set; }
 
         /// <summary>
         /// Gets or sets the Components.

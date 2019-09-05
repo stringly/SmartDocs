@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
+using SmartDocs.Models.SmartPPAClasses;
 using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
 
@@ -52,7 +53,7 @@ namespace SmartDocs.Controllers
                 // assign the Documents property of the viewmodel to the a list of DocumentListViewModelItems
                 // that is created by passing each of the repository's PPAs to the DocumentListViewModelItem
                 // constructor that takes a SmartPPA parameter
-                vm.Documents = _repository.PPAs.Where(x => x.OwnerUserId == UserId).ToList().ConvertAll(x => new DocumentListViewModelItem(x));
+                vm.Documents = _repository.PPAs.Where(x => x.AuthorUserId == UserId).ToList().ConvertAll(x => new DocumentListViewModelItem(x));
                 ViewData["Title"] = "My Documents";
                 ViewData["ActiveNavBarMenuLink"] = "My Documents";
                 return View(vm);
@@ -72,13 +73,16 @@ namespace SmartDocs.Controllers
         public ActionResult Download(int id)
         {
             // create a generator, passing the repository as a parameter
-            SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
-            // call the ReDownload method with the querystring id parameter
-            generator.ReDownloadPPA(id);
-            // set the FileResult name 
-            string resultDocName = generator.dbPPA.DocumentName;
-            // return the FileResult to the client
-            return File(generator.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", resultDocName);
+            SmartDocument ppa = _repository.PPAs.FirstOrDefault(x => x.DocumentId == id);
+            if (ppa != null)
+            {
+                SmartPPAFactory factory = new SmartPPAFactory(_repository, ppa);
+                return File(factory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", ppa.FileName);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -164,11 +168,26 @@ namespace SmartDocs.Controllers
             else
             {
                 // validation success, create new generator and pass repo
-                SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
+                SmartPPAFactory factory = new SmartPPAFactory(_repository);
+                if (form.JobId != 0)
+                {
+                    JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == form.JobId));
+                    // next, loop through the submitted form categories and assign the JobDescription member's selected scores
+                    for (int i = 0; i < job.Categories.Count(); i++)
+                    {
+                        job.Categories[i].SelectedScore = form.Categories[i]?.SelectedScore ?? 0;
+                    }
+                    form.job = job;
+                }
+                else
+                {
+                    return NotFound();
+                }
+                
                 // call generator method to pass form data
-                generator.SeedFormInfo(form);
+                factory.CreatePPA(form);
                 // redirect to success view with PPA as querystring param
-                return RedirectToAction("SaveSuccess", new { id = generator.dbPPA.PPAId });
+                return RedirectToAction("SaveSuccess", new { id = factory._PPA.DocumentId });
             }
         }
 
@@ -182,7 +201,7 @@ namespace SmartDocs.Controllers
         {
             // this is a simple view, so use VB instead of a VM            
             ViewBag.PPAId = id;
-            ViewBag.FileName = _repository.PPAs.FirstOrDefault(x => x.PPAId == id).DocumentName;
+            ViewBag.FileName = _repository.Documents.FirstOrDefault(x => x.DocumentId == id).FileName;
             ViewData["Title"] = "Success!";
             return View();
 
@@ -196,10 +215,10 @@ namespace SmartDocs.Controllers
         public ActionResult Edit(int id)
         {
             // pull the PPA from the repo
-            SmartPPA ppa = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);
-            SmartPPAFactory factory = new SmartPPAFactory();
+            SmartDocument ppa = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            SmartPPAFactory factory = new SmartPPAFactory(_repository, ppa);
             // pass the PPA to the factory method takes a SmartPPA parameter
-            PPAFormViewModel vm = factory.GetViewModelFromXML(ppa);
+            PPAFormViewModel vm = factory.GetViewModelFromXML();
             // populate the VM <select> lists
             vm.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
             vm.Users = _repository.Users.Select(x => new UserListItem(x)).ToList();
@@ -220,7 +239,7 @@ namespace SmartDocs.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id,[Bind(
-            "PPAId," +
+            "DocumentId," +
             "FirstName," +
             "LastName," +
             "DepartmentIdNumber," +
@@ -239,7 +258,7 @@ namespace SmartDocs.Controllers
             "Recommendation")] PPAFormViewModel form)
         {
             // if the querystring parameter id doesn't match the POSTed PPAId, return 404
-            if (id != form.PPAId)
+            if (id != form.DocumentId)
             {
                 return NotFound();
             }
@@ -267,12 +286,26 @@ namespace SmartDocs.Controllers
             }
             else
             {
+                if (form.JobId != 0)
+                {
+                    JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == form.JobId));
+                    // next, loop through the submitted form categories and assign the JobDescription member's selected scores
+                    for (int i = 0; i < job.Categories.Count(); i++)
+                    {
+                        job.Categories[i].SelectedScore = form.Categories[i]?.SelectedScore ?? 0;
+                    }
+                    form.job = job;
+                }
+                else
+                {
+                    return NotFound();
+                }
                 // validation success, create a new PPAGenerator and pass the repo as a parameter
-                SmartPPAGenerator generator = new SmartPPAGenerator(_repository);
+                SmartPPAFactory factory = new SmartPPAFactory(_repository);
                 // populate the form info into the generator
-                generator.SeedFormInfo(form);
+                factory.UpdatePPA(form);
                 // redirect to the SaveSuccess view, passing the newly created PPA as a querystring param
-                return RedirectToAction("SaveSuccess", new { id = generator.dbPPA.PPAId });
+                return RedirectToAction("SaveSuccess", new { id = factory._PPA.DocumentId });
             }
         }
 
@@ -289,7 +322,7 @@ namespace SmartDocs.Controllers
                 return NotFound();
             }
             // retrieve the SmartPPA from the repo
-            var smartPPA = _repository.PPAs.FirstOrDefault(m => m.PPAId == id);
+            var smartPPA = _repository.PPAs.FirstOrDefault(m => m.DocumentId == id);
 
             if (smartPPA == null)
             {
@@ -312,9 +345,9 @@ namespace SmartDocs.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             // retrieve the SmartPPA from the repo
-            var smartPPA = _repository.PPAs.FirstOrDefault(x => x.PPAId == id);
+            var smartPPA = _repository.PPAs.FirstOrDefault(x => x.DocumentId == id);
             // invoke the repo method to remove the SmartPPA
-            _repository.RemoveSmartPPA(smartPPA);
+            _repository.RemoveSmartDoc(smartPPA);
             // redirect to the Index
             return RedirectToAction(nameof(Index));
         }
@@ -326,7 +359,7 @@ namespace SmartDocs.Controllers
         /// <returns></returns>
         private bool SmartPPAExists(int id)
         {            
-            return _repository.PPAs.Any(e => e.PPAId == id);
+            return _repository.PPAs.Any(e => e.DocumentId == id);
         }
 
         /// <summary>

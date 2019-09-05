@@ -39,6 +39,7 @@ namespace SmartDocs.Models
         /// The <see cref="T:SmartDocs.Models.SmartTemplate"/>s.
         /// </value>
         public IEnumerable<SmartTemplate> Templates => context.Templates;
+        public IEnumerable<SmartDocument> Documents => context.Documents.Include(x => x.Template).Include(x => x.Author);
 
         /// <summary>
         /// Gets the Jobs.
@@ -57,7 +58,7 @@ namespace SmartDocs.Models
         /// <remarks>
         /// This list will return only the PPA records that belong to the Repo's currentUser
         /// </remarks>
-        public IEnumerable<SmartPPA> PPAs => context.PPAs.Include(y => y.Job).Include(z => z.Owner).Include(x => x.Template);
+        public IEnumerable<SmartDocument> PPAs => context.Documents.Include(y => y.Template).Include(z => z.Author).Where(x => x.Type == SmartDocument.SmartDocumentType.PPA);
 
         /// <summary>
         /// Gets the Components.
@@ -123,69 +124,13 @@ namespace SmartDocs.Models
             }            
             context.SaveChanges();
         }
-
-        /// <summary>
-        /// Saves/Updates a <see cref="T:SmartDocs.Models.SmartPPA"/>
-        /// </summary>
-        /// <remarks>
-        /// If this method is passed a SmartPPA with a non-zero SmartPPA.PPAId, it will update the corresponding SmartPPA in the repo. If this method is passed a SmartJob with a SmartPPA.PPAId = 0, then it will create a new SmartPPA in the repo.
-        /// </remarks>
-        /// <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/> to add/update.</param>
-        public void SaveSmartPPA(SmartPPA ppa)
+        public int SaveSmartDoc(SmartDocument doc)
         {
-            if (ppa.PPAId == 0)
-            {
-                context.PPAs.Add(ppa);
-            }
-            else
-            {
-                SmartPPA dbPPA = context.PPAs.FirstOrDefault(p => p.PPAId == ppa.PPAId);
-                if (dbPPA != null)
-                {
-                    dbPPA.EmployeeFirstName = ppa.EmployeeFirstName;
-                    dbPPA.EmployeeLastName = ppa.EmployeeLastName;
-                    dbPPA.DepartmentIdNumber = ppa.DepartmentIdNumber;
-                    dbPPA.PayrollIdNumber = ppa.PayrollIdNumber;
-                    dbPPA.PositionNumber = ppa.PositionNumber;
-                    dbPPA.DepartmentDivision = ppa.DepartmentDivision;
-                    dbPPA.DepartmentDivisionCode = ppa.DepartmentDivisionCode;
-                    dbPPA.WorkplaceAddress = ppa.WorkplaceAddress;
-                    dbPPA.SupervisedByEmployee = ppa.SupervisedByEmployee;
-                    dbPPA.StartDate = ppa.StartDate;
-                    dbPPA.EndDate = ppa.EndDate;
-                    dbPPA.AssessmentComments = ppa.AssessmentComments;
-                    dbPPA.RecommendationComments = ppa.RecommendationComments;
-                    dbPPA.CategoryScore_1 = ppa.CategoryScore_1;
-                    dbPPA.CategoryScore_2 = ppa.CategoryScore_2;
-                    dbPPA.CategoryScore_3 = ppa.CategoryScore_3;
-                    dbPPA.CategoryScore_4 = ppa.CategoryScore_4;
-                    dbPPA.CategoryScore_5 = ppa.CategoryScore_5;
-                    dbPPA.CategoryScore_6 = ppa.CategoryScore_6;
-                    dbPPA.Job = ppa.Job;
-                    dbPPA.Template = ppa.Template;
-                    dbPPA.Modified = DateTime.Now; 
-                    //dbPPA.Owner = currentUser; they shouldnt be able to change the owner
-                    dbPPA.DocumentName = ppa.DocumentName;
-                }
-            }
-            context.SaveChanges();
-        }
-
-        /// <summary>
-        /// Removes a <see cref="T:SmartDocs.Models.SmartPPA"/>.
-        /// </summary>
-        /// <param name="ppa">The <see cref="T:SmartDocs.Models.SmartPPA"/> to remove.</param>
-        public void RemoveSmartPPA(SmartPPA ppa)
-        {
-            context.PPAs.Remove(ppa);
-            context.SaveChanges();
-        }
-
-        public void SaveSmartDoc(SmartDocument doc)
-        {
+            int returnId = 0;
             if (doc.DocumentId == 0)
             {
-                context.Documents.Add(doc);
+                context.Documents.Add(doc);                
+                returnId = doc.DocumentId;
             }
             else
             {
@@ -198,9 +143,11 @@ namespace SmartDocs.Models
                     toEdit.Edited = DateTime.Now;
                     toEdit.FileName = doc.FileName;
                     toEdit.FormData = doc.FormData;
+                    returnId = toEdit.DocumentId;
                 }
             }
             context.SaveChanges();
+            return returnId;
         }
         public void RemoveSmartDoc(SmartDocument doc)
         {

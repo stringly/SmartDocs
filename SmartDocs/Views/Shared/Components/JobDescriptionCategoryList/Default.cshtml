@@ -1,16 +1,21 @@
 ﻿@model SmartDocs.Models.JobDescription
-
-<table class="table">
+<div class="row" style="margin-bottom:10px;">
+    <div class="col-sm-6">
+        <span style="font-size:18px; font-weight:bold">@Model.ClassTitle: @Model.WorkingTitle</span> | <a asp-action="ShowJobDetails" asp-controller="JobDescription" title="Click to View the Job Description Details in a separate tab." asp-route-id="@Model.SmartJobId" target="_blank">View Details</a><br />
+        <small class="text-muted">Rate the employee's performance in each of the listed categories.</small>
+    </div>  
+</div>
+<table class="table table-condensed table-striped">
     <thead>
-        <tr>
+        <tr style="border-top: 1px solid #094b83; color:white; background-color:#094b83;">
             <th>
 
             </th>
             <th>
-                Title
+                Category Title
             </th>
-            <th>
-                Weight %
+            <th style="text-align:center;">
+                Weight (%)
             </th>
             <th title="Unsatisfactory">
                 0
@@ -36,20 +41,17 @@
     @for (int i = 0; i < Model.Categories.Count(); i++)
     {
         <tr>
-            <td>
+            <td style="text-align:center; font-weight:bold;">
                 <div class="category-letter">@Model.Categories[i].Letter</div>
             </td>
             <td>
                 <div class="category-title">@Model.Categories[i].Title</div>
             </td>
-            <td>
+            <td style="text-align:center; font-weight:bold;">
                 @Model.Categories[i].Weight
             </td>
             <td>
-
                 @Html.RadioButtonFor(x => Model.Categories[i].SelectedScore, 0, new { onClick = $"ratingChange({Model.Categories[i].Weight}, {i}, 0)", Title = "Unsatisfactory"})
-
-
             </td>
             <td>
                 @Html.RadioButtonFor(x => Model.Categories[i].SelectedScore, 1, new { onClick =$"ratingChange({Model.Categories[i].Weight}, {i}, 1)", Title = "Needs Improvement" })
@@ -63,29 +65,37 @@
             <td>
                 @Html.RadioButtonFor(x => Model.Categories[i].SelectedScore, 4, new { onClick = $"ratingChange({Model.Categories[i].Weight}, {i}, 4)", Title = "Outstanding" })
             </td>
-            <td style="text-align:center" >
+            <td style="text-align:center; font-weight:bold;" >
                 <div id="Row-Total-@i" class="total-col">@(Model.Categories[i].SelectedScore * 0.01 * Model.Categories[i].Weight)</div>
             </td>
         </tr>
     }
-        <tr>
-            <td colspan="7" style="text-align:right">
-                <span id="ratingValidator" class="text-danger" style="display: none">Please provide ratings for each category.</span>
+        <tr style="border-bottom:none; background-color:white;">
+            <td colspan="7" style="text-align:right;">
+                <span id="ratingValidator" class="text-danger" style="display: none">Please provide a rating for each category.</span>
             </td>
-            <td colspan="1" style="text-align:right">
-                Total Rating
+            <td colspan="1" style="text-align:right; border-bottom:none;">
+                Total Rating:
             </td>
-            <td id="Total-Rating" style="text-align:center">
+            <td id="Total-Rating" style="text-align:center; font-weight:bold; border-bottom:none;">
                 
             </td>
         </tr>
-        <tr>
-            <td colspan="8" style="text-align:right">
-                Overall Appraisal
+        <tr >
+            <td colspan="7" style="border-top:none; background-color:white;">
+                <small class="text-muted">0: Unsatisfactory </small>|
+                <small class="text-muted">1: Needs Improvement </small>|
+                <small class="text-muted">2: Satisfactory </small>|
+                <small class="text-muted">3: Exceeds Satisfactory </small>|
+                <small class="text-muted">4: Outstanding </small>
             </td>
-            <td id="Overall-Appraisal" style="overflow: hidden; width: 200px; text-align:center;">
+            <td colspan="1" style="text-align:right; border-top:none; background-color:white;">
+                Overall Appraisal:
+            </td>
+            <td id="Overall-Appraisal" style="overflow: hidden; width: 200px; text-align:center; font-weight:bold;border-top:none; background-color:white;">
 
             </td>
         </tr>
     </tbody>
 </table>
+

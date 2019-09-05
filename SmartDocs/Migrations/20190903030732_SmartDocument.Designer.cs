@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartDocs.Models;
 
 namespace SmartDocs.Migrations
 {
     [DbContext(typeof(SmartDocContext))]
-    partial class SmartDocContextModelSnapshot : ModelSnapshot
+    [Migration("20190903030732_SmartDocument")]
+    partial class SmartDocument
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +55,9 @@ namespace SmartDocs.Migrations
                     b.Property<string>("FormData")
                         .HasColumnType("xml");
 
-                    b.Property<int>("TemplateId");
+                    b.Property<string>("TemplateId");
+
+                    b.Property<int?>("TemplateId1");
 
                     b.Property<string>("Type")
                         .IsRequired();
@@ -62,7 +66,7 @@ namespace SmartDocs.Migrations
 
                     b.HasIndex("AuthorUserId");
 
-                    b.HasIndex("TemplateId");
+                    b.HasIndex("TemplateId1");
 
                     b.ToTable("Documents");
                 });
@@ -93,11 +97,7 @@ namespace SmartDocs.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<bool>("IsActive");
-
                     b.Property<string>("Name");
-
-                    b.Property<DateTime>("Uploaded");
 
                     b.HasKey("TemplateId");
 
@@ -130,8 +130,7 @@ namespace SmartDocs.Migrations
 
                     b.HasOne("SmartDocs.Models.SmartTemplate", "Template")
                         .WithMany("Documents")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TemplateId1");
                 });
 #pragma warning restore 612, 618
         }

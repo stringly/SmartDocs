@@ -1,0 +1,25 @@
+[
+  {
+    "outputFileName": "wwwroot/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/moment/moment.min.js",
+    "inputFiles": [
+      "wwwroot/lib/moment/moment.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]

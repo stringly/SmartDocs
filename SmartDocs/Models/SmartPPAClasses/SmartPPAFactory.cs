@@ -6,15 +6,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace SmartDocs.Models
+namespace SmartDocs.Models.SmartPPAClasses
 {
     public class SmartPPAFactory
     {
         private IDocumentRepository _repository { get; set; }
         public SmartDocument _PPA { get; private set; }
+        public SmartPPAFactory(IDocumentRepository repo)
+        {
+            _repository = repo;
+        }
         public SmartPPAFactory(IDocumentRepository repo, SmartDocument PPA)
         {
             _repository = repo;
@@ -30,15 +33,15 @@ namespace SmartDocs.Models
                 Created = DateTime.Now,
                 Edited = DateTime.Now,
                 FileName = $"{vm.LastName}, {vm.FirstName} PPA {vm.StartDate.ToString("MM-dd-yy")} to {vm.EndDate.ToString("MM-dd-yy")}.docx",
-                FormDataXml = ViewModelToXML(vm),
-                Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartPPA")                
+                Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartPPA"),
+                FormDataXml = ViewModelToXML(vm)
             };
             _repository.SaveSmartDoc(newDoc);
             _PPA = newDoc;
         }
         public void UpdatePPA(PPAFormViewModel vm)
         {
-            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.PPAId);
+            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
             if (toEdit != null)
             {
                 toEdit.FormDataXml = ViewModelToXML(vm);
@@ -55,20 +58,25 @@ namespace SmartDocs.Models
         {
             XElement root = new XElement("SmartPPA");
             PropertyInfo[] properties = typeof(PPAFormViewModel).GetProperties();
+            root.Add(new XElement("DocumentId", _PPA?.DocumentId ?? vm.DocumentId, new XAttribute("DocumentId", _PPA?.DocumentId ?? vm.DocumentId)));
             foreach(PropertyInfo property in properties)
             {
-                if (property.Name != "Categories" && property.Name != "Components" && property.Name != "job")
+                if (property.Name != "Categories" && property.Name != "Components" && property.Name != "job" && property.Name != "JobList" && property.Name != "Users" && property.Name != "DocumentId")
                 root.Add(new XElement(property.Name, property.GetValue(vm), new XAttribute("id", property.Name)));
             }
+            SmartUser author = _repository.Users.FirstOrDefault(x => x.UserId == vm.AuthorUserId);
+            
+            root.Add(new XElement("AuthorName", author?.DisplayName ?? "Unknown", new XAttribute("AuthorName", author?.DisplayName ?? "Unknown")));
             XElement job = new XElement("JobDescription");
             job.Add(new XElement("ClassTitle", vm.job.ClassTitle, new XAttribute("id", "ClassTitle")));
             job.Add(new XElement("WorkingTitle", vm.job.WorkingTitle, new XAttribute("id", "WorkingTitle")));
             job.Add(new XElement("Grade", vm.job.Grade, new XAttribute("id", "Grade")));
             job.Add(new XElement("WorkingHours", vm.job.WorkingHours, new XAttribute("id", "WorkingHours")));
+            job.Add(new XElement("JobId", vm.job.SmartJobId, new XAttribute("id", "JobId")));
 
 
             XElement categories = new XElement("Categories", new XAttribute("id", "Categories"));
-            foreach (JobDescriptionCategory c in vm.Categories)
+            foreach (JobDescriptionCategory c in vm.job.Categories)
             {
                 XElement category = new XElement("Category", new XAttribute("id", "Category"));
                 category.Add(new XElement("Letter", c.Letter, new XAttribute("id", "Letter")));
@@ -99,7 +107,7 @@ namespace SmartDocs.Models
             
             XElement root = _PPA.FormDataXml;
             PPAFormViewModel vm = new PPAFormViewModel{
-                PPAId = Convert.ToInt32(root.Element("PPAId").Value),
+                DocumentId = _PPA.DocumentId,
                 FirstName = root.Element("FirstName").Value,
                 LastName = root.Element("LastName").Value,
                 DepartmentIdNumber = root.Element("DepartmentIdNumber").Value,
@@ -120,6 +128,7 @@ namespace SmartDocs.Models
             vm.job = new JobDescription();
                         
             XElement job = root.Element("JobDescription");
+            vm.job.SmartJobId = Convert.ToInt32(job.Element("JobId").Value);
             vm.job.ClassTitle = job.Element("ClassTitle").Value;
             vm.job.WorkingTitle = job.Element("WorkingTitle").Value;
             vm.job.Grade = job.Element("Grade").Value;
@@ -163,13 +172,26 @@ namespace SmartDocs.Models
 
         public MemoryStream GenerateDocument()
         {
-
-        }
-        private void InjectXMLFormData(MainDocumentPart mainPart)
-        {
-
-        }
-
-
+            var mem = new MemoryStream();
+            //try
+            //{
+                byte[] byteArray = _repository.Templates.FirstOrDefault(t => t.TemplateId == 1).DataStream;
+                mem.Write(byteArray, 0, byteArray.Length);
+                using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
+                {
+                    MainDocumentPart mainPart = wordDocument.MainDocumentPart;
+                    SmartPPAMappedFieldSet fields = new SmartPPAMappedFieldSet(mainPart);
+                    fields.WriteXMLToFields(_PPA.FormDataXml);
+                    mainPart.Document.Save();
+                }
+            //}
+            //catch
+            //{
+            //    mem.Dispose();
+            //    throw;
+            //}
+            mem.Seek(0, SeekOrigin.Begin);
+            return mem;
+        } 
     }
 }

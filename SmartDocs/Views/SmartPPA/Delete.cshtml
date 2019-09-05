@@ -1,5 +1,4 @@
-﻿@model SmartDocs.Models.SmartPPA
-
+﻿@model SmartDocs.Models.SmartDocument
 @{
     ViewData["Title"] = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,12 +11,12 @@
 <div>
     <hr />
     <dl class="dl-horizontal">
-        @Html.HiddenFor(model => model.PPAId)
+        @Html.HiddenFor(model => model.DocumentId)
         <dt>
             Document Name:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.DocumentName)
+            @Html.DisplayFor(model => model.FileName)
         </dd>
     </dl>
 

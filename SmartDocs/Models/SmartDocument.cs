@@ -13,8 +13,10 @@ namespace SmartDocs.Models
         [Key]
         public int DocumentId { get; set; }
         public int AuthorUserId { get;set; }
-        public string TemplateId { get; set; }
+        public virtual SmartUser Author { get;set;}
+        public int TemplateId { get; set; }
         public virtual SmartTemplate Template { get; set; }
+        public SmartDocumentType Type { get;set;}
         public DateTime Created { get; set; }
         public DateTime Edited { get; set; }
         public string FileName { get; set; }
@@ -25,6 +27,19 @@ namespace SmartDocs.Models
             get { return XElement.Parse(FormData); }
             set { FormData = value.ToString(); }
         }
+        public enum SmartDocumentType
+        {
+            [Display(Name = "Past Performance Appraisal")]
+            PPA,
+            [Display(Name = "Performance Assessment Form")]
+            CounselingForm,
+            [Display(Name = "Job Description")]
+            JobDescription,
+            [Display(Name = "Award Form")]
+            AwardForm
+
+        }
     }
+
 
 }

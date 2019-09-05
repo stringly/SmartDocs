@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartDocs.Models;
 
 namespace SmartDocs.Migrations
 {
     [DbContext(typeof(SmartDocContext))]
-    partial class SmartDocContextModelSnapshot : ModelSnapshot
+    [Migration("20190903030953_fixTemplateId")]
+    partial class fixTemplateId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,11 +95,7 @@ namespace SmartDocs.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<bool>("IsActive");
-
                     b.Property<string>("Name");
-
-                    b.Property<DateTime>("Uploaded");
 
                     b.HasKey("TemplateId");
 

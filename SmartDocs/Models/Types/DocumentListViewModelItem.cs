@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartDocs.Extensions;
+using System;
 
 namespace SmartDocs.Models.Types
 {
@@ -40,7 +41,7 @@ namespace SmartDocs.Models.Types
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.DocumentListViewModelItem"/> class.
+        /// Initializes a new instance of the <see cref="SmartDocs.Models.DocumentListViewModelItem"/> class.
         /// <remarks>
         /// Parameterless constructor
         /// </remarks>
@@ -50,18 +51,18 @@ namespace SmartDocs.Models.Types
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.DocumentListViewModelItem"/> class.
+        /// Initializes a new instance of the <see cref="SmartDocs.Models.DocumentListViewModelItem"/> class.
         /// </summary>
         /// <remarks>
-        /// Builds a viewmodel from an existing <see cref="T:SmartDocs.Models.SmartPPA"/>
+        /// Builds a viewmodel from an existing <see cref="SmartDocs.Models.SmartDocument"/>
         /// </remarks>
-        /// <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
-        public DocumentListViewModelItem(SmartPPA ppa)
+        /// <param name="ppa">A <see cref="SmartDocs.Models.SmartDocument"/>.</param>
+        public DocumentListViewModelItem(SmartDocument doc)
         {
-            DocumentId = ppa.PPAId;
-            DocumentName = ppa.DocumentName;
-            DocumentType = "SmartPPA";
-            CreatedDate = ppa.Created;
+            DocumentId = doc.DocumentId;
+            DocumentName = doc.FileName;
+            DocumentType = EnumDisplayHelper.GetDescription(doc.Type);
+            CreatedDate = doc.Created;
         }
     }
 }

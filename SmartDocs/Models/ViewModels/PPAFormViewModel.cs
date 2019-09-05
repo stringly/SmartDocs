@@ -24,7 +24,7 @@ namespace SmartDocs.Models.ViewModels
         /// <value>
         /// The ppa identifier.
         /// </value>
-        public int PPAId { get; set; }
+        public int DocumentId { get; set; }
 
         /// <summary>
         /// Gets or sets the First Name of the employee who is the subject of the PPA.
@@ -239,52 +239,5 @@ namespace SmartDocs.Models.ViewModels
             Components = new List<OrganizationComponent>();
             Users = new List<UserListItem>();            
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PPAFormViewModel"/> class.
-        /// </summary>
-        /// <remarks>
-        /// This method is designed to facilitate editing an existing PPA in the Db.
-        /// </remarks>
-        /// <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/></param>
-        public PPAFormViewModel(SmartPPA ppa)
-        {
-            PPAId = ppa.PPAId;
-            FirstName = ppa.EmployeeFirstName;
-            LastName = ppa.EmployeeLastName;
-            DepartmentIdNumber = ppa.DepartmentIdNumber;
-            PayrollIdNumber = ppa.PayrollIdNumber;
-            PositionNumber = ppa.PositionNumber;
-            DepartmentDivision = ppa.DepartmentDivision;
-            DepartmentDivisionCode = ppa.DepartmentDivisionCode;
-            WorkPlaceAddress = ppa.WorkplaceAddress;
-            SupervisedByEmployee = ppa.SupervisedByEmployee;
-            StartDate = ppa.StartDate;
-            EndDate = ppa.EndDate;
-            JobId = ppa.Job.JobId;
-            AuthorUserId = ppa.Owner.UserId;
-            Assessment = ppa.AssessmentComments;
-            Recommendation = ppa.RecommendationComments;
-            
-            // the PPA ratings are stored in 6 columns in the DB record... pull the columns in to the array to "re-assemble" the assigned category ratings 
-            // once the Job Description is re-created
-            int?[] scores = {ppa.CategoryScore_1, ppa.CategoryScore_2, ppa.CategoryScore_3, ppa.CategoryScore_4, ppa.CategoryScore_5, ppa.CategoryScore_6 };
-            // pull the Job Description associated with the PPA record by passing the SmartJob associated with the SmartPPA parameter to the appropriate constructor for JobDescription
-            job = new JobDescription(ppa.Job);
-            // reassign the selected scores from the SmartPPA object to the re-created JobDescription object
-            for (int i = 0; i < job.Categories.Count(); i++)
-            {
-                job.Categories[i].SelectedScore = scores[i] ?? 0;
-            }
-
-            Categories = job.Categories;
-            
-        }
-
-        
-
-        
-
-
     }
 }

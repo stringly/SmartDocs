@@ -9,17 +9,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <link asp-href-include="lib/bootstrap/css/*.min.css" rel="stylesheet" />
-    <link asp-href-include="lib/SmartDocs.css" asp-append-version="true" rel="stylesheet"/>
+    <link asp-href-include="lib/SmartDocs/css/SmartDocs.css" asp-append-version="true" rel="stylesheet" />
     <title>@ViewData["Title"]</title>
-    <script src="~/lib/jquery/jquery.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+
     @RenderSection("Head", false)
 </head>
 <body>
 
-    @if(ViewData["ActiveNavBarMenuLink"] != null)
+    @if (ViewData["ActiveNavBarMenuLink"] != null)
     {
         @await Component.InvokeAsync("UserNavBar", new { activeLink = ViewData["ActiveNavBarMenuLink"] })
     }
@@ -29,8 +26,15 @@
     }
 
     <div class="col-xs-12" style="position:relative">
-        <h3 id="pageMessage" class="text-danger" style="font-size:14px">@ViewBag.Message</h3>
+        <div style="text-align:center">
+            <h3 id="pageMessage" style="font-size:14px; color:#9b2121">@ViewBag.Message</h3>
+        </div>
         @RenderBody()
     </div>
 </body>
 </html>
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+@RenderSection("Scripts", false);

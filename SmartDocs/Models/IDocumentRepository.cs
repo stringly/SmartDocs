@@ -14,16 +14,14 @@ namespace SmartDocs.Models
         IEnumerable<SmartTemplate> Templates { get; }
         IEnumerable<SmartDocument> Documents { get; }
         IEnumerable<SmartJob> Jobs { get; }
-        IEnumerable<SmartPPA> PPAs { get; }
+        IEnumerable<SmartDocument> PPAs { get;}
         IEnumerable<OrganizationComponent> Components { get; }
 
         
         void SaveJob(SmartJob job);
         void RemoveJob(SmartJob job);
         void SaveTemplate(SmartTemplate template);
-        void SaveSmartPPA(SmartPPA ppa);
-        void RemoveSmartPPA(SmartPPA ppa);
-        void SaveSmartDoc(SmartDocument doc);
+        int SaveSmartDoc(SmartDocument doc);
         void RemoveSmartDoc(SmartDocument doc);
         void SaveUser(SmartUser user);
         void RemoveUser(SmartUser user);

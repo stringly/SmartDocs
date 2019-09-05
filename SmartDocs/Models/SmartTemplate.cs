@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
@@ -26,7 +27,10 @@ namespace SmartDocs.Models
         /// The name of the template document.
         /// </value>
         public string Name { get; set; }
-        public string Description { get;set;}
+        public string Description { get; set; }
+        public DateTime Uploaded { get;set;}
+        public bool IsActive { get;set;}
+
         public virtual ICollection<SmartDocument> Documents { get; set;}
 
         /// <summary>
@@ -37,12 +41,5 @@ namespace SmartDocs.Models
         /// </value>
         public byte[] DataStream { get; set; }
 
-        //[Column(TypeName = "xml")]
-        //public string FieldMap { get; set; }
-        //[NotMapped]
-        //public XElement FieldMapXml {
-        //    get { return XElement.Parse(FieldMap); }
-        //    set { FieldMap = value.ToString(); }
-        //}
     }
 }

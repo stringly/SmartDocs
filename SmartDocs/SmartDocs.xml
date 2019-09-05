@@ -609,14 +609,6 @@
             The jobs.
             </value>
         </member>
-        <member name="P:SmartDocs.Models.SmartDocContext.PPAs">
-            <summary>
-            Gets or sets the PPAs.
-            </summary>
-            <value>
-            The pp as.
-            </value>
-        </member>
         <member name="P:SmartDocs.Models.SmartDocContext.Components">
             <summary>
             Gets or sets the Components.
@@ -705,21 +697,6 @@
             </remarks>
             <param name="template">A <see cref="T:SmartDocs.Models.SmartTemplate"/> to add/update.</param>
         </member>
-        <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveSmartPPA(SmartDocs.Models.SmartPPA)">
-            <summary>
-            Saves/Updates a <see cref="T:SmartDocs.Models.SmartPPA"/>
-            </summary>
-            <remarks>
-            If this method is passed a SmartPPA with a non-zero SmartPPA.PPAId, it will update the corresponding SmartPPA in the repo. If this method is passed a SmartJob with a SmartPPA.PPAId = 0, then it will create a new SmartPPA in the repo.
-            </remarks>
-            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/> to add/update.</param>
-        </member>
-        <member name="M:SmartDocs.Models.SmartDocumentRepository.RemoveSmartPPA(SmartDocs.Models.SmartPPA)">
-            <summary>
-            Removes a <see cref="T:SmartDocs.Models.SmartPPA"/>.
-            </summary>
-            <param name="ppa">The <see cref="T:SmartDocs.Models.SmartPPA"/> to remove.</param>
-        </member>
         <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveUser(SmartDocs.Models.SmartUser)">
             <summary>
             Saves/Updates a <see cref="T:SmartDocs.Models.SmartUser"/> the user.
@@ -799,320 +776,6 @@
             The job data XML in an XElement Object.
             </value>
         </member>
-        <member name="T:SmartDocs.Models.SmartPPA">
-            <summary>
-            Class that represents the data in a PPA document stored in the DB
-            </summary>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.PPAId">
-            <summary>
-            Gets or sets the SmartPPA identifier.
-            </summary>
-            <value>
-            The SmartPPA identifier.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.Created">
-            <summary>
-            Gets or sets the Date the record was created.
-            </summary>
-            <value>
-            The date the record was created.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.Modified">
-            <summary>
-            Gets or sets the date the record was last modified.
-            </summary>
-            <value>
-            The date the record was last modified.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.Owner">
-            <summary>
-            Gets or sets the SmartUser that authored the record.
-            </summary>
-            <value>
-            The SmartUser listed as the record's author.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.OwnerUserId">
-            <summary>
-            Gets or sets the UserId of the SmartUser that authored the Document
-            </summary>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.Template">
-            <summary>
-            Gets or sets the <see cref="T:SmartDocs.Models.SmartTemplate"/> on which the document is built.
-            </summary>
-            <value>
-            The <see cref="T:SmartDocs.Models.SmartTemplate"/> template.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.TemplateId">
-            <summary>
-            Gets or sets the TemplateId of the Associated Document Template
-            </summary>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.EmployeeFirstName">
-            <summary>
-            Gets or sets the first name of the employee who is the subject of the PPA record.
-            </summary>
-            <value>
-            The first name of the employee.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.EmployeeLastName">
-            <summary>
-            Gets or sets the last name of the employee.
-            </summary>
-            <value>
-            The last name of the employee.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.DepartmentIdNumber">
-            <summary>
-            Gets or sets the PGPD Department ID number for the subject employee.
-            </summary>
-            <value>
-            The department identifier number.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.PayrollIdNumber">
-            <summary>
-            Gets or sets the payroll identifier number for the subject employee.
-            </summary>
-            <value>
-            The payroll identifier number.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.PositionNumber">
-            <summary>
-            Gets or sets the subject employee's position number.
-            </summary>
-            <value>
-            The position number.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.DepartmentDivision">
-            <summary>
-            Gets or sets the subject employee's Department/Division.
-            </summary>
-            <value>
-            The subject employee's Department/Division.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.DepartmentDivisionCode">
-            <summary>
-            Gets or sets the department division code.
-            </summary>
-            <value>
-            The department division code.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.WorkplaceAddress">
-            <summary>
-            Gets or sets the subject employee's workplace address.
-            </summary>
-            <value>
-            The workplace address of the subject employee.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.SupervisedByEmployee">
-            <summary>
-            Gets or sets the name of any component that is supervised by the subject employee.
-            </summary>
-            <value>
-            The name of any component that the subject employee supervises.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.StartDate">
-            <summary>
-            Gets or sets the Start Date for the rating period documented in the PPA.
-            </summary>
-            <value>
-            The rating period start date.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.EndDate">
-            <summary>
-            Gets or sets the End Date for the rating period documented in the PPA.
-            </summary>
-            <value>
-            The end date.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.AssessmentComments">
-            <summary>
-            Gets or sets the supervisor's assessment comments.
-            </summary>
-            <value>
-            The assessment comments.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.RecommendationComments">
-            <summary>
-            Gets or sets the supervisor's recommendation comments.
-            </summary>
-            <value>
-            The recommendation comments.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_1">
-            <summary>
-            Gets or sets the score assigned to Job Description Category 1.
-            </summary>
-            <value>
-            The score assigned to Job Description Category 1.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_2">
-            <summary>
-            Gets or sets the score assigned to Job Description Category 2.
-            </summary>
-            <value>
-            The score assigned to Job Description Category 2.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_3">
-            <summary>
-            Gets or sets the score assigned to Job Description Category 3.
-            </summary>
-            <value>
-            The score assigned to Job Description Category 3.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_4">
-            <summary>
-            Gets or sets the score assigned to Job Description Category 4.
-            </summary>
-            <value>
-            The score assigned to Job Description Category 4.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_5">
-            <summary>
-            Gets or sets the score assigned to Job Description Category 5.
-            </summary>
-            <value>
-            The score assigned to Job Description Category 5.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.CategoryScore_6">
-            <summary>
-            Gets or sets the score assigned to Job Description Category 6.
-            </summary>
-            <value>
-            The score assigned to Job Description Category 6.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.Job">
-            <summary>
-            Gets or sets the <see cref="T:SmartDocs.Models.SmartJob"/> associated with this PPA record.
-            </summary>
-            <value>
-            The associated <see cref="T:SmartDocs.Models.SmartJob"/>.
-            </value>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.JobId">
-            <summary>
-            Gets or sets the JobId of the Job Description associated with this Document
-            </summary>
-        </member>
-        <member name="P:SmartDocs.Models.SmartPPA.DocumentName">
-            <summary>
-            Gets or sets the name of the document.
-            </summary>
-            <value>
-            The name of the document.
-            </value>
-        </member>
-        <member name="M:SmartDocs.Models.SmartPPA.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartPPA"/> class.
-            </summary>
-        </member>
-        <member name="T:SmartDocs.Models.SmartPPAGenerator">
-            <summary>
-            Class that handles repo CRUD and Word Document Assembly for the SmartPPA document type
-            </summary>
-        </member>
-        <member name="F:SmartDocs.Models.SmartPPAGenerator._repository">
-            <summary>
-            The injected repository
-            </summary>
-        </member>
-        <member name="F:SmartDocs.Models.SmartPPAGenerator.Fields">
-            <summary>
-            A List of <see cref="T:SmartDocs.Models.Types.MappedField"/> that represent form data bookmarks in the template document
-            </summary>
-        </member>
-        <member name="F:SmartDocs.Models.SmartPPAGenerator.formData">
-            <summary>
-            The form data mapped to Key-Value, because I was too lazy to re-write the code that worked for testing
-            </summary>
-        </member>
-        <member name="F:SmartDocs.Models.SmartPPAGenerator.job">
-            <summary>
-            The <see cref="T:SmartDocs.Models.JobDescription"/> associated with this SmartPPA instance.
-            </summary>
-        </member>
-        <member name="F:SmartDocs.Models.SmartPPAGenerator.dbPPA">
-            <summary>
-            The <see cref="T:SmartDocs.Models.SmartPPA"/> generated from the Database instance.
-            </summary>
-        </member>
-        <member name="M:SmartDocs.Models.SmartPPAGenerator.#ctor(SmartDocs.Models.IDocumentRepository)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartPPAGenerator"/> class.
-            </summary>
-            <param name="repo">An injected <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
-        </member>
-        <member name="M:SmartDocs.Models.SmartPPAGenerator.ReDownloadPPA(System.Int32)">
-            <summary>
-            Method that re-assembles a SmartPPA from the database
-            </summary>
-            <param name="PPAid">The Identifier of the desired <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
-        </member>
-        <member name="M:SmartDocs.Models.SmartPPAGenerator.SeedFormInfo(SmartDocs.Models.ViewModels.PPAFormViewModel)">
-            <summary>
-            Seeds the form information from a PPAFormViewModel into a Dictionary that can then be used in the field mapping.
-            </summary>
-            <param name="form">A <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
-        </member>
-        <member name="M:SmartDocs.Models.SmartPPAGenerator.GenerateDocument">
-            <summary>
-            Generates the Document by assembling the Template Datastream, PPA Form data, and Job Description data.
-            </summary>
-            <remarks>
-            As of this version, the SmartPPAGenerator is implemented poorly, so the class must be constructed and then 
-            the <see cref="M:SmartDocs.Models.SmartPPAGenerator.SeedFormInfo(PPAFormViewModel)"/> method must be called before this method is called. Otherwise, the 
-            <see cref="P:SmartDocs.Models.SmartPPAGenerator.formData"/> property will be empty, and this method will fail.
-            </remarks>
-            <returns>A <see cref="T:System.IO.MemoryStream"/> of the assembled SmartPPA.</returns>
-        </member>
-        <member name="M:SmartDocs.Models.SmartPPAGenerator.initializeFieldMap">
-            <summary>
-            Initializes the field map.
-            </summary>
-            <remarks>
-            The template document contains several tables with indexed cells into which specific data will be injected.
-            The <see cref="T:SmartDocs.Models.Types.MappedField"/> encapsulates the Name of the field and the Table, Row, and Cell index.
-            </remarks>
-        </member>
-        <member name="M:SmartDocs.Models.SmartPPAGenerator.WriteTemplate">
-            <summary>
-            Writes a new template to the Database.
-            </summary>
-        </member>
-        <member name="M:SmartDocs.Models.SmartPPAGenerator.OverwriteTemplate">
-            <summary>
-            Overwrites the first template in the database.
-            </summary>
-            <remarks>
-            SmartDocs v1.x only uses the SmartPPA template, which must be index 1.
-            </remarks>
-        </member>
         <member name="T:SmartDocs.Models.SmartTemplate">
             <summary>
             Class that represents the Template documents in the database
@@ -1126,7 +789,7 @@
             The identifier for the Template.
             </value>
         </member>
-        <member name="P:SmartDocs.Models.SmartTemplate.DocumentName">
+        <member name="P:SmartDocs.Models.SmartTemplate.Name">
             <summary>
             Gets or sets the name of the Template Document.
             </summary>
@@ -1224,20 +887,20 @@
         </member>
         <member name="M:SmartDocs.Models.Types.DocumentListViewModelItem.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:SmartDocs.Models.DocumentListViewModelItem"/> class.
+            Initializes a new instance of the <see cref="!:SmartDocs.Models.DocumentListViewModelItem"/> class.
             <remarks>
             Parameterless constructor
             </remarks>
             </summary>
         </member>
-        <member name="M:SmartDocs.Models.Types.DocumentListViewModelItem.#ctor(SmartDocs.Models.SmartPPA)">
+        <member name="M:SmartDocs.Models.Types.DocumentListViewModelItem.#ctor(SmartDocs.Models.SmartDocument)">
             <summary>
-            Initializes a new instance of the <see cref="T:SmartDocs.Models.DocumentListViewModelItem"/> class.
+            Initializes a new instance of the <see cref="!:SmartDocs.Models.DocumentListViewModelItem"/> class.
             </summary>
             <remarks>
-            Builds a viewmodel from an existing <see cref="T:SmartDocs.Models.SmartPPA"/>
+            Builds a viewmodel from an existing <see cref="T:SmartDocs.Models.SmartDocument"/>
             </remarks>
-            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartDocument"/>.</param>
         </member>
         <member name="T:SmartDocs.Models.Types.JobDescriptionCategory">
             <summary>
@@ -1756,7 +1419,7 @@
             The View Model used to Create/Edit a PPA Document
             </summary>
         </member>
-        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.PPAId">
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.DocumentId">
             <summary>
             Gets or sets the ppa identifier.
             </summary>
@@ -1865,7 +1528,7 @@
         </member>
         <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.job">
             <summary>
-            Gets or sets the <see cref="T:SmartDocs.Models.JobDescription"/> associated with the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            Gets or sets the <see cref="T:SmartDocs.Models.JobDescription"/> associated with the <see cref="!:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
             </summary>
             <value>
             The job.
@@ -1948,15 +1611,6 @@
             This constructor is used when a new PPA is being created.
             </remarks>
             </summary>
-        </member>
-        <member name="M:SmartDocs.Models.ViewModels.PPAFormViewModel.#ctor(SmartDocs.Models.SmartPPA)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/> class.
-            </summary>
-            <remarks>
-            This method is designed to facilitate editing an existing PPA in the Db.
-            </remarks>
-            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/></param>
         </member>
         <member name="T:SmartDocs.Models.ViewModels.UserIndexListViewModel">
             <summary>

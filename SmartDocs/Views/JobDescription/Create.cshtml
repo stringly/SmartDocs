@@ -5,56 +5,67 @@
 }
 
 
-<h3>Create Job Description</h3>
-<a asp-action="Index">Back to List</a>
-<div>
-    <form asp-action="Create">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="row col-sm-10">
-            <h4>Job Description Details</h4>
-            <div class="form-group col-sm-3">
-                <label asp-for="Rank" class="control-label"></label>
-                @Html.DropDownListFor(model => model.Rank,
-                            new SelectList(Model.Ranks, "Rank"),
-                            "Select Rank",
-                            new { @class = "form-control" })
-                <span asp-validation-for="Rank" class="text-danger"></span>
+    <div class="col-md-12 col-lg-10 col-lg-offset-1">
+        <div class="container-fluid" style="width: 100%">
+            <div class="row">
+                <h3>Create Job Description</h3>
+                <a asp-action="Index">Back to List</a>
             </div>
-            <div class="form-group col-sm-3">
-                <label asp-for="Grade" class="control-label"></label>
-                <input asp-for="Grade" class="form-control" />
-                <span asp-validation-for="Grade" class="text-danger"></span>
-            </div>
-            <div class="form-group col-sm-3">
-                <label asp-for="WorkingTitle" class="control-label"></label>
-                <input asp-for="WorkingTitle" class="form-control" />
-                <span asp-validation-for="WorkingTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group col-sm-2">
-                <label asp-for="WorkingHours" class="control-label"></label>
-                <input asp-for="WorkingHours" class="form-control" />
-                <span asp-validation-for="WorkingHours" class="text-danger"></span>
+            <hr />
+            <div>
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label asp-for="Rank" class="control-label"></label>
+                                @Html.DropDownListFor(model => model.Rank,
+                                            new SelectList(Model.Ranks, "Rank"),
+                                            "Select Rank",
+                                            new { @class = "form-control" })
+                                <span asp-validation-for="Rank" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label asp-for="Grade" class="control-label"></label>
+                                <input asp-for="Grade" class="form-control" />
+                                <span asp-validation-for="Grade" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label asp-for="WorkingTitle" class="control-label"></label>
+                                <input asp-for="WorkingTitle" class="form-control" />
+                                <span asp-validation-for="WorkingTitle" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label asp-for="WorkingHours" class="control-label"></label>
+                                <input asp-for="WorkingHours" class="form-control" />
+                                <span asp-validation-for="WorkingHours" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h4>Categories</h4>
+                        @await Component.InvokeAsync("JobDescriptionCategoryEditor", Model.Categories)                        
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-success" />
+                            <a asp-action="Index" asp-controller="JobDescription" class="btn btn-danger">Cancel</a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="row col-sm-10">
-            <h4>Categories</h4>
-            <div class="container">
-                @await Component.InvokeAsync("JobDescriptionCategoryEditor", Model.Categories)
-            </div>
-        </div>
-        <div class="row col-sm-10">
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </form>
-</div>
-<script>
-    $(document).ready(function () {
-        $('[id^="hideButton"]').click(function () {
-            var Id = $(this).attr('category');
-            $("#hideable-" + Id).toggle();
-        })
-    });
-</script>
+    </div>
+@section scripts{ 
+    <script>
+        $(document).ready(function () {
+            $('[id^="hideButton"]').click(function () {
+                var Id = $(this).attr('category');
+                $("#hideable-" + Id).toggle();
+            })
+        });
+    </script>
+}
+
 

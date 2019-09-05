@@ -461,6 +461,7 @@ namespace SmartDocs.Models.Types
 
                 ParagraphProperties paragraphProperties3 = new ParagraphProperties();
                 SpacingBetweenLines spacingBetweenLines3 = new SpacingBetweenLines(){ After = "100" };
+                Indentation indentation1 = new Indentation() { Left = "0", Hanging = "0" };
 
                 ParagraphMarkRunProperties paragraphMarkRunProperties3 = new ParagraphMarkRunProperties();
                 RunStyle runStyle3 = new RunStyle() { Val = "TimesLarge" };
@@ -476,8 +477,9 @@ namespace SmartDocs.Models.Types
                 paragraphMarkRunProperties3.Append(fontSizeComplexScript1);
                 paragraphProperties3.Append(spacingBetweenLines3);
                 paragraphProperties3.Append(paragraphMarkRunProperties3);
+                paragraphProperties3.Append(indentation1);
                 ProofError proofError1 = new ProofError() { Type = ProofingErrorValues.SpellStart };
-
+                
                 Run run1 = new Run();
 
                 RunProperties runProperties1 = new RunProperties();
@@ -500,9 +502,9 @@ namespace SmartDocs.Models.Types
                 ProofError proofError2 = new ProofError() { Type = ProofingErrorValues.SpellEnd };
 
                 paragraph3.Append(paragraphProperties3);
-                paragraph3.Append(proofError1);
+                //paragraph3.Append(proofError1);
                 paragraph3.Append(run1);
-                paragraph3.Append(proofError2);
+                //paragraph3.Append(proofError2);
 
 
                 tableCell3.Append(paragraph3);
