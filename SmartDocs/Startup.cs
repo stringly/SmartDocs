@@ -9,6 +9,7 @@ using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
+using SmartDocs.OldModels;
 
 namespace SmartDocs
 {
@@ -43,6 +44,7 @@ namespace SmartDocs
             });
 
             services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
+            //services.AddDbContext<SmartDocsContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:OldConnectionString"]));
             services.AddScoped<IClaimsTransformation, ClaimsLoader>();
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();            
@@ -56,14 +58,15 @@ namespace SmartDocs
         /// <param name="app">An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> object.</param>
         /// <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
         /// <param name="service">An <see cref="T:System.IServiceProvider"/> object.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service/*, IDocumentRepository repository, SmartDocsContext oldContext, SmartDocContext newContext*/)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseGoogleExceptionLogging();
             }
-
+            //DataInitializer.SeedTemplate(newContext);
+            //DataInitializer.SeedData(repository, oldContext);
             app.UseStatusCodePages();
             app.UseGoogleExceptionLogging();
             app.UseStaticFiles();

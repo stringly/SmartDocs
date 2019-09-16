@@ -127,26 +127,34 @@ namespace SmartDocs.Models
         public int SaveSmartDoc(SmartDocument doc)
         {
             int returnId = 0;
-            if (doc.DocumentId == 0)
+            try
             {
-                context.Documents.Add(doc);                
-                returnId = doc.DocumentId;
-            }
-            else
-            {
-                SmartDocument toEdit = context.Documents.Where(x => x.DocumentId == doc.DocumentId).FirstOrDefault();
-                if (toEdit != null)
+                if (doc.DocumentId == 0)
                 {
-                    toEdit.AuthorUserId = doc.AuthorUserId;
-                    toEdit.TemplateId = doc.TemplateId;
-                    toEdit.Created = doc.Created;
-                    toEdit.Edited = DateTime.Now;
-                    toEdit.FileName = doc.FileName;
-                    toEdit.FormData = doc.FormData;
-                    returnId = toEdit.DocumentId;
+                    context.Documents.Add(doc);                
+                    returnId = doc.DocumentId;
                 }
+                else
+                {
+                    SmartDocument toEdit = context.Documents.Where(x => x.DocumentId == doc.DocumentId).FirstOrDefault();
+                    if (toEdit != null)
+                    {
+                        toEdit.AuthorUserId = doc.AuthorUserId;
+                        toEdit.TemplateId = doc.TemplateId;
+                        toEdit.Created = doc.Created;
+                        toEdit.Edited = DateTime.Now;
+                        toEdit.FileName = doc.FileName;
+                        toEdit.FormData = doc.FormData;
+                        returnId = toEdit.DocumentId;
+                    }
+                }
+                context.SaveChanges();
             }
-            context.SaveChanges();
+            catch (Exception e)
+            {
+                return 0;
+            }
+            
             return returnId;
         }
         public void RemoveSmartDoc(SmartDocument doc)
