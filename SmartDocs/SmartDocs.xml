@@ -42,6 +42,12 @@
             <remarks>This view shows the user a message generic "not authorized" message.</remarks>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
+        <member name="M:SmartDocs.Controllers.HomeController.NotAuthorized">
+            <summary>
+            View that is returned when a user attempts an action for which they are not authorized.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
         <member name="T:SmartDocs.Controllers.JobDescriptionController">
             <summary>
             Controller for "Job Description" views interactions
@@ -239,24 +245,6 @@
             </remarks>
             <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
-        <member name="M:SmartDocs.Controllers.SmartPPAController.Index">
-            <summary>
-            Shows a view with a list of all <see cref="T:SmartDocs.Models.SmartPPA"/> in the DB.
-            </summary>
-            <remarks>
-            The list returned from this method is created via <see cref="M:SmartDocs.Models.SmartDocumentRepository.PPAs"/>,
-            which limits the result set to the <see cref="T:SmartDocs.Models.SmartPPA"/> objects authored by the
-            <see cref="M:SmartDocs.Models.SmartDocumentRepository.GetCurrentUser"/>
-            </remarks>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
-        </member>
-        <member name="M:SmartDocs.Controllers.SmartPPAController.Download(System.Int32)">
-            <summary>
-            Downloads an existing SmartPPA.
-            </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to be downloaded</param>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.FileStreamResult"/></returns>
-        </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.Create">
             <summary>
             Shows the view to create a new SmartPPA.
@@ -319,12 +307,6 @@
             Gets the <see cref="T:SmartDocs.ViewComponents.JobDescriptionCategoryListViewComponent"/> for a specified JobId.
             </summary>
             <param name="jobId">The identifier of a <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        </member>
-        <member name="M:SmartDocs.Controllers.SmartPPAController.NotAuthorized">
-            <summary>
-            View that is returned when a user attempts an action for which they are not authorized.
-            </summary>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="T:SmartDocs.Controllers.SmartUsersController">
@@ -1618,8 +1600,135 @@
             </summary>
             <remarks>
             This method is designed to facilitate editing an existing PPA in the Db.
+            As of Version 1.1, this method is deprecated for all but conversions from the old format.
             </remarks>
             <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/></param>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.DocumentId">
+            <summary>
+            The SmartDocumentID of the Document from which the model is built
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.AuthorUserId">
+            <summary>
+            Gets or sets the id of the <see cref="T:SmartDocs.Models.SmartUser"/> who is the author.
+            </summary>
+            <value>
+            The author user identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.FirstName">
+            <summary>
+            The First Name of the Employee
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.LastName">
+            <summary>
+            Gets or sets the Last Name of the employee.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.DepartmentIdNumber">
+            <summary>
+            Gets or sets the PGPD Id Number (Badge Number) of the employee who is the subject of the PPA
+            </summary>
+            <value>
+            The department identifier number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.PositionNumber">
+            <summary>
+            Gets or sets the Position Number of the employee who is the subject of the PPA.
+            </summary>
+            <value>
+            The position number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.DepartmentDivision">
+            <summary>
+            Gets or sets the Department or Division to which the subject employee is assigned.
+            </summary>
+            <value>
+            The department division.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.DepartmentDivisionCode">
+            <summary>
+            Gets or sets the Code for the Department or Division to which the subject employee is assigned.
+            </summary>
+            <value>
+            The department division code.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.WorkPlaceAddress">
+            <summary>
+            Gets or sets the subject employee's work place address.
+            </summary>
+            <value>
+            The work place address.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.SupervisedByEmployee">
+            <summary>
+            Gets or sets the component for which the subject employee is a supervisor.
+            </summary>
+            <value>
+            The supervised by employee.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.JobId">
+            <summary>
+            Gets or sets the identifier for the <see cref="T:SmartDocs.Models.SmartJob"/> associated with the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            </summary>
+            <value>
+            The job identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.job">
+            <summary>
+            Gets or sets the <see cref="T:SmartDocs.Models.JobDescription"/> from which the View Model is built.
+            </summary>
+            <value>
+            The job.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.JobList">
+            <summary>
+            Gets or sets the list of Job Descriptions available in the database.
+            </summary>
+            <remarks>
+            This builds a list of <see cref="T:SmartDocs.Models.Types.JobDescriptionListItem"/> from the available <see cref="T:SmartDocs.Models.SmartJob"/>s.
+            </remarks>
+            <value>
+            The job list.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.Components">
+            <summary>
+            Gets or sets the components.
+            </summary>
+            <remarkds>
+            This shows a list of <see cref="T:SmartDocs.Models.OrganizationComponent"/> in the database.
+            </remarkds>
+            <value>
+            The components.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.Users">
+            <summary>
+            Gets or sets the Users list.
+            </summary>
+            <remarks>
+            This assembles a List of <see cref="T:SmartDocs.Models.Types.UserListItem"/> from the available <see cref="T:SmartDocs.Models.SmartUser"/>s.
+            </remarks>
+            <value>
+            The users.
+            </value>
         </member>
         <member name="T:SmartDocs.Models.ViewModels.UserIndexListViewModel">
             <summary>
@@ -1692,7 +1801,7 @@
             </summary>
             <param name="services">An <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> object.</param>
         </member>
-        <member name="M:SmartDocs.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider,SmartDocs.Models.IDocumentRepository,SmartDocs.OldModels.SmartDocsContext,SmartDocs.Models.SmartDocContext)">
+        <member name="M:SmartDocs.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider,SmartDocs.Models.SmartDocContext)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.  
             </summary>

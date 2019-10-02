@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace SmartDocs.Models.SmartPPAClasses
+namespace SmartDocs.Models.SmartDocumentClasses
 {
     public class SmartPPAMappedFieldSet
     {

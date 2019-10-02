@@ -1,7 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Wordprocessing;
 using System.Linq;
 
-namespace SmartDocs.Models.SmartPPAClasses
+namespace SmartDocs.Models.SmartDocumentClasses
 {
     public class SmartCategory
     {

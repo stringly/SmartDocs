@@ -4,7 +4,10 @@
     bool IsAdmin = User.IsInRole("Administrator");
 }
 <h2>Current Job Descriptions</h2>
+@if (IsAdmin)
+{
 <a asp-action="Create">Add New</a>
+}
 <table class="table table-striped">
     <thead>
         <tr>

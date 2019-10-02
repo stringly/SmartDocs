@@ -141,6 +141,7 @@ namespace SmartDocs.Models
                     {
                         toEdit.AuthorUserId = doc.AuthorUserId;
                         toEdit.TemplateId = doc.TemplateId;
+                        toEdit.Type = doc.Type;
                         toEdit.Created = doc.Created;
                         toEdit.Edited = DateTime.Now;
                         toEdit.FileName = doc.FileName;

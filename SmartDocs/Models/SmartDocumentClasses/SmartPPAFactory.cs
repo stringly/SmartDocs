@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 
-namespace SmartDocs.Models.SmartPPAClasses
+namespace SmartDocs.Models.SmartDocumentClasses
 {
     public class SmartPPAFactory
     {
@@ -30,11 +30,13 @@ namespace SmartDocs.Models.SmartPPAClasses
             SmartDocument newDoc = new SmartDocument
             {
                 AuthorUserId = vm.AuthorUserId,
+                Type = SmartDocument.SmartDocumentType.PPA,
                 Created = DateTime.Now,
                 Edited = DateTime.Now,
                 FileName = $"{vm.LastName}, {vm.FirstName} PPA {vm.StartDate.ToString("MM-dd-yy")} to {vm.EndDate.ToString("MM-dd-yy")}.docx",
                 Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartPPA"),
                 FormDataXml = ViewModelToXML(vm)
+
             };
             _repository.SaveSmartDoc(newDoc);
             _PPA = newDoc;
@@ -175,7 +177,7 @@ namespace SmartDocs.Models.SmartPPAClasses
             var mem = new MemoryStream();
             //try
             //{
-                byte[] byteArray = _repository.Templates.FirstOrDefault(t => t.TemplateId == 1).DataStream;
+                byte[] byteArray = _repository.Templates.FirstOrDefault(t => t.Name == "SmartPPA").DataStream;
                 mem.Write(byteArray, 0, byteArray.Length);
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
                 {

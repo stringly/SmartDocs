@@ -58,14 +58,14 @@ namespace SmartDocs
         /// <param name="app">An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> object.</param>
         /// <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
         /// <param name="service">An <see cref="T:System.IServiceProvider"/> object.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service/*, IDocumentRepository repository, SmartDocsContext oldContext, SmartDocContext newContext*/)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service, SmartDocContext newContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseGoogleExceptionLogging();
             }
-            //DataInitializer.SeedTemplate(newContext);
+            DataInitializer.SeedTemplates(newContext);
             //DataInitializer.SeedData(repository, oldContext);
             app.UseStatusCodePages();
             app.UseGoogleExceptionLogging();

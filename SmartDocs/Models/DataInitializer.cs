@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartDocs.Models.SmartPPAClasses;
+using SmartDocs.Models.SmartDocumentClasses;
 using SmartDocs.Models.ViewModels;
 using SmartDocs.OldModels;
 using System;
@@ -12,17 +12,33 @@ namespace SmartDocs.Models
 {
     public class DataInitializer
     {
-        public static void SeedTemplate(SmartDocContext context)
+        public static void SeedTemplates(SmartDocContext context)
         {
-            SmartTemplate template = new SmartTemplate
+            if (!context.Templates.Any(x => x.Name == "SmartPPA"))
             {
-                Name = "SmartPPA",
-                Description = "Performance Appraisal Package: PPA, PAF, and Job Description.",
-                Uploaded = DateTime.Now,
-                IsActive = true,
-                DataStream = File.ReadAllBytes("TemplateNoJobDescriptionCell.docx")
-            };
-            context.Add(template);
+                SmartTemplate template = new SmartTemplate
+                {
+                    Name = "SmartPPA",
+                    Description = "Performance Appraisal Package: PPA, PAF, and Job Description.",
+                    Uploaded = DateTime.Now,
+                    IsActive = true,
+                    DataStream = File.ReadAllBytes("Smart_PPA_Template.docx")
+                };
+                context.Add(template);
+            }
+            if(!context.Templates.Any(x => x.Name == "SmartJobDescription"))
+            {
+                SmartTemplate template = new SmartTemplate
+                {
+                    Name = "SmartJobDescription",
+                    Description = "Job Description Standalone template.",
+                    Uploaded = DateTime.Now,
+                    IsActive = true,
+                    DataStream = File.ReadAllBytes("Job_Description_Template.docx")
+                };
+                context.Add(template);
+            }
+            
             context.SaveChanges();
         }
         public static void SeedData(IDocumentRepository repository, SmartDocsContext oldContext)

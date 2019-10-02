@@ -245,10 +245,12 @@ namespace SmartDocs.Models.ViewModels
         /// </summary>
         /// <remarks>
         /// This method is designed to facilitate editing an existing PPA in the Db.
+        /// As of Version 1.1, this method is deprecated for all but conversions from the old format.
         /// </remarks>
         /// <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/></param>
         public PPAFormViewModel(Ppas ppa)
         {
+            // TODO: Fully Deprecate this constructor.
             DocumentId = ppa.Ppaid;
             FirstName = ppa.EmployeeFirstName;
             LastName = ppa.EmployeeLastName;

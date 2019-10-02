@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
-using SmartDocs.Models.SmartPPAClasses;
+using SmartDocs.Models.SmartDocumentClasses;
 using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
 
@@ -32,57 +32,6 @@ namespace SmartDocs.Controllers
         public SmartPPAController(IDocumentRepository repo)
         {
             _repository = repo;
-        }
-
-        /// <summary>
-        /// Shows a view with a list of all <see cref="T:SmartDocs.Models.SmartPPA"/> in the DB.
-        /// </summary>
-        /// <remarks>
-        /// The list returned from this method is created via <see cref="M:SmartDocs.Models.SmartDocumentRepository.PPAs"/>,
-        /// which limits the result set to the <see cref="T:SmartDocs.Models.SmartPPA"/> objects authored by the
-        /// <see cref="M:SmartDocs.Models.SmartDocumentRepository.GetCurrentUser"/>
-        /// </remarks>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
-        public IActionResult Index()
-        {
-            if (User.HasClaim(x => x.Type == "UserId"))
-            {
-                int UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
-                // create a new view model
-                DocumentListViewModel vm = new DocumentListViewModel();
-                // assign the Documents property of the viewmodel to the a list of DocumentListViewModelItems
-                // that is created by passing each of the repository's PPAs to the DocumentListViewModelItem
-                // constructor that takes a SmartPPA parameter
-                vm.Documents = _repository.PPAs.Where(x => x.AuthorUserId == UserId).ToList().ConvertAll(x => new DocumentListViewModelItem(x));
-                ViewData["Title"] = "My Documents";
-                ViewData["ActiveNavBarMenuLink"] = "My Documents";
-                return View(vm);
-            }
-            else
-            {
-                // TODO: if windows auth fails, the application will return a 401 long before they get here? Shouldn't this check against a null _repo.GetCurrentUser()?
-                return RedirectToAction("Access Denied", "Home");
-            }
-        }
-
-        /// <summary>
-        /// Downloads an existing SmartPPA.
-        /// </summary>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to be downloaded</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.FileStreamResult"/></returns>
-        public ActionResult Download(int id)
-        {
-            // create a generator, passing the repository as a parameter
-            SmartDocument ppa = _repository.PPAs.FirstOrDefault(x => x.DocumentId == id);
-            if (ppa != null)
-            {
-                SmartPPAFactory factory = new SmartPPAFactory(_repository, ppa);
-                return File(factory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", ppa.FileName);
-            }
-            else
-            {
-                return NotFound();
-            }
         }
 
         /// <summary>
@@ -349,7 +298,7 @@ namespace SmartDocs.Controllers
             // invoke the repo method to remove the SmartPPA
             _repository.RemoveSmartDoc(smartPPA);
             // redirect to the Index
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index","Home");
         }
 
         /// <summary>
@@ -375,14 +324,6 @@ namespace SmartDocs.Controllers
             return ViewComponent("JobDescriptionCategoryList", job);
         }
 
-        /// <summary>
-        /// View that is returned when a user attempts an action for which they are not authorized.
-        /// </summary>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        public IActionResult NotAuthorized()
-        {
-            ViewBag.Message = "You are not authorized to take this action";
-            return View();
-        }
+
     }
 }
