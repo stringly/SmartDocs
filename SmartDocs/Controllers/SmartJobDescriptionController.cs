@@ -101,5 +101,13 @@ namespace SmartDocs.Controllers
             return View();
 
         }
+
+        public IActionResult GetJobDescriptionViewComponent(int jobId)
+        {
+            // retrieve the SmartJob from the repo
+            JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == jobId));
+            // return the ViewComponent
+            return ViewComponent("JobDescriptionDetail", job);
+        }
     }
 }

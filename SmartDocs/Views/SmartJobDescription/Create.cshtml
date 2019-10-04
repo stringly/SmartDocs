@@ -102,7 +102,7 @@
                     </div>
                     <div id="PositionInfo" class="">
                         <div class="row">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label asp-for="JobId" class="control-label"></label>
                                 @Html.DropDownListFor(model => model.JobId,
                                         new SelectList(Model.JobList, "JobId", "DisplayName"),
@@ -198,7 +198,7 @@
             });
             $("#JobDescription").change(function () {
                 var Id = $(this).val();
-                var container = $("#RatingInfo");
+                var container = $("#JobDetails");
                 if (Id != 0) {
                     $.get("/SmartJobDescription/GetJobDescriptionViewComponent", { jobId: Id }, function (data) {
                         container.html(data);
