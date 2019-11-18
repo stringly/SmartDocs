@@ -851,7 +851,7 @@
             The name of the document.
             </value>
         </member>
-        <member name="P:SmartDocs.Models.Types.DocumentListViewModelItem.DocumentType">
+        <member name="P:SmartDocs.Models.Types.DocumentListViewModelItem.DocumentTypeDisplayName">
             <summary>
             Gets or sets the type of the document.
             </summary>

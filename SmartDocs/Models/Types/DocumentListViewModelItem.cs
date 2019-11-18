@@ -30,7 +30,11 @@ namespace SmartDocs.Models.Types
         /// <value>
         /// The type of the document.
         /// </value>
-        public string DocumentType { get; set; }
+        public string DocumentTypeDisplayName { get; set; }
+
+        public SmartDocument.SmartDocumentType Type { get; set; }
+
+        public string ParentControllerName { get; set; }
 
         /// <summary>
         /// Gets or sets the date the document was created.
@@ -61,7 +65,26 @@ namespace SmartDocs.Models.Types
         {
             DocumentId = doc.DocumentId;
             DocumentName = doc.FileName;
-            DocumentType = EnumDisplayHelper.GetDescription(doc.Type);
+            Type = doc.Type;
+            switch (doc.Type)
+            {
+                case SmartDocument.SmartDocumentType.PPA:
+                    DocumentTypeDisplayName = "Smart PPA";
+                    ParentControllerName = "SmartPPA";
+                    break;
+                case SmartDocument.SmartDocumentType.JobDescription:
+                    DocumentTypeDisplayName = "Job Description";
+                    ParentControllerName = "SmartJobDescription";
+                    break;
+                case SmartDocument.SmartDocumentType.AwardForm:
+                    DocumentTypeDisplayName = "Award Form";
+                    ParentControllerName = "AwardForm";
+                    break;
+                case SmartDocument.SmartDocumentType.CounselingForm:
+                    DocumentTypeDisplayName = "Counseling Form";
+                    ParentControllerName = "CounselingForm";
+                    break;
+            }            
             CreatedDate = doc.Created;
         }
     }
