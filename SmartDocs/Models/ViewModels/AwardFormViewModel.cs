@@ -1,4 +1,5 @@
-﻿using SmartDocs.Models.Types;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SmartDocs.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +16,8 @@ namespace SmartDocs.Models.ViewModels
     /// </remarks>
     public class AwardFormViewModel
     {
+        public int DocumentId { get; set; }
+        public int AuthorUserId { get; set; }
         [Display(Name = "Nominee's Agency"), Required]
         public string AgencyName { get; set; }
         
@@ -26,8 +29,33 @@ namespace SmartDocs.Models.ViewModels
         public string Division { get; set; }
 
         public List<OrganizationComponent> Components { get; set; }
-        public List<SmartUser> Users { get; set; }        
-        public List<AwardType> Awards { get; set; }
+        public List<SmartUser> Users { get; set; }
+        [Display(Name = "Select Award")]
+        public List<AwardSelectListOption> AwardList { get; set; } 
+        public AwardType Award { get; set; }
 
+        public AwardFormViewModel()
+        {
+            AwardList = new List<AwardSelectListOption>
+            {
+                new AwardSelectListOption
+                {
+                    Text = "Good Conduct Award",
+                    Value = "1",
+                    SubText = "(No Sustained Discipline in past 24 months.)"
+                    
+                },
+                new AwardSelectListOption
+                {
+                    Text = "Exemplary Performance",
+                    Value = "2",
+                    SubText = "(Exceeds Satisfactory or above on appraisal)"
+                },
+            };
+        }
+    }
+
+    public class AwardSelectListOption : SelectListItem {
+        public string SubText { get; set; }
     }
 }

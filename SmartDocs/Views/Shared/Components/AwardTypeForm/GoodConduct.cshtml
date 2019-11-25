@@ -1,0 +1,21 @@
+﻿@model GoodConductAward
+
+<p>@Model.Description</p>
+
+<hidden asp-for="AwardClass"></hidden>
+<hidden asp-for="Name"></hidden>
+<hidden asp-for="ComponentViewName"></hidden>
+<hidden asp-for="Description"></hidden>
+<hidden asp-for="HasRibbon"></hidden>
+<div class="form-group col-md-6">
+    <label asp-for="EligibilityConfirmationDate" class="control-label"></label>
+    <div class='input-group date datetimepicker'>
+        <input type="text" asp-for="EligibilityConfirmationDate" class="form-control" style="padding-top:0px" />
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+    <span asp-validation-for="EligibilityConfirmationDate" class="text-danger"></span>
+</div>
+
+

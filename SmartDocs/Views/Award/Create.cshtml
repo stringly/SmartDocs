@@ -28,6 +28,8 @@
         <h3>Create an Award Nomination Form</h3>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <hidden asp-for="AuthorUserId"></hidden>
+            <hidden asp-for="DocumentId"></hidden>
             <div class="row">
                 <div class="form-group col-md-6">
                     <label asp-for="AgencyName" class="control-label"></label>
@@ -50,7 +52,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label asp-for="NomineeName" class="control-label"></label>
-                    <input asp-for="NomineeName" class="form-control" placeholder="e.g. Lt. Bob Smith #1234 or select nominee from the left"/>
+                    <input asp-for="NomineeName" class="form-control" placeholder="e.g. Lt. Bob Smith #1234 or select nominee from the left" />
                     <span asp-validation-for="NomineeName" class="text-danger"></span>
                 </div>
             </div>
@@ -59,7 +61,7 @@
                     <label asp-for="Division" class="control-label"></label>
                     <select id="Division" name="Division" class="form-control">
                         <option value="" disabled>Choose Division</option>
-                        @foreach(var division in Model.Components)
+                        @foreach (var division in Model.Components)
                         {
                             <option value="@division.Name">@division.Name</option>
                         }
@@ -69,14 +71,44 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label class="control-label"></label>
-                    @* Stopped here *@
+                    <label asp-for="AwardList" class="control-label"></label>
+                    <select id="AwardList"
+                            class="form-control"
+                            data-val="true">
+                        <option value="" data-code="" data-address="" disabled selected>Select Award</option>
+                        @foreach (var award in Model.AwardList)
+                        {
+                            <option value="@award.Value">@award.Text @award.SubText</option>
+                        }
+                    </select>
                 </div>
             </div>
+            <div class="row" id="AwardFormViewComponentWait" style="display:none">
+                <div class="col-sm-2 col-sm-offset-5" style="text-align:center">
+                    <div class="loader" id="loader-4">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <h5 style="margin-top:0px;">Retrieving Award Form</h5>
+                </div>
+            </div>
+            @if (Model.Award != null)
+            {
+                <div class="row" id="AwardFormViewComponentContent">
+                    @await Component.InvokeAsync("AwardTypeForm", Model.Award)
+                </div>
+            }
+            else
+            {
+                <div class="row" id="AwardFormViewComponentContent" style="display:none">
+
+                </div>
+            }
             <div class="row">
                 <div class="form-group col-md-12">
                     <button type="submit" class="btn btn-success">Submit</button>
-                    <a asp-action="Ixdex" asp-controller="Home" class="btn btn-danger">Cancel</a>
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-danger">Cancel</a>
                 </div>
             </div>
         </form>
@@ -91,9 +123,61 @@
     <script type="text/javascript" src="~/lib/moment/moment.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript">
+            (function ($) {
+            var defaultOptions = {
+                validClass: 'has-success',
+                errorClass: 'has-error',
+                highlight: function (element, errorClass, validClass) {
+                    $(element).closest(".form-group")
+                        .removeClass(validClass)
+                        .addClass('has-error');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).closest(".form-group")
+                        .removeClass('has-error')
+                        .addClass(validClass);
+                }
+            };
+
+            $.validator.setDefaults(defaultOptions);
+
+            $.validator.unobtrusive.options = {
+                errorClass: defaultOptions.errorClass,
+                validClass: defaultOptions.validClass,
+            };
+        })(jQuery);
     $(document).ready(function () {
+
         $("#waitSection").hide();
         $("#formSection").show();
+        $("#UsersSelectBox").change(function () {
+            var txt = $(this).find('option:selected').text();
+            console.log(txt);
+            $("#NomineeName").val(txt);
+        })
+        $("#AwardList").change(function () {
+            console.log($(this).Text);
+            $("#AwardFormViewComponentWait").show();
+                var Id = $(this).val();
+                var container = $("#AwardFormViewComponentContent");
+                if (Id != 0) {
+                    $.get("/Award/GetAwardFormViewComponent", { awardId: Id }, function (data) {
+                        container.html(data);
+                        var datepickers = document.getElementsByClassName("datetimepicker");
+                        [].forEach.call(datepickers, function (elem) {
+                             $(elem).datetimepicker({
+                                format: "l"
+                            });
+                        });
+                        $("#AwardFormViewComponentContent").show();
+                        $("#AwardFormViewComponentWait").hide();
+                    });
+                } else {
+                    container.empty();
+                    $("#AwardFormViewComponentContent").hide();
+                    $("#AwardFormViewComponentWait").hide();
+                }
+        })
     });
 </script>
 }
