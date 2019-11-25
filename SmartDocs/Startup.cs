@@ -37,14 +37,15 @@ namespace SmartDocs
         /// <param name="services">An <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> object.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddGoogleExceptionLogging(options => {
+            services.AddGoogleExceptionLogging(options =>
+            {
                 options.ProjectId = "smartdocs-219705";
                 options.ServiceName = "SmartDocs";
                 options.Version = "0.01";
             });
 
             services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
-            //services.AddDbContext<SmartDocsContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:OldConnectionString"]));
+            services.AddDbContext<SmartDocsContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:OldConnectionString"]));
             services.AddScoped<IClaimsTransformation, ClaimsLoader>();
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();            
@@ -58,7 +59,7 @@ namespace SmartDocs
         /// <param name="app">An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> object.</param>
         /// <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
         /// <param name="service">An <see cref="T:System.IServiceProvider"/> object.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service, SmartDocContext newContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service, SmartDocContext newContext/*, SmartDocsContext oldContext, SmartDocumentRepository repository*/)
         {
             if (env.IsDevelopment())
             {

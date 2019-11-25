@@ -1170,6 +1170,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:SmartDocs.Models.ViewModels.AwardFormViewModel">
+            <summary>
+            Viewmodel to serve CRUD views for award forms
+            </summary>
+            <remarks>
+            I think I'll use the ghetto combobox method and populate the VM Bound string fields for Class and Division from a drop-down with data annotations.
+            </remarks>
+        </member>
         <member name="T:SmartDocs.Models.ViewModels.DocumentListViewModel">
             <summary>
             ViewModel that displays a list of Documents

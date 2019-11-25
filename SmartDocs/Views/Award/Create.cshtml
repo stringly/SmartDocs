@@ -1,0 +1,99 @@
+﻿@model AwardFormViewModel
+@{
+    Layout = "_Layout";
+}
+@section head{
+    <link href="~/lib/smart_wizard/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/smart_wizard/css/smart_wizard_theme_arrows.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/SmartDocs/css/spinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+}
+
+<div id="waitSection">
+    <div class="container-fluid" style="width:100%;">
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-5" style="text-align:center">
+                <div class="loader" id="loader-4">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <h3 style="margin-top:0px;">Loading Form</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="formSection" style="display:none;" class="col-md-12 col-lg-10 col-lg-offset-1">
+    <div class="container-fluid" style="width:100%">
+        <h3>Create an Award Nomination Form</h3>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="AgencyName" class="control-label"></label>
+                    <input asp-for="AgencyName" class="form-control" />
+                    <span asp-validation-for="AgencyName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="control-label">Select an Employee to Nominate</label>
+                    <select id="UsersSelectBox"
+                            class="form-control"
+                            data-val="true">
+                        <option value="" data-code="" data-address="" disabled selected>Choose Employee</option>
+                        @foreach (var user in Model.Users)
+                        {
+                            <option value="@user.DisplayName">@user.DisplayName</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="NomineeName" class="control-label"></label>
+                    <input asp-for="NomineeName" class="form-control" placeholder="e.g. Lt. Bob Smith #1234 or select nominee from the left"/>
+                    <span asp-validation-for="NomineeName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Division" class="control-label"></label>
+                    <select id="Division" name="Division" class="form-control">
+                        <option value="" disabled>Choose Division</option>
+                        @foreach(var division in Model.Components)
+                        {
+                            <option value="@division.Name">@division.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Division" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="control-label"></label>
+                    @* Stopped here *@
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <a asp-action="Ixdex" asp-controller="Home" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+@section scripts{
+    <script type="text/javascript" src="~/lib/moment/moment.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#waitSection").hide();
+        $("#formSection").show();
+    });
+</script>
+}

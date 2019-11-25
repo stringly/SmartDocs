@@ -47,6 +47,20 @@ namespace SmartDocs.Models.SmartDocumentClasses
             _repository.SaveSmartDoc(newDoc);
             _jobDescription = newDoc;
         }
+        public void UpdateSmartJobDescription(SmartJobDescriptionViewModel vm)
+        {
+            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
+            if (toEdit != null)
+            {
+                toEdit.AuthorUserId = vm.AuthorUserId;
+                toEdit.Edited = DateTime.Now;
+                toEdit.FileName = $"{vm.LastName}, {vm.FirstName} Job Description {DateTime.Now.ToString("MM-dd-yy")}.docx";
+                toEdit.FormDataXml = ViewModelToXML(vm);
+                toEdit.Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartJobDescription");
+                _repository.SaveSmartDoc(toEdit);
+            }
+            _jobDescription = toEdit;
+        }
         private XElement ViewModelToXML(SmartJobDescriptionViewModel vm)
         {
             XElement root = new XElement("SmartJobDescription");
@@ -126,8 +140,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 {
                     Letter = category.Element("Letter").Value,
                     Weight = Convert.ToInt32(category.Element("Weight").Value),
-                    Title = category.Element("Title").Value,
-                    SelectedScore = Convert.ToInt32(category.Element("SelectedScore").Value)
+                    Title = category.Element("Title").Value
                 };
                 // each category contains a child element named "PositionDescriptionFields" that contains children named "PositionDescriptionItem"
                 IEnumerable<XElement> positionDescriptionFields = category.Element("PositionDescriptionFields").Elements("PositionDescriptionItem");

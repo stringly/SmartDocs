@@ -27,7 +27,7 @@ namespace SmartDocs.Models
         /// <remarks>
         /// Parameterless Constructor
         /// </remarks>
-        public SmartDocContext()
+        protected SmartDocContext()
         {
         }
 
