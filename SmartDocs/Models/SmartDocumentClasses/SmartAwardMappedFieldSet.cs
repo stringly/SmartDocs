@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SmartDocs.Models.SmartDocumentClasses
 {
@@ -93,15 +94,57 @@ namespace SmartDocs.Models.SmartDocumentClasses
             NonBaseSalaryBonusPayAmount = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(15).Elements<TableCell>().ElementAt(4));
             OtherNonBaseSalaryBonus = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(16).Elements<TableCell>().ElementAt(0));
             OtherNonBaseSalaryBonusAmount = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(16).Elements<TableCell>().ElementAt(2));
-            OtherRecognition = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(16).Elements<TableCell>().ElementAt(0));
-            OtherRecognitionSpecified = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(16).Elements<TableCell>().ElementAt(2));
-            OutstandingPerformance1 = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(19).Elements<TableCell>().ElementAt(0));
-            OutstandingPerformance2 = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(20).Elements<TableCell>().ElementAt(0));
-            OutstandingPerformance3 = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(21).Elements<TableCell>().ElementAt(0));
-            GoodConductAppraisalMinimumRatingRequirement = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(23).Elements<TableCell>().ElementAt(0));
-            GoodConductApprovalObtained = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(24).Elements<TableCell>().ElementAt(0));
-            GoodConductApprovalObtainedDate = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(24).Elements<TableCell>().ElementAt(3));
-            OtherJustification = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(26).Elements<TableCell>().ElementAt(0));
+            OtherRecognition = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(17).Elements<TableCell>().ElementAt(0));
+            OtherRecognitionSpecified = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(17).Elements<TableCell>().ElementAt(2));
+            OutstandingPerformance1 = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(22).Elements<TableCell>().ElementAt(0));
+            OutstandingPerformance2 = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(21).Elements<TableCell>().ElementAt(0));
+            OutstandingPerformance3 = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(20).Elements<TableCell>().ElementAt(0));
+            GoodConductAppraisalMinimumRatingRequirement = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(24).Elements<TableCell>().ElementAt(0));
+            GoodConductApprovalObtained = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(25).Elements<TableCell>().ElementAt(0));
+            GoodConductApprovalObtainedDate = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(25).Elements<TableCell>().ElementAt(3));
+            OtherJustification = new SmartParagraph(MainTable.Elements<TableRow>().ElementAt(27).Elements<TableCell>().ElementAt(0));
+        }
+
+        public void WriteXMLToFields(XElement root)
+        {
+            AgencyName.Write(root.Element("AgencyName").Value);
+            EmployeeName.Write(root.Element("NomineeName").Value);
+            EmployeeClassTitle.Write(root.Element("ClassTitle").Value);
+            EmployeeDivision.Write(root.Element("Division").Value);
+            XElement award = root.Element("AwardType");
+            switch (award.Element("ComponentViewName").Value)
+            {
+                case "GoodConduct":
+                    SpecialAchievementAward.Write("X");
+                    GrantOfLeave.Write("X");
+                    GrantOfLeaveCount.Write("2");
+                    OtherRecognition.Write("X");
+                    OtherRecognitionSpecified.Write("Award Ribbon");
+                    GoodConductAppraisalMinimumRatingRequirement.Write("X");
+                    GoodConductApprovalObtained.Write("X");
+                    GoodConductApprovalObtainedDate.Write(Convert.ToDateTime(award.Element("EligibilityConfirmationDate").Value).ToString("MM/dd/yy"));
+                    break;
+                case "Exemplary":
+                    ExemplaryPerformanceAward.Write("X");
+                    ExemplaryPerformanceDateRange.Write($"{Convert.ToDateTime(award.Element("StartDate").Value).ToString("MM/yy")} - {Convert.ToDateTime(award.Element("EndDate").Value).ToString("MM/yy")}");
+                    GrantOfLeave.Write("X");
+                    GrantOfLeaveCount.Write(award.Element("SelectedAwardType").Value);
+                    switch (award.Element("SelectedAwardType").Value)
+                    {
+                        case "1":
+                            OutstandingPerformance1.Write("X");
+                            break;
+                        case "2":
+                            OutstandingPerformance2.Write("X");
+                            break;
+                        case "3":
+                            OutstandingPerformance3.Write("X");
+                            break;
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException("The Award Type specified in the XML Form Data is not recognized.");
+            }
         }
 
 

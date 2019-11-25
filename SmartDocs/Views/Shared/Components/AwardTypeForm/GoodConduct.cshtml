@@ -2,11 +2,18 @@
 
 <p>@Model.Description</p>
 
-<hidden asp-for="AwardClass"></hidden>
-<hidden asp-for="Name"></hidden>
-<hidden asp-for="ComponentViewName"></hidden>
-<hidden asp-for="Description"></hidden>
-<hidden asp-for="HasRibbon"></hidden>
+<input type="hidden" asp-for="AwardClass" />
+<input type="hidden" asp-for="Name">
+<input type="hidden" asp-for="ComponentViewName" />
+<input type="hidden" asp-for="Description" />
+<input type="hidden" asp-for="HasRibbon" />
+<input type="hidden" asp-for="Kind" />
+<input type="hidden" name="Award.AwardClass" id="Award.AwardClass" value="@Model.AwardClass"/>
+<input type="hidden" name="Award.Name" id="Award.Name" value="@Model.Name" />
+<input type="hidden" name="Award.ComponentViewName" id="Award.ComponentViewName" value="@Model.ComponentViewName"/>
+<input type="hidden" name="Award.Description" id="Award.Description" value="@Model.Description" />
+<input type="hidden" name="Award.HasRibbon" id="Award.HasRibbon" value="@(Model.HasRibbon == true ? "True" : "False")" />
+<input type="hidden" name="Award.Kind" id="Award.Kind" value="@Model.Kind" />
 <div class="form-group col-md-6">
     <label asp-for="EligibilityConfirmationDate" class="control-label"></label>
     <div class='input-group date datetimepicker'>

@@ -64,7 +64,9 @@ namespace SmartDocs.Models.SmartDocumentClasses
             foreach(PropertyInfo property in properties)
             {
                 if (property.Name != "Categories" && property.Name != "Components" && property.Name != "job" && property.Name != "JobList" && property.Name != "Users" && property.Name != "DocumentId")
-                root.Add(new XElement(property.Name, property.GetValue(vm), new XAttribute("id", property.Name)));
+                {
+                    root.Add(new XElement(property.Name, property.GetValue(vm), new XAttribute("id", property.Name)));
+                }                
             }
             SmartUser author = _repository.Users.FirstOrDefault(x => x.UserId == vm.AuthorUserId);
             

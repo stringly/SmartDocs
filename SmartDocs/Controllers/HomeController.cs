@@ -116,8 +116,8 @@ namespace SmartDocs.Controllers
                         var jobFactory = new SmartJobDescriptionFactory(_repository, document);
                         return File(jobFactory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", document.FileName);                        
                     case SmartDocument.SmartDocumentType.AwardForm:
-                        // TODO: Add Award Form
-                        return NotFound();                        
+                        var awardFactory = new SmartAwardFactory(_repository, document);
+                        return File(awardFactory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", document.FileName);                        
                     case SmartDocument.SmartDocumentType.CounselingForm:
                         // TODO: Add PAF
                         return NotFound();

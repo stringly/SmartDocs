@@ -599,6 +599,11 @@
             The components.
             </value>
         </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartAwardMappedFieldSet.EmployeeClassTitle">
+            <summary>
+            The Employee's Work Class Title
+            </summary>
+        </member>
         <member name="T:SmartDocs.Models.SmartDocumentRepository">
             <summary>
             Repository that implements DB interactions

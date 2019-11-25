@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
+using SmartDocs.Models.SmartDocumentClasses;
 using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
 
@@ -51,19 +52,32 @@ namespace SmartDocs.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AwardFormViewModel form)
+        public async Task<IActionResult> Create([Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,Award")] AwardFormViewModel form)
         {
             if (!ModelState.IsValid)
             {
                 ViewData["Title"] = "Create Award Form: Error";
+                form.Components = _repository.Components.ToList();
+                form.Users = _repository.Users.ToList();
                 return View(form);
             }
             else
             {
                 // do Award Form Factory stuff
+                SmartAwardFactory factory = new SmartAwardFactory(_repository);
+                factory.CreateSmartAwardForm(form);
+                return RedirectToAction("SaveSuccess", new { id = factory._awardForm.DocumentId });
             }
         }
+        public IActionResult SaveSuccess(int id)
+        {
+            // this is a simple view, so use VB instead of a VM            
+            ViewBag.SmartDocumentId = id;
+            ViewBag.FileName = _repository.Documents.FirstOrDefault(x => x.DocumentId == id).FileName;
+            ViewData["Title"] = "Success!";
+            return View();
 
+        }
         public IActionResult GetAwardFormViewComponent(int awardId)
         {
             AwardType award;

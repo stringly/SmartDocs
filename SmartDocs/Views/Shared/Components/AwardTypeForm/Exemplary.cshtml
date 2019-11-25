@@ -2,11 +2,12 @@
 
 <p>@Model.Description</p>
 
-<hidden asp-for="AwardClass"></hidden>
-<hidden asp-for="Name"></hidden>
-<hidden asp-for="ComponentViewName"></hidden>
-<hidden asp-for="Description"></hidden>
-<hidden asp-for="HasRibbon"></hidden>
+<input type="hidden" asp-for="AwardClass"/>
+<input type="hidden" asp-for="Name">
+<input type="hidden" asp-for="ComponentViewName"/>
+<input type="hidden" asp-for="Description"/>
+<input type="hidden" asp-for="HasRibbon"/>
+<input type="hidden" asp-for="Kind" />
 <div class="form-group col-md-6">
     <label asp-for="StartDate" class="control-label"></label>
     <div class='input-group date datetimepicker'>

@@ -31,10 +31,22 @@ namespace SmartDocs.Models
                 SmartTemplate template = new SmartTemplate
                 {
                     Name = "SmartJobDescription",
-                    Description = "Job Description Standalone template.",
+                    Description = "Job Description Standalone Template.",
                     Uploaded = DateTime.Now,
                     IsActive = true,
                     DataStream = File.ReadAllBytes("Job_Description_Template.docx")
+                };
+                context.Add(template);
+            }
+            if(!context.Templates.Any(x => x.Name == "SmartAwardForm"))
+            {
+                SmartTemplate template = new SmartTemplate
+                {
+                    Name = "SmartAwardForm",
+                    Description = "Award Nomination Form Template",
+                    Uploaded = DateTime.Now,
+                    IsActive = true,
+                    DataStream = File.ReadAllBytes("Award_Form_Template.docx")
                 };
                 context.Add(template);
             }

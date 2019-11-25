@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace SmartDocs.Models.Types
 {
-    public class AwardType
+    public abstract class AwardType
     {
+        public string Kind { get; set; }
         [Required, Display(Name = "Award Class")]
         public string AwardClass { get; set; }
         [Required, Display(Name = "Award Name")]
@@ -16,6 +19,11 @@ namespace SmartDocs.Models.Types
         public string ComponentViewName { get; set;}
         public string Description { get;set; }
         public bool HasRibbon { get; set; }
+
+        public AwardType()
+        {
+
+        }
     }
 
     public class GoodConductAward: AwardType
@@ -25,6 +33,7 @@ namespace SmartDocs.Models.Types
 
         public GoodConductAward()
         {
+            Kind = "GoodConductAward";
             EligibilityConfirmationDate = DateTime.Now;
             ComponentViewName = "GoodConduct";
             AwardClass = "Special Achievement Award";
@@ -35,6 +44,7 @@ namespace SmartDocs.Models.Types
     }
     public class OutstandingPerformanceAward: AwardType
     {
+        
         [Display(Name = "Start Date of Eligibility Period"), Required]
         public DateTime StartDate { get; set; }
         [Display(Name = "End Date of Eligibility Period"), Required]
@@ -45,6 +55,7 @@ namespace SmartDocs.Models.Types
 
         public OutstandingPerformanceAward()
         {
+            Kind = "OutstandingPerformanceAward";
             EndDate = DateTime.Now;
             StartDate = EndDate.AddYears(-1);
             ComponentViewName = "Exemplary";
@@ -70,6 +81,72 @@ namespace SmartDocs.Models.Types
                     Value = "3"
                 }
             };
+        }
+    }
+
+    public class AwardTypeModelBinderProvider : Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinderProvider
+    {
+        public Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinder GetBinder(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBinderProviderContext context)
+        {
+            if (context.Metadata.ModelType != typeof(AwardType))
+            {
+                return null;
+            }
+            var subclasses = new[] { typeof(GoodConductAward), typeof(OutstandingPerformanceAward), };
+            var binders = new Dictionary<Type, (ModelMetadata, IModelBinder)>();
+            foreach (var type in subclasses)
+            {
+                var modelMetadata = context.MetadataProvider.GetMetadataForType(type);
+                binders[type] = (modelMetadata, context.CreateBinder(modelMetadata));
+            }
+            return new AwardTypeModelBinder(binders);
+        }
+    }
+    public class AwardTypeModelBinder : IModelBinder
+    {
+        private Dictionary<Type, (ModelMetadata, IModelBinder)> binders;
+        public AwardTypeModelBinder(Dictionary<Type, (ModelMetadata, IModelBinder)> binders)
+        {
+            this.binders = binders;
+        }
+        public async Task BindModelAsync(ModelBindingContext bindingContext)
+        {
+            var modelKindName = ModelNames.CreatePropertyModelName(bindingContext.ModelName, nameof(AwardType.Kind));
+            var modelTypeValue = bindingContext.ValueProvider.GetValue(modelKindName).FirstValue;
+
+            IModelBinder modelBinder;
+            ModelMetadata modelMetadata;
+            if (modelTypeValue == "GoodConductAward")
+            {
+                (modelMetadata, modelBinder) = binders[typeof(GoodConductAward)];
+            }
+            else if (modelTypeValue == "OutstandingPerformanceAward")
+            {
+                (modelMetadata, modelBinder) = binders[typeof(OutstandingPerformanceAward)];
+            }
+            else
+            {
+                bindingContext.Result = ModelBindingResult.Failed();
+                return;
+            }
+
+            var newBindingContext = DefaultModelBindingContext.CreateBindingContext(
+                bindingContext.ActionContext,
+                bindingContext.ValueProvider,
+                modelMetadata,
+                bindingInfo: null,
+                bindingContext.ModelName);
+            await modelBinder.BindModelAsync(newBindingContext);
+            bindingContext.Result = newBindingContext.Result;
+
+            if (newBindingContext.Result.IsModelSet)
+            {
+                // Setting the ValidationState ensures properties on derived types are correctly 
+                bindingContext.ValidationState[newBindingContext.Result] = new Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ValidationStateEntry
+                {
+                    Metadata = modelMetadata,
+                };
+            }
         }
     }
 }

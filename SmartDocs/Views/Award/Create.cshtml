@@ -28,8 +28,8 @@
         <h3>Create an Award Nomination Form</h3>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <hidden asp-for="AuthorUserId"></hidden>
-            <hidden asp-for="DocumentId"></hidden>
+            <input type="hidden" asp-for="AuthorUserId"/>
+            <input type="hidden" asp-for="DocumentId"/>
             <div class="row">
                 <div class="form-group col-md-6">
                     <label asp-for="AgencyName" class="control-label"></label>

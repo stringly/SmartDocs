@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using SmartDocs.OldModels;
+using SmartDocs.Models.Types;
 
 namespace SmartDocs
 {
@@ -50,7 +51,10 @@ namespace SmartDocs
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();            
             services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new AwardTypeModelBinderProvider());
+            });
         }
 
         /// <summary>
