@@ -2,16 +2,16 @@
 
 <p>@Model.Description</p>
 
-<input type="hidden" asp-for="AwardClass"/>
-<input type="hidden" asp-for="Name">
-<input type="hidden" asp-for="ComponentViewName"/>
-<input type="hidden" asp-for="Description"/>
-<input type="hidden" asp-for="HasRibbon"/>
-<input type="hidden" asp-for="Kind" />
+<input type="hidden" name="Award.AwardClass" id="Award.AwardClass" value="@Model.AwardClass"/>
+<input type="hidden" name="Award.Name" id="Award.Name" value="@Model.Name">
+<input type="hidden" name="Award.ComponentViewName" id="Award.ComponentViewName" value="@Model.ComponentViewName"/>
+<input type="hidden" name="Award.Description" id="Award.Description" value="@Model.Description"/>
+<input type="hidden" name="Award.HasRibbon" id="Award.HasRibbon" value="@(Model.HasRibbon == true ? "True" : "False")"/>
+<input type="hidden" name="Award.Kind" id="Award.Kind" value="@Model.Kind" />
 <div class="form-group col-md-6">
     <label asp-for="StartDate" class="control-label"></label>
     <div class='input-group date datetimepicker'>
-        <input type="text" asp-for="StartDate" class="form-control" style="padding-top:0px" />
+        <input type="text" name="Award.StartDate" id="Award.StartDate" class="form-control" style="padding-top:0px" value="@Model.StartDate" />
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -21,7 +21,7 @@
 <div class="form-group col-md-6">
     <label asp-for="EndDate" class="control-label"></label>
     <div class='input-group date datetimepicker'>
-        <input type="text" asp-for="EndDate" class="form-control" style="padding-top:0px" />
+        <input type="text" name="Award.EndDate" id="Award.EndDate" class="form-control" style="padding-top:0px" value="@Model.EndDate" />
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -30,6 +30,12 @@
 </div>
 <div class="form-group col-md-6">
     <label asp-for="SelectedAwardType" class="control-label"></label>
-    <select asp-for="SelectedAwardType" asp-items="Model.AwardTypes" class="form-control" />
+    <select name="Award.SelectedAwardType" id="Award.SelectedAwardType" class="form-control" value="@Model.SelectedAwardType">
+        <option value="" data-code="" data-address="" disabled selected>Choose Specific Award</option>
+        @foreach (SelectListItem type in Model.AwardTypes)
+        {
+            <option value="@type.Value">@type.Text</option>
+        }
+        </select>
     <span asp-validation-for="SelectedAwardType" class="text-danger"></span>
 </div>

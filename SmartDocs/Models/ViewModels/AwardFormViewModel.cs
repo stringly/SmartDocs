@@ -23,15 +23,16 @@ namespace SmartDocs.Models.ViewModels
         
         [Display(Name = "Nominee's Name"), Required]
         public string NomineeName { get; set; }
-
+        [Display(Name = "Nominee's Class Title"), Required]
         public string ClassTitle { get; set; }
-
+        [Display(Name = "Nominee's District/Division"), Required]
         public string Division { get; set; }
 
         public List<OrganizationComponent> Components { get; set; }
         public List<SmartUser> Users { get; set; }
         [Display(Name = "Select Award")]
-        public List<AwardSelectListOption> AwardList { get; set; } 
+        public List<AwardSelectListOption> AwardList { get; set; }
+        [Required]
         public AwardType Award { get; set; }
 
         public AwardFormViewModel()

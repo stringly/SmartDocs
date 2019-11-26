@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,12 +30,12 @@ namespace SmartDocs.Models.Types
     public class GoodConductAward: AwardType
     {
         [Display(Name ="Date Eligibility Confirmed by IAD"), Required]
+        [DataType(DataType.Date)]
         public DateTime EligibilityConfirmationDate { get; set; }
 
         public GoodConductAward()
         {
             Kind = "GoodConductAward";
-            EligibilityConfirmationDate = DateTime.Now;
             ComponentViewName = "GoodConduct";
             AwardClass = "Special Achievement Award";
             Name = "Good Conduct Award";
@@ -56,8 +57,6 @@ namespace SmartDocs.Models.Types
         public OutstandingPerformanceAward()
         {
             Kind = "OutstandingPerformanceAward";
-            EndDate = DateTime.Now;
-            StartDate = EndDate.AddYears(-1);
             ComponentViewName = "Exemplary";
             AwardClass = "Exemplary Performance Award";
             Name = "Outstanding Performance Award";

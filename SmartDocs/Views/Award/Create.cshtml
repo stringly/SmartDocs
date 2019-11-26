@@ -68,6 +68,11 @@
                     </select>
                     <span asp-validation-for="Division" class="text-danger"></span>
                 </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="ClassTitle" class="control-label"></label>
+                    <input asp-for="ClassTitle" class="form-control" placeholder="e.g. Police Corporal" />
+                    <span asp-validation-for="ClassTitle" class="text-danger"></span>
+                </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
@@ -123,29 +128,29 @@
     <script type="text/javascript" src="~/lib/moment/moment.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript">
-            (function ($) {
-            var defaultOptions = {
-                validClass: 'has-success',
-                errorClass: 'has-error',
-                highlight: function (element, errorClass, validClass) {
-                    $(element).closest(".form-group")
-                        .removeClass(validClass)
-                        .addClass('has-error');
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).closest(".form-group")
-                        .removeClass('has-error')
-                        .addClass(validClass);
-                }
-            };
+        //    (function ($) {
+        //    var defaultOptions = {
+        //        validClass: 'has-success',
+        //        errorClass: 'has-error',
+        //        highlight: function (element, errorClass, validClass) {
+        //            $(element).closest(".form-group")
+        //                .removeClass(validClass)
+        //                .addClass('has-error');
+        //        },
+        //        unhighlight: function (element, errorClass, validClass) {
+        //            $(element).closest(".form-group")
+        //                .removeClass('has-error')
+        //                .addClass(validClass);
+        //        }
+        //    };
 
-            $.validator.setDefaults(defaultOptions);
+        //    $.validator.setDefaults(defaultOptions);
 
-            $.validator.unobtrusive.options = {
-                errorClass: defaultOptions.errorClass,
-                validClass: defaultOptions.validClass,
-            };
-        })(jQuery);
+        //    $.validator.unobtrusive.options = {
+        //        errorClass: defaultOptions.errorClass,
+        //        validClass: defaultOptions.validClass,
+        //    };
+        //})(jQuery);
     $(document).ready(function () {
 
         $("#waitSection").hide();

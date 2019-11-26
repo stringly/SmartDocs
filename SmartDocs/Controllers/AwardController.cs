@@ -85,10 +85,15 @@ namespace SmartDocs.Controllers
             switch (awardId)
             {
                 case 1:
-                    award = new GoodConductAward();
+                    GoodConductAward goodConductAward = new GoodConductAward();
+                    goodConductAward.EligibilityConfirmationDate = DateTime.Now;
+                    award = goodConductAward;                    
                     break;
                 case 2:
-                    award = new OutstandingPerformanceAward();
+                    OutstandingPerformanceAward outAward = new OutstandingPerformanceAward();
+                    outAward.EndDate = DateTime.Now;
+                    outAward.StartDate = outAward.EndDate.AddYears(-1);
+                    award = outAward;
                     break;
                 default:
                     return NotFound();

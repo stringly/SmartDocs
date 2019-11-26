@@ -51,6 +51,7 @@ namespace SmartDocs
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();            
             services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
+
             services.AddMvc(options =>
             {
                 options.ModelBinderProviders.Insert(0, new AwardTypeModelBinderProvider());

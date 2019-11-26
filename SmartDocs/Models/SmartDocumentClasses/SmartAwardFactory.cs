@@ -77,7 +77,19 @@ namespace SmartDocs.Models.SmartDocumentClasses
 
             root.Add(new XElement("AuthorName", author?.DisplayName ?? "Unknown", new XAttribute("AuthorName", author?.DisplayName ?? "Unknown")));
             XElement award = new XElement("AwardType");
-            PropertyInfo[] awardProperties = typeof(AwardType).GetProperties();
+            PropertyInfo[] awardProperties;
+            switch (vm.Award.Kind)
+            {
+                case "GoodConductAward":
+                    awardProperties = typeof(GoodConductAward).GetProperties();
+                    break;
+                case "OutstandingPerformanceAward":
+                    awardProperties = typeof(OutstandingPerformanceAward).GetProperties();
+                    break;
+                default:
+                    awardProperties = typeof(AwardType).GetProperties();
+                    break;
+            }            
             foreach(PropertyInfo property in awardProperties)
             {
                 award.Add(new XElement(property.Name, property.GetValue(vm.Award), new XAttribute("id", property.Name)));
