@@ -32,7 +32,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 _awardForm = award;
             }
         }
-        public void CreateSmartAwardForm(AwardFormViewModel vm)
+        public void CreateSmartAwardForm(SmartAwardViewModel vm)
         {
             SmartDocument newDoc = new SmartDocument
             {
@@ -40,35 +40,35 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 Type = SmartDocument.SmartDocumentType.AwardForm,
                 Created = DateTime.Now,
                 Edited = DateTime.Now,
-                FileName = $"{vm.NomineeName} {vm.Award.Name} Form {DateTime.Now.ToString("MM-dd-yy")}.docx",
+                FileName = $"{vm.NomineeName} {vm.AwardName} Form {DateTime.Now.ToString("MM-dd-yy")}.docx",
                 Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartAwardForm"),
                 FormDataXml = ViewModelToXML(vm)
             };
             _repository.SaveSmartDoc(newDoc);
             _awardForm = newDoc;
         }
-        public void UpdateAwardForm(AwardFormViewModel vm)
+        public void UpdateAwardForm(SmartAwardViewModel vm)
         {
             SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
             if (toEdit != null)
             {
                 toEdit.AuthorUserId = vm.AuthorUserId;
                 toEdit.Edited = DateTime.Now;
-                toEdit.FileName = $"{vm.NomineeName} {vm.Award.Name} Form {DateTime.Now.ToString("MM-dd-yy")}.docx";
+                toEdit.FileName = $"{vm.NomineeName} {vm.AwardName} Form {DateTime.Now.ToString("MM-dd-yy")}.docx";
                 toEdit.Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartAwardForm");
                 _repository.SaveSmartDoc(toEdit);
             }
             _awardForm = toEdit;
         }
 
-        private XElement ViewModelToXML(AwardFormViewModel vm)
+        private XElement ViewModelToXML(SmartAwardViewModel vm)
         {
             XElement root = new XElement("SmartAward");
-            PropertyInfo[] properties = typeof(AwardFormViewModel).GetProperties();
+            PropertyInfo[] properties = typeof(SmartAwardViewModel).GetProperties();
             root.Add(new XElement("DocumentId", _awardForm?.DocumentId ?? vm.DocumentId, new XAttribute("DocumentId", _awardForm?.DocumentId ?? vm.DocumentId)));
             foreach(PropertyInfo property in properties)
             {
-                if (property.Name != "Award" && property.Name != "DocumentId" && property.Name != "Components" && property.Name != "Users" && property.Name != "AwardList")
+                if (property.Name != "DocumentId" && property.Name != "Components" && property.Name != "Users" && property.Name != "AwardList" && property.Name != "Components" && property.Name != "Users" && property.Name != "AwardTypes")
                 {
                     root.Add(new XElement(property.Name, property.GetValue(vm), new XAttribute("id", property.Name)));
                 }
@@ -77,61 +77,62 @@ namespace SmartDocs.Models.SmartDocumentClasses
 
             root.Add(new XElement("AuthorName", author?.DisplayName ?? "Unknown", new XAttribute("AuthorName", author?.DisplayName ?? "Unknown")));
             XElement award = new XElement("AwardType");
-            PropertyInfo[] awardProperties;
-            switch (vm.Award.Kind)
-            {
-                case "GoodConductAward":
-                    awardProperties = typeof(GoodConductAward).GetProperties();
-                    break;
-                case "OutstandingPerformanceAward":
-                    awardProperties = typeof(OutstandingPerformanceAward).GetProperties();
-                    break;
-                default:
-                    awardProperties = typeof(AwardType).GetProperties();
-                    break;
-            }            
-            foreach(PropertyInfo property in awardProperties)
-            {
-                award.Add(new XElement(property.Name, property.GetValue(vm.Award), new XAttribute("id", property.Name)));
-            }
-            root.Add(award);
+            //PropertyInfo[] awardProperties;
+            //switch (vm.Kind)
+            //{
+            //    case "GoodConductAward":
+            //        awardProperties = typeof(GoodConductAwardViewModel).GetProperties();
+            //        break;
+            //    case "OutstandingPerformanceAward":
+            //        awardProperties = typeof(OutstandingPerformanceAwardViewModel).GetProperties();
+            //        break;
+            //    default:
+            //        awardProperties = typeof(SmartAwardViewModel).GetProperties();
+            //        break;
+            //}            
+            //foreach(PropertyInfo property in awardProperties)
+            //{
+            //    award.Add(new XElement(property.Name, property.GetValue(vm.Award), new XAttribute("id", property.Name)));
+            //}
+            //root.Add(award);
             return (root);
         }
 
-        public AwardFormViewModel GetViewModelFromXML()
+        public SmartAwardViewModel GetViewModelFromXML()
         {
-            XElement root = _awardForm.FormDataXml;
-            AwardFormViewModel vm = new AwardFormViewModel
-            {
-                DocumentId = _awardForm.DocumentId,
-                AuthorUserId = Convert.ToInt32(root.Element("AuthorUserId").Value),
-                AgencyName = root.Element("AgencyName").Value,
-                NomineeName = root.Element("Nominee").Value,
-                ClassTitle = root.Element("ClassTitle").Value,
-                Division = root.Element("Division").Value
-            };
-            XElement award = root.Element("AwardType");
-            AwardType awardType;
-            switch (award.Element("ComponentViewName").Value)
+            XElement root = _awardForm.FormDataXml;           
+            SmartAwardViewModel vm;
+            switch (root.Element("ComponentViewName").Value)
             {
                 case "GoodConduct":
-                    awardType = new GoodConductAward
+                    vm = new GoodConductAwardViewModel
                     {
-                        EligibilityConfirmationDate = Convert.ToDateTime(award.Element("EligibilityConfirmationDate").Value),
+                        DocumentId = _awardForm.DocumentId,
+                        AuthorUserId = Convert.ToInt32(root.Element("AuthorUserId").Value),
+                        AgencyName = root.Element("AgencyName").Value,
+                        NomineeName = root.Element("Nominee").Value,
+                        ClassTitle = root.Element("ClassTitle").Value,
+                        Division = root.Element("Division").Value,
+                        EligibilityConfirmationDate = Convert.ToDateTime(root.Element("EligibilityConfirmationDate").Value),
                     };
                     break;
                 case "Exemplary":
-                    awardType = new OutstandingPerformanceAward
+                    vm = new OutstandingPerformanceAwardViewModel
                     {
-                        StartDate = Convert.ToDateTime(award.Element("StartDate").Value),
-                        EndDate = Convert.ToDateTime(award.Element("EndDate").Value),
-                        SelectedAwardType = Convert.ToInt32(award.Element("SelectedAwardType").Value)
+                        DocumentId = _awardForm.DocumentId,
+                        AuthorUserId = Convert.ToInt32(root.Element("AuthorUserId").Value),
+                        AgencyName = root.Element("AgencyName").Value,
+                        NomineeName = root.Element("Nominee").Value,
+                        ClassTitle = root.Element("ClassTitle").Value,
+                        Division = root.Element("Division").Value,
+                        StartDate = Convert.ToDateTime(root.Element("StartDate").Value),
+                        EndDate = Convert.ToDateTime(root.Element("EndDate").Value),
+                        SelectedAwardType = Convert.ToInt32(root.Element("SelectedAwardType").Value)
                     };
                     break;
                 default:
                     throw new NotImplementedException("The Award Type specified in the FormData collection is missing or invalid.");
             }
-            vm.Award = awardType;
             return vm;
         }
 

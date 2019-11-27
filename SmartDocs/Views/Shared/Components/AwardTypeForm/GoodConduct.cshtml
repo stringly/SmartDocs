@@ -1,17 +1,17 @@
-﻿@model GoodConductAward
+﻿@model GoodConductAwardViewModel
 
 <p>@Model.Description</p>
 
-<input type="hidden" name="Award.AwardClass" id="Award.AwardClass" value="@Model.AwardClass"/>
-<input type="hidden" name="Award.Name" id="Award.Name" value="@Model.Name" />
-<input type="hidden" name="Award.ComponentViewName" id="Award.ComponentViewName" value="@Model.ComponentViewName"/>
-<input type="hidden" name="Award.Description" id="Award.Description" value="@Model.Description" />
-<input type="hidden" name="Award.HasRibbon" id="Award.HasRibbon" value="@(Model.HasRibbon == true ? "True" : "False")" />
-<input type="hidden" name="Award.Kind" id="Award.Kind" value="@Model.Kind" />
+<input type="hidden" asp-for="AwardClass" />
+<input type="hidden" asp-for="AwardName">
+<input type="hidden" asp-for="ComponentViewName" />
+<input type="hidden" asp-for="Description" />
+<input type="hidden" asp-for="HasRibbon" />
+<input type="hidden" asp-for="Kind" />
 <div class="form-group col-md-6">
     <label asp-for="EligibilityConfirmationDate" class="control-label"></label>
     <div class='input-group date datetimepicker'>
-        <input type="text" name="Award.EligibilityConfirmationDate" id="Award.EligibilityConfirmationDate" class="form-control" style="padding-top:0px" />
+        <input type="text" asp-for="EligibilityConfirmationDate" class="form-control" style="padding-top:0px" />
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>

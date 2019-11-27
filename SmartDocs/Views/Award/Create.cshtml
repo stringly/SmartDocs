@@ -1,4 +1,4 @@
-﻿@model AwardFormViewModel
+﻿@model SmartAwardViewModel
 @{
     Layout = "_Layout";
 }
@@ -98,18 +98,9 @@
                     <h5 style="margin-top:0px;">Retrieving Award Form</h5>
                 </div>
             </div>
-            @if (Model.Award != null)
-            {
-                <div class="row" id="AwardFormViewComponentContent">
-                    @await Component.InvokeAsync("AwardTypeForm", Model.Award)
-                </div>
-            }
-            else
-            {
-                <div class="row" id="AwardFormViewComponentContent" style="display:none">
+            <div class="row" id="AwardFormViewComponentContent" style="display:none">
 
-                </div>
-            }
+            </div>            
             <div class="row">
                 <div class="form-group col-md-12">
                     <button type="submit" class="btn btn-success">Submit</button>

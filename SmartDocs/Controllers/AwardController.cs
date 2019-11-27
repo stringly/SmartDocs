@@ -32,8 +32,8 @@ namespace SmartDocs.Controllers
             int UserId = 0;
             if(User.HasClaim(x => x.Type == "UserId"))
             {
-                UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);            
-                AwardFormViewModel vm = new AwardFormViewModel();
+                UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
+                EmptyAwardViewModel vm = new EmptyAwardViewModel();
                 vm.AuthorUserId = UserId;
                 vm.AgencyName = Agency;
                 vm.NomineeName = NomineeName;
@@ -52,7 +52,7 @@ namespace SmartDocs.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,Award")] AwardFormViewModel form)
+        public async Task<IActionResult> Create([Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
         {
             if (!ModelState.IsValid)
             {
@@ -80,28 +80,28 @@ namespace SmartDocs.Controllers
         }
         public IActionResult GetAwardFormViewComponent(int awardId)
         {
-            AwardType award;
+            SmartAwardViewModel awardVM;
 
             switch (awardId)
             {
                 case 1:
-                    GoodConductAward goodConductAward = new GoodConductAward();
+                    GoodConductAwardViewModel goodConductAward = new GoodConductAwardViewModel();
                     goodConductAward.EligibilityConfirmationDate = DateTime.Now;
-                    award = goodConductAward;                    
+                    awardVM = goodConductAward;                    
                     break;
                 case 2:
-                    OutstandingPerformanceAward outAward = new OutstandingPerformanceAward();
+                    OutstandingPerformanceAwardViewModel outAward = new OutstandingPerformanceAwardViewModel();
                     outAward.EndDate = DateTime.Now;
                     outAward.StartDate = outAward.EndDate.AddYears(-1);
-                    award = outAward;
+                    awardVM = outAward;
                     break;
                 default:
                     return NotFound();
             }
-            if(award != null)
+            if(awardVM != null)
             {
                 // return the ViewComponent
-                return ViewComponent("AwardTypeForm", award);
+                return ViewComponent("AwardTypeForm", awardVM);
             }
             else
             {

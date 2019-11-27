@@ -1,67 +1,137 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SmartDocs.Models.Types
+namespace SmartDocs.Models.ViewModels
 {
-    public abstract class AwardType
+    public abstract class SmartAwardViewModel
     {
+        public int DocumentId { get; set; }
+        public int AuthorUserId { get; set; }
+        [Display(Name = "Nominee's Agency"), Required]
+        public string AgencyName { get; set; }
+        [Display(Name = "Nominee's Name"), Required]
+        public string NomineeName { get; set; }
+        [Display(Name = "Nominee's Class Title"), Required]
+        public string ClassTitle { get; set; }
+        [Display(Name = "Nominee's District/Division"), Required]
+        public string Division { get; set; }
         public string Kind { get; set; }
         [Required, Display(Name = "Award Class")]
         public string AwardClass { get; set; }
         [Required, Display(Name = "Award Name")]
-        public string Name { get; set; }
-        public string ComponentViewName { get; set;}
-        public string Description { get;set; }
+        public string AwardName { get; set; }
+        public string ComponentViewName { get; set; }
+        public string Description { get; set; }
         public bool HasRibbon { get; set; }
+        public List<OrganizationComponent> Components { get; set; }
+        public List<SmartUser> Users { get; set; }
+        [Display(Name = "Select Award")]
+        public List<AwardSelectListOption> AwardList { get; set; }
+    }
 
-        public AwardType()
+    public class EmptyAwardViewModel : SmartAwardViewModel
+    {
+        public EmptyAwardViewModel()
         {
+            AwardList = new List<AwardSelectListOption>
+            {
+                new AwardSelectListOption
+                {
+                    Text = "Good Conduct Award",
+                    Value = "1",
+                    SubText = "(No Sustained Discipline in past 24 months.)"
 
+                },
+                new AwardSelectListOption
+                {
+                    Text = "Exemplary Performance",
+                    Value = "2",
+                    SubText = "(Exceeds Satisfactory or above on appraisal)"
+                },
+            };
         }
     }
 
-    public class GoodConductAward: AwardType
+    public class AwardSelectListOption : SelectListItem
     {
-        [Display(Name ="Date Eligibility Confirmed by IAD"), Required]
+        public string SubText { get; set; }
+    }
+
+    public class GoodConductAwardViewModel: SmartAwardViewModel
+    {
+        [Display(Name = "Date Eligibility Confirmed by IAD"), Required]
         [DataType(DataType.Date)]
         public DateTime EligibilityConfirmationDate { get; set; }
 
-        public GoodConductAward()
+        public GoodConductAwardViewModel()
         {
-            Kind = "GoodConductAward";
+            Kind = "GoodConductAwardViewModel";
             ComponentViewName = "GoodConduct";
             AwardClass = "Special Achievement Award";
-            Name = "Good Conduct Award";
+            AwardName = "Good Conduct Award";
             HasRibbon = true;
             Description = "To be eligible for the Good Conduct Award, the employee must have received an overall rating of at least 'Exceeds Satisfactory' on the last two appraisals, and has not received any sustained disciplinary action within the last 24 months. Documentation confirming the employee's eligibility must be obtained from IAD and included with the Nomination Form.";
+
+            AwardList = new List<AwardSelectListOption>
+            {
+                new AwardSelectListOption
+                {
+                    Text = "Good Conduct Award",
+                    Value = "1",
+                    SubText = "(No Sustained Discipline in past 24 months.)"
+
+                },
+                new AwardSelectListOption
+                {
+                    Text = "Exemplary Performance",
+                    Value = "2",
+                    SubText = "(Exceeds Satisfactory or above on appraisal)"
+                },
+            };
         }
     }
-    public class OutstandingPerformanceAward: AwardType
+    public class OutstandingPerformanceAwardViewModel : SmartAwardViewModel
     {
-        
+
         [Display(Name = "Start Date of Eligibility Period"), Required]
         public DateTime StartDate { get; set; }
         [Display(Name = "End Date of Eligibility Period"), Required]
         public DateTime EndDate { get; set; }
         [Required, Display(Name = "Select the type of Outstanding Performance Award")]
-        public int SelectedAwardType { get;set;}
-        public List<SelectListItem> AwardTypes { get;set;}
+        public int SelectedAwardType { get; set; }
+        public List<SelectListItem> AwardTypes { get; set; }
 
-        public OutstandingPerformanceAward()
+        public OutstandingPerformanceAwardViewModel()
         {
-            Kind = "OutstandingPerformanceAward";
+            Kind = "OutstandingPerformanceAwardViewModel";
             ComponentViewName = "Exemplary";
             AwardClass = "Exemplary Performance Award";
-            Name = "Outstanding Performance Award";
+            AwardName = "Outstanding Performance Award";
             HasRibbon = false;
             Description = "To be eligible for the Outstanding Performance Award, the employee must have received at minimum a rating of 'Exceeds Satisfactory' on the last appraisal. See the options below for more detail.";
+            AwardList = new List<AwardSelectListOption>
+            {
+                new AwardSelectListOption
+                {
+                    Text = "Good Conduct Award",
+                    Value = "1",
+                    SubText = "(No Sustained Discipline in past 24 months.)"
+
+                },
+                new AwardSelectListOption
+                {
+                    Text = "Exemplary Performance",
+                    Value = "2",
+                    SubText = "(Exceeds Satisfactory or above on appraisal)"
+                },
+            };
+
             AwardTypes = new List<SelectListItem>
             {
                 new SelectListItem
@@ -87,11 +157,11 @@ namespace SmartDocs.Models.Types
     {
         public Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinder GetBinder(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBinderProviderContext context)
         {
-            if (context.Metadata.ModelType != typeof(AwardType))
+            if (context.Metadata.ModelType != typeof(SmartAwardViewModel))
             {
                 return null;
             }
-            var subclasses = new[] { typeof(GoodConductAward), typeof(OutstandingPerformanceAward), };
+            var subclasses = new[] { typeof(GoodConductAwardViewModel), typeof(OutstandingPerformanceAwardViewModel), };
             var binders = new Dictionary<Type, (ModelMetadata, IModelBinder)>();
             foreach (var type in subclasses)
             {
@@ -110,18 +180,18 @@ namespace SmartDocs.Models.Types
         }
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var modelKindName = ModelNames.CreatePropertyModelName(bindingContext.ModelName, nameof(AwardType.Kind));
+            var modelKindName = ModelNames.CreatePropertyModelName(bindingContext.ModelName, nameof(SmartAwardViewModel.Kind));
             var modelTypeValue = bindingContext.ValueProvider.GetValue(modelKindName).FirstValue;
 
             IModelBinder modelBinder;
             ModelMetadata modelMetadata;
-            if (modelTypeValue == "GoodConductAward")
+            if (modelTypeValue == "GoodConductAwardViewModel")
             {
-                (modelMetadata, modelBinder) = binders[typeof(GoodConductAward)];
+                (modelMetadata, modelBinder) = binders[typeof(GoodConductAwardViewModel)];
             }
-            else if (modelTypeValue == "OutstandingPerformanceAward")
+            else if (modelTypeValue == "OutstandingPerformanceAwardViewModel")
             {
-                (modelMetadata, modelBinder) = binders[typeof(OutstandingPerformanceAward)];
+                (modelMetadata, modelBinder) = binders[typeof(OutstandingPerformanceAwardViewModel)];
             }
             else
             {
@@ -149,3 +219,4 @@ namespace SmartDocs.Models.Types
         }
     }
 }
+

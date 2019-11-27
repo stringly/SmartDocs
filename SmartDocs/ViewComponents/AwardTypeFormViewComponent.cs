@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models.Types;
+using SmartDocs.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SmartDocs.ViewComponents
 {
     public class AwardTypeFormViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(AwardType award)
+        public async Task<IViewComponentResult> InvokeAsync(SmartAwardViewModel award)
         {
             return View(award.ComponentViewName, award);
         }
