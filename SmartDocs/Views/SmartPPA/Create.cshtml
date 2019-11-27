@@ -182,29 +182,29 @@
     <script type="text/javascript" src="~/lib/moment/moment.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script>
-        (function ($) {
-            var defaultOptions = {
-                validClass: 'has-success',
-                errorClass: 'has-error',
-                highlight: function (element, errorClass, validClass) {
-                    $(element).closest(".form-group")
-                        .removeClass(validClass)
-                        .addClass('has-error');
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).closest(".form-group")
-                        .removeClass('has-error')
-                        .addClass(validClass);
-                }
-            };
+            (function ($) {
+                var defaultOptions = {
+                    validClass: 'has-success',
+                    errorClass: 'has-error',
+                    highlight: function (element, errorClass, validClass) {
+                        $(element).closest(".form-group")
+                            .removeClass(validClass)
+                            .addClass('has-error');
+                    },
+                    unhighlight: function (element, errorClass, validClass) {
+                        $(element).closest(".form-group")
+                            .removeClass('has-error')
+                            .addClass(validClass);
+                    }
+                };
 
-            $.validator.setDefaults(defaultOptions);
+                $.validator.setDefaults(defaultOptions);
 
-            $.validator.unobtrusive.options = {
-                errorClass: defaultOptions.errorClass,
-                validClass: defaultOptions.validClass,
-            };
-        })(jQuery);
+                $.validator.unobtrusive.options = {
+                    errorClass: defaultOptions.errorClass,
+                    validClass: defaultOptions.validClass,
+                };
+            })(jQuery);
         $(document).ready(function () {
             $('#smartwizard').smartWizard({
                 theme: 'arrows',
@@ -291,6 +291,7 @@
             });
             $("#waitSection").hide();
             $("#formSection").show();
+
         });
         function addHeaders() {
             var editor = CKEDITOR.instances['comments'];

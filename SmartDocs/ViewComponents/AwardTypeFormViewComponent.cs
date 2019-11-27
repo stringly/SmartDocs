@@ -10,7 +10,7 @@ namespace SmartDocs.ViewComponents
 {
     public class AwardTypeFormViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(SmartAwardViewModel award)
+        public async Task<IViewComponentResult> InvokeAsync(AwardTypeFormViewComponentViewModel award)
         {
             return View(award.ComponentViewName, award);
         }

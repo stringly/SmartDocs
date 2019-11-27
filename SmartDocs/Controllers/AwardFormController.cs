@@ -13,12 +13,12 @@ using SmartDocs.Models.ViewModels;
 namespace SmartDocs.Controllers
 {
     [Authorize(Roles = "User, Administrator")]
-    public class AwardController : Controller
+    public class AwardFormController : Controller
     {
         private IDocumentRepository _repository;
 
 
-        public AwardController(IDocumentRepository repo)
+        public AwardFormController(IDocumentRepository repo)
         {
             _repository = repo;
         }
@@ -52,7 +52,7 @@ namespace SmartDocs.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
+        public async Task<IActionResult> Create([Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,SelectedAward,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
         {
             if (!ModelState.IsValid)
             {
@@ -64,10 +64,24 @@ namespace SmartDocs.Controllers
             else
             {
                 // do Award Form Factory stuff
-                SmartAwardFactory factory = new SmartAwardFactory(_repository);
+                SmartAwardFactory factory = new SmartAwardFactory(_repository);                
                 factory.CreateSmartAwardForm(form);
                 return RedirectToAction("SaveSuccess", new { id = factory._awardForm.DocumentId });
             }
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            SmartDocument award = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            if (award == null)
+            {
+                return NotFound();
+            }
+            SmartAwardFactory factory = new SmartAwardFactory(_repository, award);
+            SmartAwardViewModel vm = factory.GetViewModelFromXML();
+            ViewData["Title"] = "Edit Award Form";
+            return View(vm);
+
         }
         public IActionResult SaveSuccess(int id)
         {
@@ -80,17 +94,17 @@ namespace SmartDocs.Controllers
         }
         public IActionResult GetAwardFormViewComponent(int awardId)
         {
-            SmartAwardViewModel awardVM;
+            AwardTypeFormViewComponentViewModel awardVM;
 
             switch (awardId)
             {
                 case 1:
-                    GoodConductAwardViewModel goodConductAward = new GoodConductAwardViewModel();
+                    GoodConductAwardFormViewComponentViewModel goodConductAward = new GoodConductAwardFormViewComponentViewModel();
                     goodConductAward.EligibilityConfirmationDate = DateTime.Now;
                     awardVM = goodConductAward;                    
                     break;
                 case 2:
-                    OutstandingPerformanceAwardViewModel outAward = new OutstandingPerformanceAwardViewModel();
+                    OutstandingPerformanceAwardFormViewComponentViewModel outAward = new OutstandingPerformanceAwardFormViewComponentViewModel();
                     outAward.EndDate = DateTime.Now;
                     outAward.StartDate = outAward.EndDate.AddYears(-1);
                     awardVM = outAward;
@@ -107,6 +121,38 @@ namespace SmartDocs.Controllers
             {
                 return NotFound();
             }
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            // query string is empty, return 404
+            if (id == null)
+            {
+                return NotFound();
+            }
+            // retrieve the SmartPPA from the repo
+            var toDelete = _repository.Documents.FirstOrDefault(m => m.DocumentId == id);
+
+            if (toDelete == null)
+            {
+                // no SmartPPA could be found with the provided id
+                return NotFound();
+            }
+            // return the View (which uses the Domain Object as a model)
+            ViewData["Title"] = "Delete Award Form";
+            return View(toDelete);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            // retrieve the SmartPPA from the repo
+            var toDelete = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            // invoke the repo method to remove the SmartPPA
+            _repository.RemoveSmartDoc(toDelete);
+            // redirect to the Index
+            return RedirectToAction("Index", "Home");
         }
     }
 }

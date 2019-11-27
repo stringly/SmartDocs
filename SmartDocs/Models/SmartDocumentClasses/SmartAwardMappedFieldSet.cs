@@ -110,9 +110,8 @@ namespace SmartDocs.Models.SmartDocumentClasses
             AgencyName.Write(root.Element("AgencyName").Value);
             EmployeeName.Write(root.Element("NomineeName").Value);
             EmployeeClassTitle.Write(root.Element("ClassTitle").Value);
-            EmployeeDivision.Write(root.Element("Division").Value);
-            XElement award = root.Element("AwardType");
-            switch (award.Element("ComponentViewName").Value)
+            EmployeeDivision.Write(root.Element("Division").Value);            
+            switch (root.Element("ComponentViewName").Value)
             {
                 case "GoodConduct":
                     SpecialAchievementAward.Write("X");
@@ -122,14 +121,14 @@ namespace SmartDocs.Models.SmartDocumentClasses
                     OtherRecognitionSpecified.Write("Award Ribbon");
                     GoodConductAppraisalMinimumRatingRequirement.Write("X");
                     GoodConductApprovalObtained.Write("X");
-                    GoodConductApprovalObtainedDate.Write(Convert.ToDateTime(award.Element("EligibilityConfirmationDate").Value).ToString("MM/dd/yy"));
+                    GoodConductApprovalObtainedDate.Write(Convert.ToDateTime(root.Element("EligibilityConfirmationDate").Value).ToString("MM/dd/yy"));
                     break;
                 case "Exemplary":
                     ExemplaryPerformanceAward.Write("X");
-                    ExemplaryPerformanceDateRange.Write($"{Convert.ToDateTime(award.Element("StartDate").Value).ToString("MM/yy")} - {Convert.ToDateTime(award.Element("EndDate").Value).ToString("MM/yy")}");
+                    ExemplaryPerformanceDateRange.Write($"{Convert.ToDateTime(root.Element("StartDate").Value).ToString("MM/yy")} - {Convert.ToDateTime(root.Element("EndDate").Value).ToString("MM/yy")}");
                     GrantOfLeave.Write("X");
-                    GrantOfLeaveCount.Write(award.Element("SelectedAwardType").Value);
-                    switch (award.Element("SelectedAwardType").Value)
+                    GrantOfLeaveCount.Write(root.Element("SelectedAwardType").Value);
+                    switch (root.Element("SelectedAwardType").Value)
                     {
                         case "1":
                             OutstandingPerformance1.Write("X");

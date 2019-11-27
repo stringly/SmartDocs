@@ -1,0 +1,199 @@
+﻿@model SmartAwardViewModel
+@{
+    Layout = "_Layout";
+}
+@section head{
+    <link href="~/lib/smart_wizard/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/smart_wizard/css/smart_wizard_theme_arrows.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/SmartDocs/css/spinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+}
+
+<div id="waitSection">
+    <div class="container-fluid" style="width:100%;">
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-5" style="text-align:center">
+                <div class="loader" id="loader-4">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <h3 style="margin-top:0px;">Loading Form</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="formSection" style="display:none;" class="col-md-12 col-lg-10 col-lg-offset-1">
+    <div class="container-fluid" style="width:100%">
+        <h3>Create an Award Nomination Form</h3>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AuthorUserId" />
+            <input type="hidden" asp-for="DocumentId" />
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="AgencyName" class="control-label"></label>
+                    <input asp-for="AgencyName" class="form-control" />
+                    <span asp-validation-for="AgencyName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="control-label">Select an Employee to Nominate</label>
+                    <select id="UsersSelectBox"
+                            class="form-control"
+                            data-val="true">
+                        <option value="" data-code="" data-address="" disabled selected>Choose Employee</option>
+                        @foreach (var user in Model.Users)
+                        {
+                            <option value="@user.DisplayName">@user.DisplayName</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="NomineeName" class="control-label"></label>
+                    <input asp-for="NomineeName" class="form-control" placeholder="e.g. Lt. Bob Smith #1234 or select nominee from the left" />
+                    <span asp-validation-for="NomineeName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Division" class="control-label"></label>
+                    <select id="Division" name="Division" class="form-control">
+                        <option value="" disabled>Choose Division</option>
+                        @foreach (var division in Model.Components)
+                        {
+                            <option value="@division.Name">@division.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Division" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="ClassTitle" class="control-label"></label>
+                    <input asp-for="ClassTitle" class="form-control" placeholder="e.g. Police Corporal" />
+                    <span asp-validation-for="ClassTitle" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="SelectedAward" class="control-label"></label>
+                    <select asp-for="SelectedAward"
+                            class="form-control">
+                        <option value="" data-code="" data-address="" disabled selected>Select Award</option>
+                        @foreach (var award in Model.AwardList)
+                        {
+                            <option value="@award.Value">@award.Text @award.SubText</option>
+                        }
+                    </select>
+                    <span asp-validation-for="SelectedAward" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row" id="AwardFormViewComponentWait" style="display:none">
+                <div class="col-sm-2 col-sm-offset-5" style="text-align:center">
+                    <div class="loader" id="loader-4">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <h5 style="margin-top:0px;">Retrieving Award Form</h5>
+                </div>
+            </div>
+            @if (Model.SelectedAward == 1)
+            {
+                <div class="row" id="AwardFormViewComponentContent">
+                    @await Component.InvokeAsync("AwardTypeForm", new GoodConductAwardFormViewComponentViewModel())
+                </div>
+            }
+            else if (Model.SelectedAward == 2)
+            {
+                <div class="row" id="AwardFormViewComponentContent">
+                    @await Component.InvokeAsync("AwardTypeForm", new OutstandingPerformanceAwardFormViewComponentViewModel())
+                </div>
+            }
+            else
+            {
+                <div class="row" id="AwardFormViewComponentContent" style="display:none">
+                    <input type="hidden" name="Kind" id="Kind" value="EmptyAwardViewModel" />
+                </div>
+            }
+
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+@section scripts{
+    <script type="text/javascript" src="~/lib/moment/moment.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+            (function ($) {
+            var defaultOptions = {
+                validClass: 'has-success',
+                errorClass: 'has-error',
+                highlight: function (element, errorClass, validClass) {
+                    $(element).closest(".form-group")
+                        .removeClass(validClass)
+                        .addClass('has-error');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).closest(".form-group")
+                        .removeClass('has-error')
+                        .addClass(validClass);
+                }
+            };
+
+            $.validator.setDefaults(defaultOptions);
+
+            $.validator.unobtrusive.options = {
+                errorClass: defaultOptions.errorClass,
+                validClass: defaultOptions.validClass,
+            };
+        })(jQuery);
+    $(document).ready(function () {
+
+        $("#waitSection").hide();
+        $("#formSection").show();
+        $("#UsersSelectBox").change(function () {
+            var txt = $(this).find('option:selected').text();
+            console.log(txt);
+            $("#NomineeName").val(txt);
+        })
+        registerDatePickers();
+        $("#SelectedAward").change(function () {
+            console.log($(this).Text);
+            $("#AwardFormViewComponentWait").show();
+                var Id = $(this).val();
+                var container = $("#AwardFormViewComponentContent");
+                if (Id != 0) {
+                    $.get("/AwardForm/GetAwardFormViewComponent", { awardId: Id }, function (data) {
+                        container.html(data);
+                        registerDatePickers();
+                        $("#AwardFormViewComponentContent").show();
+                        $("#AwardFormViewComponentWait").hide();
+                    });
+                } else {
+                    container.empty();
+                    $("#AwardFormViewComponentContent").hide();
+                    $("#AwardFormViewComponentWait").hide();
+                }
+        })
+    });
+    function registerDatePickers() {
+        var datepickers = document.getElementsByClassName("datetimepicker");
+        [].forEach.call(datepickers, function (elem) {
+                $(elem).datetimepicker({
+                format: "l"
+            });
+        });
+    }
+</script>
+}

@@ -3,25 +3,22 @@
     ViewData["Title"] = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+    <div class="col-md-10 col-md-offset-1">
+        <h2 style="color:#a94442;">Confirm Deletion?</h2>
+        <h4>Are you sure you want to delete this document? This action can not be undone.</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            @Html.HiddenFor(model => model.DocumentId)
+            <dt>
+                Document Name:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FileName)
+            </dd>
+        </dl>
+        <form asp-action="Delete">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            <a asp-action="Index" class="btn btn-success">Cancel</a>
+        </form>
+    </div>
 
-<h2>Confirm Deletion</h2>
-
-<h3>Are you sure you want to delete this document?</h3>
-<h4>This action can not be undone.</h4>
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        @Html.HiddenFor(model => model.DocumentId)
-        <dt>
-            Document Name:
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FileName)
-        </dd>
-    </dl>
-
-    <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index" class="btn btn-success">Cancel</a>
-    </form>
-</div>

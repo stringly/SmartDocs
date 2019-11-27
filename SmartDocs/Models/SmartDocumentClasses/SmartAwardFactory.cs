@@ -64,7 +64,19 @@ namespace SmartDocs.Models.SmartDocumentClasses
         private XElement ViewModelToXML(SmartAwardViewModel vm)
         {
             XElement root = new XElement("SmartAward");
-            PropertyInfo[] properties = typeof(SmartAwardViewModel).GetProperties();
+            PropertyInfo[] properties;
+            switch (vm.SelectedAward)
+            {
+                case 1:
+                    properties = typeof(GoodConductAwardViewModel).GetProperties();
+                    break;
+                case 2:
+                    properties = typeof(OutstandingPerformanceAwardViewModel).GetProperties();
+                    break;
+                default:
+                    throw new NotImplementedException("The Viewmodel has an unrecognized SelectedAwardType");
+            }
+            
             root.Add(new XElement("DocumentId", _awardForm?.DocumentId ?? vm.DocumentId, new XAttribute("DocumentId", _awardForm?.DocumentId ?? vm.DocumentId)));
             foreach(PropertyInfo property in properties)
             {
@@ -77,24 +89,6 @@ namespace SmartDocs.Models.SmartDocumentClasses
 
             root.Add(new XElement("AuthorName", author?.DisplayName ?? "Unknown", new XAttribute("AuthorName", author?.DisplayName ?? "Unknown")));
             XElement award = new XElement("AwardType");
-            //PropertyInfo[] awardProperties;
-            //switch (vm.Kind)
-            //{
-            //    case "GoodConductAward":
-            //        awardProperties = typeof(GoodConductAwardViewModel).GetProperties();
-            //        break;
-            //    case "OutstandingPerformanceAward":
-            //        awardProperties = typeof(OutstandingPerformanceAwardViewModel).GetProperties();
-            //        break;
-            //    default:
-            //        awardProperties = typeof(SmartAwardViewModel).GetProperties();
-            //        break;
-            //}            
-            //foreach(PropertyInfo property in awardProperties)
-            //{
-            //    award.Add(new XElement(property.Name, property.GetValue(vm.Award), new XAttribute("id", property.Name)));
-            //}
-            //root.Add(award);
             return (root);
         }
 
@@ -110,10 +104,18 @@ namespace SmartDocs.Models.SmartDocumentClasses
                         DocumentId = _awardForm.DocumentId,
                         AuthorUserId = Convert.ToInt32(root.Element("AuthorUserId").Value),
                         AgencyName = root.Element("AgencyName").Value,
-                        NomineeName = root.Element("Nominee").Value,
+                        NomineeName = root.Element("NomineeName").Value,
                         ClassTitle = root.Element("ClassTitle").Value,
                         Division = root.Element("Division").Value,
-                        EligibilityConfirmationDate = Convert.ToDateTime(root.Element("EligibilityConfirmationDate").Value),
+                        SelectedAward = 1,
+                        Kind = root.Element("Kind").Value,
+                        AwardClass = root.Element("AwardClass").Value,
+                        AwardName = root.Element("AwardName").Value,
+                        ComponentViewName = root.Element("ComponentViewName").Value,
+                        Description = root.Element("Description").Value,
+                        HasRibbon = Convert.ToBoolean(root.Element("HasRibbon").Value),
+                        EligibilityConfirmationDate = Convert.ToDateTime(root.Element("EligibilityConfirmationDate").Value)
+
                     };
                     break;
                 case "Exemplary":
@@ -122,9 +124,16 @@ namespace SmartDocs.Models.SmartDocumentClasses
                         DocumentId = _awardForm.DocumentId,
                         AuthorUserId = Convert.ToInt32(root.Element("AuthorUserId").Value),
                         AgencyName = root.Element("AgencyName").Value,
-                        NomineeName = root.Element("Nominee").Value,
+                        NomineeName = root.Element("NomineeName").Value,
                         ClassTitle = root.Element("ClassTitle").Value,
                         Division = root.Element("Division").Value,
+                        SelectedAward = 2,
+                        Kind = root.Element("Kind").Value,
+                        AwardClass = root.Element("AwardClass").Value,
+                        AwardName = root.Element("AwardName").Value,
+                        ComponentViewName = root.Element("ComponentViewName").Value,
+                        Description = root.Element("Description").Value,
+                        HasRibbon = Convert.ToBoolean(root.Element("HasRibbon").Value),
                         StartDate = Convert.ToDateTime(root.Element("StartDate").Value),
                         EndDate = Convert.ToDateTime(root.Element("EndDate").Value),
                         SelectedAwardType = Convert.ToInt32(root.Element("SelectedAwardType").Value)
@@ -133,6 +142,24 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 default:
                     throw new NotImplementedException("The Award Type specified in the FormData collection is missing or invalid.");
             }
+            vm.Components = _repository.Components.ToList();
+            vm.Users = _repository.Users.ToList();
+            vm.AwardList = new List<AwardSelectListOption>
+            {
+                new AwardSelectListOption
+                {
+                    Text = "Good Conduct Award",
+                    Value = "1",
+                    SubText = "(No Sustained Discipline in past 24 months.)"
+
+                },
+                new AwardSelectListOption
+                {
+                    Text = "Exemplary Performance",
+                    Value = "2",
+                    SubText = "(Exceeds Satisfactory or above on appraisal)"
+                },
+            };
             return vm;
         }
 

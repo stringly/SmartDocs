@@ -21,6 +21,9 @@ namespace SmartDocs.Models.ViewModels
         public string ClassTitle { get; set; }
         [Display(Name = "Nominee's District/Division"), Required]
         public string Division { get; set; }
+        [Required(ErrorMessage = "You must select an Award Type.")]
+        [Display(Name = "Award Type")]
+        public int? SelectedAward { get; set; }
         public string Kind { get; set; }
         [Required, Display(Name = "Award Class")]
         public string AwardClass { get; set; }
@@ -31,8 +34,9 @@ namespace SmartDocs.Models.ViewModels
         public bool HasRibbon { get; set; }
         public List<OrganizationComponent> Components { get; set; }
         public List<SmartUser> Users { get; set; }
-        [Display(Name = "Select Award")]
         public List<AwardSelectListOption> AwardList { get; set; }
+
+        public abstract AwardTypeFormViewComponentViewModel GetComponentModel();
     }
 
     public class EmptyAwardViewModel : SmartAwardViewModel
@@ -56,6 +60,10 @@ namespace SmartDocs.Models.ViewModels
                 },
             };
         }
+        public override AwardTypeFormViewComponentViewModel GetComponentModel()
+        {
+            return null;
+        }
     }
 
     public class AwardSelectListOption : SelectListItem
@@ -70,14 +78,7 @@ namespace SmartDocs.Models.ViewModels
         public DateTime EligibilityConfirmationDate { get; set; }
 
         public GoodConductAwardViewModel()
-        {
-            Kind = "GoodConductAwardViewModel";
-            ComponentViewName = "GoodConduct";
-            AwardClass = "Special Achievement Award";
-            AwardName = "Good Conduct Award";
-            HasRibbon = true;
-            Description = "To be eligible for the Good Conduct Award, the employee must have received an overall rating of at least 'Exceeds Satisfactory' on the last two appraisals, and has not received any sustained disciplinary action within the last 24 months. Documentation confirming the employee's eligibility must be obtained from IAD and included with the Nomination Form.";
-
+        {           
             AwardList = new List<AwardSelectListOption>
             {
                 new AwardSelectListOption
@@ -95,6 +96,19 @@ namespace SmartDocs.Models.ViewModels
                 },
             };
         }
+        public override AwardTypeFormViewComponentViewModel GetComponentModel()
+        {
+            return new GoodConductAwardFormViewComponentViewModel
+            {
+                Kind = "GoodConductAwardViewModel",
+                ComponentViewName = "GoodConduct",
+                AwardClass = "Special Achievement Award",
+                AwardName = "Good Conduct Award",
+                HasRibbon = true,
+                Description = "To be eligible for the Good Conduct Award, the employee must have received an overall rating of at least 'Exceeds Satisfactory' on the last two appraisals, and has not received any sustained disciplinary action within the last 24 months. Documentation confirming the employee's eligibility must be obtained from IAD and included with the Nomination Form.",
+                EligibilityConfirmationDate = this.EligibilityConfirmationDate
+            };
+        }
     }
     public class OutstandingPerformanceAwardViewModel : SmartAwardViewModel
     {
@@ -104,17 +118,12 @@ namespace SmartDocs.Models.ViewModels
         [Display(Name = "End Date of Eligibility Period"), Required]
         public DateTime EndDate { get; set; }
         [Required, Display(Name = "Select the type of Outstanding Performance Award")]
-        public int SelectedAwardType { get; set; }
+        public int? SelectedAwardType { get; set; }
         public List<SelectListItem> AwardTypes { get; set; }
 
         public OutstandingPerformanceAwardViewModel()
         {
-            Kind = "OutstandingPerformanceAwardViewModel";
-            ComponentViewName = "Exemplary";
-            AwardClass = "Exemplary Performance Award";
-            AwardName = "Outstanding Performance Award";
-            HasRibbon = false;
-            Description = "To be eligible for the Outstanding Performance Award, the employee must have received at minimum a rating of 'Exceeds Satisfactory' on the last appraisal. See the options below for more detail.";
+           
             AwardList = new List<AwardSelectListOption>
             {
                 new AwardSelectListOption
@@ -131,23 +140,37 @@ namespace SmartDocs.Models.ViewModels
                     SubText = "(Exceeds Satisfactory or above on appraisal)"
                 },
             };
-
-            AwardTypes = new List<SelectListItem>
+        }
+        public override AwardTypeFormViewComponentViewModel GetComponentModel()
+        {
+            return new OutstandingPerformanceAwardFormViewComponentViewModel
             {
-                new SelectListItem
+                Kind = "OutstandingPerformanceAwardViewModel",
+                ComponentViewName = "Exemplary",
+                AwardClass = "Exemplary Performance Award",
+                AwardName = "Outstanding Performance Award",
+                HasRibbon = false,
+                Description = "To be eligible for the Outstanding Performance Award, the employee must have received at minimum a rating of 'Exceeds Satisfactory' on the last appraisal. See the options below for more detail.",
+                StartDate = this.StartDate,
+                EndDate = this.EndDate,
+                SelectedAwardType = this.SelectedAwardType,
+                AwardTypes = new List<SelectListItem>
                 {
-                    Text = "Employee has received an overall rating of 'Exceeds Satisfactory' on the annual appraisal (Awards 8 Hours Annual Leave)",
-                    Value = "1"
-                },
-                new SelectListItem
-                {
-                    Text = "Employee has received an overall rating of 'Outstanding' on the annual appraisal (Awards 16 Hours Annual Leave)",
-                    Value = "2"
-                },
-                new SelectListItem
-                {
-                    Text = "Employee has received an overall rating of 'Outstanding' on the past two consecutive appraisals (Awards 24 Hours Annual Leave)",
-                    Value = "3"
+                    new SelectListItem
+                    {
+                        Text = "Employee has received an overall rating of 'Exceeds Satisfactory' on the annual appraisal (Awards 8 Hours Annual Leave)",
+                        Value = "1"
+                    },
+                    new SelectListItem
+                    {
+                        Text = "Employee has received an overall rating of 'Outstanding' on the annual appraisal (Awards 16 Hours Annual Leave)",
+                        Value = "2"
+                    },
+                    new SelectListItem
+                    {
+                        Text = "Employee has received an overall rating of 'Outstanding' on the past two consecutive appraisals (Awards 24 Hours Annual Leave)",
+                        Value = "3"
+                    }
                 }
             };
         }
@@ -161,7 +184,7 @@ namespace SmartDocs.Models.ViewModels
             {
                 return null;
             }
-            var subclasses = new[] { typeof(GoodConductAwardViewModel), typeof(OutstandingPerformanceAwardViewModel), };
+            var subclasses = new[] { typeof(GoodConductAwardViewModel), typeof(OutstandingPerformanceAwardViewModel), typeof(EmptyAwardViewModel) };
             var binders = new Dictionary<Type, (ModelMetadata, IModelBinder)>();
             foreach (var type in subclasses)
             {
@@ -192,6 +215,10 @@ namespace SmartDocs.Models.ViewModels
             else if (modelTypeValue == "OutstandingPerformanceAwardViewModel")
             {
                 (modelMetadata, modelBinder) = binders[typeof(OutstandingPerformanceAwardViewModel)];
+            }
+            else if (modelTypeValue == "EmptyAwardViewModel")
+            {
+                (modelMetadata, modelBinder) = binders[typeof(EmptyAwardViewModel)];
             }
             else
             {

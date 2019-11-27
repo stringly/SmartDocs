@@ -19,11 +19,13 @@
             Download Link:
         </dt>
         <dd>
-            <a asp-action="Download" asp-controller="Home" asp-route-id="@ViewBag.SmartJobDescriptionId">Download</a>
+            <a asp-action="Download" asp-controller="Home" asp-route-id="@ViewBag.SmartDocumentId">Download</a>
         </dd>
     </dl>
     <p>
-        <a asp-action="Create" asp-controller="Award">Create another Award Form</a>
+        <a asp-action="Create" asp-controller="AwardForm">Create another Award Form</a>
+    </p>
+    <p>        
         <a asp-action="Index" asp-controller="Home">Return to My Documents</a>
     </p>
 </div>
