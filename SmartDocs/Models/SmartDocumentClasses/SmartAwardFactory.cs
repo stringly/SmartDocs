@@ -56,6 +56,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 toEdit.Edited = DateTime.Now;
                 toEdit.FileName = $"{vm.NomineeName} {vm.AwardName} Form {DateTime.Now.ToString("MM-dd-yy")}.docx";
                 toEdit.Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartAwardForm");
+                toEdit.FormDataXml = ViewModelToXML(vm);
                 _repository.SaveSmartDoc(toEdit);
             }
             _awardForm = toEdit;

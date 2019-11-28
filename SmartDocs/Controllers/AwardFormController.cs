@@ -53,7 +53,7 @@ namespace SmartDocs.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,SelectedAward,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
-        {
+        {            
             if (!ModelState.IsValid)
             {
                 ViewData["Title"] = "Create Award Form: Error";
@@ -83,8 +83,34 @@ namespace SmartDocs.Controllers
             return View(vm);
 
         }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, [Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,SelectedAward,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
+        {
+            if(id != form.DocumentId)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                // rebuild and return VM
+                ViewData["Title"] = "Edit Award Form: Error";
+                form.Components = _repository.Components.ToList();
+                form.Users = _repository.Users.ToList();
+                return View(form);
+            }
+            SmartDocument awardDoc = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            if (awardDoc == null)
+            {
+                return NotFound();
+            }
+            SmartAwardFactory factory = new SmartAwardFactory(_repository, awardDoc);
+            factory.UpdateAwardForm(form);
+            return RedirectToAction("SaveSuccess", new { id = factory._awardForm.DocumentId });
+
+        }
         public IActionResult SaveSuccess(int id)
         {
+            
             // this is a simple view, so use VB instead of a VM            
             ViewBag.SmartDocumentId = id;
             ViewBag.FileName = _repository.Documents.FirstOrDefault(x => x.DocumentId == id).FileName;
