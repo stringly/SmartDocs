@@ -66,6 +66,8 @@ namespace SmartDocs.Controllers
         {
             ViewData["Title"] = "Document Menu";
             ViewData["ActiveNavBarMenuLink"] = "Choices";
+            ViewBag.UniqueUsersCount = _repository.Documents.Select(x => x.AuthorUserId).Distinct().Count();
+            ViewBag.DocumentsCreatedCount = _repository.Documents.Count();
             return View();
         }
         /// <summary>

@@ -4,10 +4,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartDocs.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Components",
+                columns: table => new
+                {
+                    ComponentId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
+                    DepartmentCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Components", x => x.ComponentId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Jobs",
                 columns: table => new
@@ -28,7 +43,10 @@ namespace SmartDocs.Migrations
                 {
                     TemplateId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DocumentName = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Uploaded = table.Column<DateTime>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
                     DataStream = table.Column<byte[]>(nullable: true)
                 },
                 constraints: table =>
@@ -52,97 +70,63 @@ namespace SmartDocs.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Records",
+                name: "Documents",
                 columns: table => new
                 {
                     DocumentId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(nullable: true),
+                    AuthorUserId = table.Column<int>(nullable: false),
+                    TemplateId = table.Column<int>(nullable: false),
+                    Type = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
-                    Modified = table.Column<DateTime>(nullable: false)
+                    Edited = table.Column<DateTime>(nullable: false),
+                    FileName = table.Column<string>(nullable: true),
+                    FormData = table.Column<string>(type: "xml", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Records", x => x.DocumentId);
+                    table.PrimaryKey("PK_Documents", x => x.DocumentId);
                     table.ForeignKey(
-                        name: "FK_Records_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Documents_Users_AuthorUserId",
+                        column: x => x.AuthorUserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PPAs",
-                columns: table => new
-                {
-                    PPAId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RecordDocumentId = table.Column<int>(nullable: true),
-                    TemplateId = table.Column<int>(nullable: true),
-                    FormData = table.Column<string>(type: "xml", nullable: true),
-                    JobId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PPAs", x => x.PPAId);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PPAs_Jobs_JobId",
-                        column: x => x.JobId,
-                        principalTable: "Jobs",
-                        principalColumn: "JobId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PPAs_Records_RecordDocumentId",
-                        column: x => x.RecordDocumentId,
-                        principalTable: "Records",
-                        principalColumn: "DocumentId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PPAs_Templates_TemplateId",
+                        name: "FK_Documents_Templates_TemplateId",
                         column: x => x.TemplateId,
                         principalTable: "Templates",
                         principalColumn: "TemplateId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PPAs_JobId",
-                table: "PPAs",
-                column: "JobId");
+                name: "IX_Documents_AuthorUserId",
+                table: "Documents",
+                column: "AuthorUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PPAs_RecordDocumentId",
-                table: "PPAs",
-                column: "RecordDocumentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PPAs_TemplateId",
-                table: "PPAs",
+                name: "IX_Documents_TemplateId",
+                table: "Documents",
                 column: "TemplateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Records_UserId",
-                table: "Records",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PPAs");
+                name: "Components");
+
+            migrationBuilder.DropTable(
+                name: "Documents");
 
             migrationBuilder.DropTable(
                 name: "Jobs");
 
             migrationBuilder.DropTable(
-                name: "Records");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Templates");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

@@ -1806,7 +1806,7 @@
             </summary>
             <param name="services">An <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> object.</param>
         </member>
-        <member name="M:SmartDocs.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider,SmartDocs.Models.SmartDocContext)">
+        <member name="M:SmartDocs.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider,SmartDocs.Models.SmartDocContext,SmartDocs.OldModels.SmartDocsContext)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.  
             </summary>

@@ -65,15 +65,18 @@ namespace SmartDocs
         /// <param name="app">An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> object.</param>
         /// <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
         /// <param name="service">An <see cref="T:System.IServiceProvider"/> object.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service, SmartDocContext newContext/*, SmartDocsContext oldContext, SmartDocumentRepository repository*/)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service, SmartDocContext newContext, SmartDocsContext oldContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseGoogleExceptionLogging();
             }
-            DataInitializer.SeedTemplates(newContext);
-            //DataInitializer.SeedData(repository, oldContext);
+            // comment out these lines if there is no need to push the old PPAs into the new DB
+            DataInitializer initializer = new DataInitializer(newContext, oldContext);
+            initializer.SeedTemplates();
+            initializer.SeedOldPPAs();            
+
             app.UseStatusCodePages();
             app.UseGoogleExceptionLogging();
             app.UseStaticFiles();

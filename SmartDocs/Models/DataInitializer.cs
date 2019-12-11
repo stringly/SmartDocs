@@ -12,9 +12,18 @@ namespace SmartDocs.Models
 {
     public class DataInitializer
     {
-        public static void SeedTemplates(SmartDocContext context)
+
+        public SmartDocContext _newContext { get; private set; }
+        public SmartDocsContext _oldContext { get; private set; }
+
+        public DataInitializer(SmartDocContext newContext, SmartDocsContext oldContext)
         {
-            if (!context.Templates.Any(x => x.Name == "SmartPPA"))
+            _newContext = newContext;
+            _oldContext = oldContext;
+        }
+        public void SeedTemplates()
+        {
+            if (!_newContext.Templates.Any(x => x.Name == "SmartPPA"))
             {
                 SmartTemplate template = new SmartTemplate
                 {
@@ -24,9 +33,9 @@ namespace SmartDocs.Models
                     IsActive = true,
                     DataStream = File.ReadAllBytes("Smart_PPA_Template.docx")
                 };
-                context.Add(template);
+                _newContext.Add(template);
             }
-            if(!context.Templates.Any(x => x.Name == "SmartJobDescription"))
+            if(!_newContext.Templates.Any(x => x.Name == "SmartJobDescription"))
             {
                 SmartTemplate template = new SmartTemplate
                 {
@@ -36,9 +45,9 @@ namespace SmartDocs.Models
                     IsActive = true,
                     DataStream = File.ReadAllBytes("Job_Description_Template.docx")
                 };
-                context.Add(template);
+                _newContext.Add(template);
             }
-            if(!context.Templates.Any(x => x.Name == "SmartAwardForm"))
+            if(!_newContext.Templates.Any(x => x.Name == "SmartAwardForm"))
             {
                 SmartTemplate template = new SmartTemplate
                 {
@@ -48,18 +57,22 @@ namespace SmartDocs.Models
                     IsActive = true,
                     DataStream = File.ReadAllBytes("Award_Form_Template.docx")
                 };
-                context.Add(template);
+                _newContext.Add(template);
             }
-            
-            context.SaveChanges();
+
+            _newContext.SaveChanges();
         }
-        public static void SeedData(IDocumentRepository repository, SmartDocsContext oldContext)
+        public void SeedOldPPAs()
         {
-            List<Ppas> oldppas = oldContext.Ppas
+            if(_newContext.Documents.Count() != 0)
+            {
+                return;
+            }
+            List<Ppas> oldppas = _oldContext.Ppas
                 .Include(x => x.Job)
                 .Include(x => x.OwnerUser)
                 .ToList();
-            SmartPPAFactory fact = new SmartPPAFactory(repository);
+            SmartPPAFactory fact = new SmartPPAFactory(new SmartDocumentRepository(_newContext));
             foreach(Ppas ppa in oldppas)
             {
                 PPAFormViewModel vm = new PPAFormViewModel(ppa);

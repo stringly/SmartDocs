@@ -10,8 +10,8 @@ using SmartDocs.Models;
 namespace SmartDocs.Migrations
 {
     [DbContext(typeof(SmartDocContext))]
-    [Migration("20190831232450_FormDataXML")]
-    partial class FormDataXML
+    [Migration("20191211051617_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,6 +38,37 @@ namespace SmartDocs.Migrations
                     b.ToTable("Components");
                 });
 
+            modelBuilder.Entity("SmartDocs.Models.SmartDocument", b =>
+                {
+                    b.Property<int>("DocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuthorUserId");
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<DateTime>("Edited");
+
+                    b.Property<string>("FileName");
+
+                    b.Property<string>("FormData")
+                        .HasColumnType("xml");
+
+                    b.Property<int>("TemplateId");
+
+                    b.Property<string>("Type")
+                        .IsRequired();
+
+                    b.HasKey("DocumentId");
+
+                    b.HasIndex("AuthorUserId");
+
+                    b.HasIndex("TemplateId");
+
+                    b.ToTable("Documents");
+                });
+
             modelBuilder.Entity("SmartDocs.Models.SmartJob", b =>
                 {
                     b.Property<int>("JobId")
@@ -54,76 +85,6 @@ namespace SmartDocs.Migrations
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("SmartDocs.Models.SmartPPA", b =>
-                {
-                    b.Property<int>("PPAId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AssessmentComments");
-
-                    b.Property<int?>("CategoryScore_1");
-
-                    b.Property<int?>("CategoryScore_2");
-
-                    b.Property<int?>("CategoryScore_3");
-
-                    b.Property<int?>("CategoryScore_4");
-
-                    b.Property<int?>("CategoryScore_5");
-
-                    b.Property<int?>("CategoryScore_6");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<string>("DepartmentDivision");
-
-                    b.Property<string>("DepartmentDivisionCode");
-
-                    b.Property<string>("DepartmentIdNumber");
-
-                    b.Property<string>("DocumentName");
-
-                    b.Property<string>("EmployeeFirstName");
-
-                    b.Property<string>("EmployeeLastName");
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<string>("FormData")
-                        .HasColumnType("xml");
-
-                    b.Property<int>("JobId");
-
-                    b.Property<DateTime>("Modified");
-
-                    b.Property<int>("OwnerUserId");
-
-                    b.Property<string>("PayrollIdNumber");
-
-                    b.Property<string>("PositionNumber");
-
-                    b.Property<string>("RecommendationComments");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<string>("SupervisedByEmployee");
-
-                    b.Property<int>("TemplateId");
-
-                    b.Property<string>("WorkplaceAddress");
-
-                    b.HasKey("PPAId");
-
-                    b.HasIndex("JobId");
-
-                    b.HasIndex("OwnerUserId");
-
-                    b.HasIndex("TemplateId");
-
-                    b.ToTable("PPAs");
-                });
-
             modelBuilder.Entity("SmartDocs.Models.SmartTemplate", b =>
                 {
                     b.Property<int>("TemplateId")
@@ -132,7 +93,13 @@ namespace SmartDocs.Migrations
 
                     b.Property<byte[]>("DataStream");
 
-                    b.Property<string>("DocumentName");
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<string>("Name");
+
+                    b.Property<DateTime>("Uploaded");
 
                     b.HasKey("TemplateId");
 
@@ -156,20 +123,15 @@ namespace SmartDocs.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SmartDocs.Models.SmartPPA", b =>
+            modelBuilder.Entity("SmartDocs.Models.SmartDocument", b =>
                 {
-                    b.HasOne("SmartDocs.Models.SmartJob", "Job")
-                        .WithMany()
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SmartDocs.Models.SmartUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerUserId")
+                    b.HasOne("SmartDocs.Models.SmartUser", "Author")
+                        .WithMany("Documents")
+                        .HasForeignKey("AuthorUserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SmartDocs.Models.SmartTemplate", "Template")
-                        .WithMany()
+                        .WithMany("Documents")
                         .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

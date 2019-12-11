@@ -12,7 +12,7 @@ namespace SmartDocs.Controllers
     /// Controller for <see cref="T:SmartDocs.Models.SmartUser"/> interactions
     /// </summary>
     /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
-    [Authorize(Roles = "Administrator")]
+    
     public class SmartUsersController : Controller
     {
         private IDocumentRepository _repo;
@@ -34,6 +34,7 @@ namespace SmartDocs.Controllers
         /// </remarks>
         /// <param name="searchString">The search string that limits the list.</param>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> list of users in the repo.</returns>
+        [Authorize(Roles = "Administrator")]
         public IActionResult Index(string searchString)
         {
             UserIndexListViewModel vm = new UserIndexListViewModel { CurrentFilter = searchString };
@@ -61,6 +62,7 @@ namespace SmartDocs.Controllers
         /// View that allows Admin to create a new SmartUser
         /// </remarks>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["Title"] = "Create User";
@@ -74,6 +76,7 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create([Bind("UserId,BlueDeckId,LogonName,DisplayName")] SmartUser smartUser)
         {
             // check if POSTed data is valid
@@ -164,6 +167,7 @@ namespace SmartDocs.Controllers
         /// </summary>
         /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -190,6 +194,7 @@ namespace SmartDocs.Controllers
         /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public IActionResult DeleteConfirmed(int id)
         {
             // retrieve the SmartUser from the repo

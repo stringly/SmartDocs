@@ -28,6 +28,7 @@ namespace SmartDocs.Models
             if (principal.Identity is ClaimsIdentity)
             {
                 string logonName = user.Split('\\')[1];
+                logonName = logonName.ToLower();
                 // pull user roles 
                 SmartUser dbUser = _repository.GetUserByLogonName(logonName);
                 if (dbUser != null)

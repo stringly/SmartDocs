@@ -4,34 +4,66 @@
 }
 
 
-<div class="col-md-10 col-md-offset-1">
-    <h2>SmartDocs</h2>
-    <h4></h4>
-    <strong>What is this site?</strong>
-    <p>
-        This site was built to be the new home of the SmartPPA. The original version of the SmartPPA, which was a macro-enabled Word Document, was much more difficult for me to maintain.
-        The final version stopped working completely in 2018 when the department updated most of the office computers to Office 2013. I built this site instead of updating the Word version of the SmartPPA.
-        I hope to add additional "Smart" versions of other documents eventually.
-    </p>
-    <strong>Is this safe to use?</strong>
-    <p>
-        This app is hosted on a server on the county's local intranet. This site is only available on computers connected to the county network. None of the information you enter in this app leaves the county network at any point.
-        Documents that you generate in this app are only visible to you.
-    </p>
-    <strong>How do I use this app?</strong>
-    <p>
-        Please keep in mind that this project is still in development, so you may encounter errors. If you encounter an error, refresh the page and try again. If you experience a repeated error, please contact me. Your feedback helps.
-        If you need help, try one (or all) of these options:
-        <ol>
-            <li>Download and view the <a href="~/lib/SmartDocs User Guide.docx" download="SmartDocs User Guide.docx">User Guide</a>.</li>
-            <li><a href="mailto:jcsmith1@co.pg.md.us">Send me an Email</a> and ask a question (or make a suggestion).</li>
-            <li>Text me: (301) 648-3444. I will try and respond as soon as I can.</li>
-        </ol>
-    </p>
-    <strong>The Job Description I need isn't an option!</strong>
-    <p>
-        <a href="mailto:jcsmith1@co.pg.md.us?Subject=Add%20a%20Job%20Description">Send it to me via email</a> and I will add it. One of the main reasons I built this app was to simplify the process of adding new job descriptions so that I could be more responsive to these requests.
-    </p>
+    <div class="col-md-10 col-md-offset-1">
+        <h2>SmartDocs</h2>
+        <h4>Frequently Asked Questions</h4>
+        <hr />
+        <h4>What is this site?</h4>
+        <p>
+            This site was built to be the new home of the SmartPPA. The original version of the SmartPPA, which was a macro-enabled Word Document, was much more difficult for me to maintain.
+            The final version stopped working completely in 2018 when the department updated most workstations to Windows 10 and Office 2013. I built this site instead of updating the Word version of the SmartPPA.
+            I hope to be able to continue to add additional "Smart" versions of other documents.
+        </p>
+        <h4>Is this safe to use?</h4>
+        <p>
+            This app is hosted on a server on the county's local intranet. This site is only available on computers connected to the county network. None of the information you enter in this app leaves the county network at any point.
+            Documents that you generate in this app are only visible to you.
+        </p>
+        <p>
+            When you first navigate to the SmartDocs, you may be prompted to enter your Windows User Name and password. This is the same password you use to log on to Windows on a county workstation. This site uses <a href="https://docs.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-overview">Windows Authentication</a> to restrict access to this site. This authentication process is handled internally by Windows, which means your password is not visible to me and is not stored anywhere in SmartDocs. <strong>Never share your password with anyone.</strong> No legitimate IT Employee will ever ask you for your password.
+        </p>
+        <h4>How do I use this app?</h4>
+        <p>
+            Please keep in mind that this project is still in development, so you may encounter errors. If you encounter an error, refresh the page and try again. If you experience a repeated error, please contact me. Your feedback helps.
+            If you need help, try one (or all) of these options:
+            <ol>
+                <li>Download and view the <a href="~/lib/SmartDocs User Guide.docx" download="SmartDocs User Guide.docx">User Guide</a>.</li>
+                <li><a href="mailto:jcsmith1@co.pg.md.us">Send me an Email</a> and ask a question (or make a suggestion).</li>
+                <li>Text me: (301) 648-3444. I will try and respond as soon as I can.</li>
+            </ol>
+        </p>
+        <h4>What Job Descriptions are available?</h4>
+        <p>
+            You can view a list of all the Job Descriptions that are supported by SmartDocs by visiting the <a asp-action="Index" asp-controller="JobDescription">Job Descriptions Index.</a> You can view Performance Details and Category Ratings for each Job Description from this list.
+        </p>
+        <h4>The Job Description I need isn't an option!</h4>
+        <p>
+            <a href="mailto:jcsmith1@co.pg.md.us?Subject=Add%20a%20Job%20Description">Send it to me via email</a> and I will add it. One of the main reasons I built this app was to simplify the process of adding new job descriptions so that I could be more responsive to these requests. If you send me a Job Description, I would prefer you send it in Word format or in a document .pdf. If you send it as a scan, then I can't copy/paste the Job Description details. If all you have is a scan of the Document, then I will make it work, but try and send it in Word format if you can.
+        </p>
+        <h4>Can I edit the documents that SmartDocs generates?</h4>
+        <p>
+            You can make any edits you want in the Word Documents that you download from SmartDocs. The old version of SmartPPA that used Macros had extensive editing restrictions in Word that were in place to preserve the Document's formatting. Word Documents generated by SmartDocs are not restricted in this manner.
+        </p>
+        <p>
+            You can also make changes to documents that you have already generated. Your <a asp-action="Index" asp-controller="Home">My Documents</a> page will list all of the documents that you create in SmartDocs. You can re-download, edit, or delete any documents that you make in SmartDocs at any time.
+        </p>
+        <h4 class="text-success">New Documents are here!</h4>
+        <p>
+            <ul>
+                <li>
+                    <strong>Standalone Job Descriptions</strong>
+                    <p>You can now create standalone Job Descriptions to serve on an Employee. Use these if an employee is transferred or changes jobs during a rating period.</p>
+                </li>
+                <li>
+                    <strong>Award Nomination Forms</strong>
+                    <p>You can generate Award Nomination Forms for Good Conduct Awards and Exemplary Performance Awards. Other award types are in development, but I tried to focus first on the types of Awards that are commonly included as part of an Annual Appraisal.</p>
+                </li>
+            </ul>
+        </p>
+        <h4>Did you have anything to do with "BlueTeam", which is the new Use of Force reporting system?</h4>
+        <p>
+            No, and I will keep my thoughts on "BlueTeam" to myself. 
+        </p>
 
-</div>
+    </div>
 
