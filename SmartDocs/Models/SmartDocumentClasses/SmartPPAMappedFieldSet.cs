@@ -99,7 +99,18 @@ namespace SmartDocs.Models.SmartDocumentClasses
             // Write PPA Fields
             PPA_EmployeeName.Write($"{root.Element("LastName").Value}, {root.Element("FirstName").Value}");
             PPA_PayrollId.Write(root.Element("PayrollIdNumber").Value);
+            // attempt to append newline subtext for Working Title
+            
             PPA_ClassTitle.Write(job.ClassTitle);
+            Run titleRun = new Run();
+            RunProperties titleRunProperties = new RunProperties();
+            FontSize titleRunFontSize = new FontSize() { Val = "16" };
+            titleRunProperties.Append(titleRunFontSize);
+            titleRun.Append(titleRunProperties);
+            Text titleRunText = new Text(job.WorkingTitle);
+            titleRun.Append(titleRunText);
+
+            PPA_ClassTitle.Paragraph.InsertAfterSelf(new Paragraph(titleRun));
             PPA_Grade.Write(job.Grade);
             PPA_PositionNumber.Write(root.Element("PositionNumber").Value);
             PPA_StartDate.Write(DateTime.Parse(root.Element("StartDate").Value).ToString("MM/dd/yy"));
