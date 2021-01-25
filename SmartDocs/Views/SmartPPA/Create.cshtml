@@ -67,8 +67,7 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label asp-for="DepartmentDivision" class="control-label"></label>
-                                <select name="@Html.NameFor(model => model.DepartmentDivision)"
-                                        id="@Html.IdFor(model => model.DepartmentDivision)"
+                                <select asp-for="DepartmentDivision"
                                         class="form-control"
                                         data-val-required="Please select the employee's assignment."
                                         data-val="true">
@@ -278,6 +277,7 @@
                 }
             });
             $("#DepartmentDivision").change(function () {
+                console.log("Department Change fired.");
                 $("#DepartmentDivisionCode").val($(this).find(":selected").data("code"));
                 $("#DepartmentDivisionCode").closest(".form-group").removeClass("has-error").addClass("has-success");
                 $("#WorkPlaceAddress").val($(this).find(":selected").data("address"));

@@ -21,7 +21,7 @@ namespace SmartDocs.Models
         void SaveJob(SmartJob job);
         void RemoveJob(SmartJob job);
         void SaveTemplate(SmartTemplate template);
-        int SaveSmartDoc(SmartDocument doc);
+        SmartDocument SaveSmartDoc(SmartDocument doc);
         void RemoveSmartDoc(SmartDocument doc);
         void SaveUser(SmartUser user);
         void RemoveUser(SmartUser user);

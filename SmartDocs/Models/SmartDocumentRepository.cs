@@ -124,15 +124,16 @@ namespace SmartDocs.Models
             }            
             context.SaveChanges();
         }
-        public int SaveSmartDoc(SmartDocument doc)
+        public SmartDocument SaveSmartDoc(SmartDocument doc)
         {
-            int returnId = 0;
+            SmartDocument returnDoc = new SmartDocument();
             try
             {
                 if (doc.DocumentId == 0)
                 {
-                    context.Documents.Add(doc);                
-                    returnId = doc.DocumentId;
+                    context.Documents.Add(doc);
+                    context.SaveChanges();
+                    returnDoc = doc;
                 }
                 else
                 {
@@ -145,18 +146,18 @@ namespace SmartDocs.Models
                         toEdit.Created = doc.Created;
                         toEdit.Edited = DateTime.Now;
                         toEdit.FileName = doc.FileName;
-                        toEdit.FormData = doc.FormData;
-                        returnId = toEdit.DocumentId;
+                        toEdit.FormData = doc.FormData;                        
                     }
-                }
-                context.SaveChanges();
+                    context.SaveChanges();
+                    returnDoc = toEdit;
+                }               
+                
+                return returnDoc;
             }
             catch (Exception e)
             {
-                return 0;
-            }
-            
-            return returnId;
+                return null;
+            }            
         }
         public void RemoveSmartDoc(SmartDocument doc)
         {

@@ -68,14 +68,13 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label asp-for="DepartmentDivision" class="control-label"></label>
-                                <select name="@Html.NameFor(model => model.DepartmentDivision)"
-                                        id="@Html.IdFor(model => model.DepartmentDivision)"
+                                <select asp-for="DepartmentDivision"
                                         class="form-control"
                                         data-val-required="Please select the employee's assignment."
                                         data-val="true">
                                     @foreach (var division in Model.Components)
                                     {
-                                        <option value="@division.Name" data-code="@division.DepartmentCode" data-address="@division.Address" selected="@(Model.DepartmentDivision == division.Name ? "true" : "false")">@division.Name</option>
+                                        <option value="@division.Name" data-code="@division.DepartmentCode" data-address="@division.Address" >@division.Name</option>
                                     }
                                 </select>
                                 <span asp-validation-for="DepartmentDivision" class="text-danger"></span>

@@ -38,8 +38,9 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 FormDataXml = ViewModelToXML(vm)
 
             };
-            _repository.SaveSmartDoc(newDoc);
-            _PPA = newDoc;
+            _PPA  = _repository.SaveSmartDoc(newDoc);
+            
+            
         }
         public void UpdatePPA(PPAFormViewModel vm)
         {
@@ -60,7 +61,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
         {
             XElement root = new XElement("SmartPPA");
             PropertyInfo[] properties = typeof(PPAFormViewModel).GetProperties();
-            root.Add(new XElement("DocumentId", _PPA?.DocumentId ?? vm.DocumentId, new XAttribute("DocumentId", _PPA?.DocumentId ?? vm.DocumentId)));
+            //root.Add(new XElement("DocumentId", _PPA?.DocumentId ?? vm.DocumentId, new XAttribute("DocumentId", _PPA?.DocumentId ?? vm.DocumentId)));
             foreach(PropertyInfo property in properties)
             {
                 if (property.Name != "Categories" && property.Name != "Components" && property.Name != "job" && property.Name != "JobList" && property.Name != "Users" && property.Name != "DocumentId")
