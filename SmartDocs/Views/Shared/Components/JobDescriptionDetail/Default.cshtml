@@ -1,0 +1,45 @@
+﻿@model SmartDocs.Models.JobDescription
+<div class="row" style="margin-bottom:10px;">
+    <div class="col-sm-12">
+        <span style="font-size:18px; font-weight:bold">@Model.ClassTitle: @Model.WorkingTitle</span><br />
+        <small class="text-muted">Showing Job Description Details.</small>
+    </div>
+</div>
+<table class="table table-condensed table-striped">
+    @foreach(JobDescriptionCategory category in Model.Categories)
+    {
+        <tr style="background-color: #d7d7d7">
+            <td style="text-align:left">
+                <span style="font-weight:bold">
+                    @category.Letter : @category.Title
+                </span>
+            </td>
+            <td style="text-align:right">
+                <span style="font-weight: bold">
+                    @category.Weight%
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td width="50%">
+                <ul>
+                    @foreach (PositionDescriptionItem item in category.PositionDescriptionItems)
+                    {
+                        <li>@item.Detail</li>
+                    }
+                </ul>
+                
+            </td>
+            <td width="50%">
+                <ul>
+                    @foreach (PerformanceStandardItem item in category.PerformanceStandardItems)
+                    {
+                        <li>@item.Detail</li>
+                    }
+                </ul>
+                
+            </td>
+        </tr>
+
+    }
+</table>

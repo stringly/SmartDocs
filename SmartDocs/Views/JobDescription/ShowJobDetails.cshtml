@@ -1,0 +1,91 @@
+﻿@model SmartDocs.Models.JobDescription
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link asp-href-include="lib/bootstrap/css/*.min.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="col-xs-12" style="position:relative">
+        <div class="col-md-12 col-lg-10 col-lg-offset-1">
+            <div class="container-fluid" style="width: 100%">
+                <h2>Job Description Detail</h2>
+                <h4>@Model.Rank : @Model.WorkingTitle</h4>
+                <div>
+                    <hr />
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Class Title:
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.ClassTitle)
+                        </dd>
+                        <dt>
+                            Rank:
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Rank)
+                        </dd>
+                        <dt>
+                            Working Title:
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.WorkingTitle)
+                        </dd>
+                        <dt>
+                            Grade:
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Grade)
+                        </dd>
+                        <dt>
+                            Working Hours:
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.WorkingHours)
+                        </dd>
+                    </dl>
+                    @foreach (var item in Model.Categories)
+                    {
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Category:
+                            </dt>
+                            <dd style="font-weight:bold">
+                                @item.Letter: @item.Title
+                            </dd>
+                            <dt>
+                                Weight:
+                            </dt>
+                            <dd>
+                                @item.Weight%
+                            </dd>
+                            <dt>
+                                Position:
+                            </dt>
+                            <dd>
+                                @foreach (var pos in item.PositionDescriptionItems)
+                                {
+                                    <p>@pos.Detail</p>
+                                }
+                            </dd>
+                            <dt>
+                                Standards:
+                            </dt>
+                            <dd>
+                                @foreach (var perf in item.PerformanceStandardItems)
+                                {
+                                    <p>@perf.Detail</p>
+                                }
+                            </dd>
+                        </dl>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

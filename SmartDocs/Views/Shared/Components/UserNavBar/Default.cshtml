@@ -1,0 +1,65 @@
+﻿@model NavBarViewModel
+@{ 
+    int UserId = 0;
+    string UserName = "Guest";
+    if(User.HasClaim(x => x.Type == "UserId"))
+    {
+        UserId  = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
+    }
+    if(User.HasClaim(x => x.Type == "DisplayName"))
+    {
+        UserName  = ((ClaimsIdentity)User.Identity).FindFirst("DisplayName").Value;
+    }
+    
+}
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" asp-action="About" asp-controller="Home">SmartDocs</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="@(Model.ActiveLink == "Choices" ? "active" : "")">
+                        <a asp-action="Choices" asp-controller="Home">Create a Document</a>
+                    </li>
+                    <li class="@(Model.ActiveLink == "My Documents" ? "active" : "")">
+                        <a asp-action="Index" asp-controller="Home">My Documents</a>
+                    </li>
+                    <li class="@(Model.ActiveLink == "Job Descriptions" ? "active" : "")">
+                        <a asp-action="Index" asp-controller="JobDescription">Job Descriptions</a>
+                    </li>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li class="@(Model.ActiveLink == "Users" ? "active" : "")">
+                            <a asp-action="Index" asp-controller="SmartUsers">Users</a>
+                        </li>
+                        <li class="@(Model.ActiveLink == "Components" ? "active" : "")">
+                            <a asp-action="Index" asp-controller="OrganizationComponents">Components</a>
+                        </li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (UserId != 0)
+                    {
+                        <li class="@(Model.ActiveLink == "Edit User" ? "active" : "")">
+                            <a asp-action="Edit" asp-controller="SmartUsers" asp-route-id="@UserId">@UserName</a>
+                        </li>
+                    }
+                    else
+                    {
+                <li>
+                    <a asp-action="About" asp-controller="Home">@UserName</a>
+                </li>
+                        
+                    }
+
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div>
+    </div>

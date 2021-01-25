@@ -1,0 +1,231 @@
+﻿@model SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel
+
+@{
+    Layout = "_Layout";
+}
+@section head{
+    <link href="~/lib/smart_wizard/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/smart_wizard/css/smart_wizard_theme_arrows.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/SmartDocs/css/spinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+}
+
+<div id="waitSection">
+    <div class="container-fluid" style="width:100%;">
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-5" style="text-align:center">
+                <div class="loader" id="loader-4">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <h3 style="margin-top:0px;">Loading Form</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="formSection" style="display:none;" class="col-md-12 col-lg-10 col-lg-offset-1">
+    <div class="container-fluid" style="width: 100%;">
+        <form asp-action="Create" id="ppaForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div id="smartwizard" class="container-fluid" align="center">
+                <ul>
+                    <li><a href="#EmployeeInfo">Employee<br /><small>Information about the employee.</small></a></li>
+                    <li><a href="#PositionInfo">Position/Rating<br /><small>Pick a Job Description.</small></a></li>
+                    <li><a href="#Done">Save<br /><small>Save changes</small></a></li>
+                </ul>
+                <div>
+                    <div id="EmployeeInfo">
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label asp-for="FirstName" class="control-label"></label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label asp-for="LastName" class="control-label"></label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label asp-for="DepartmentIdNumber" class="control-label"></label>
+                                <input asp-for="DepartmentIdNumber" class="form-control" />
+                                <span asp-validation-for="DepartmentIdNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label asp-for="PositionNumber" class="control-label"></label>
+                                <input asp-for="PositionNumber" class="form-control" />
+                                <span asp-validation-for="PositionNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label asp-for="DepartmentDivision" class="control-label"></label>
+                                <select name="@Html.NameFor(model => model.DepartmentDivision)"
+                                        id="@Html.IdFor(model => model.DepartmentDivision)"
+                                        class="form-control"
+                                        data-val-required="Please select the employee's assignment."
+                                        data-val="true">
+                                    <option value="" data-code="" data-address="" disabled selected>Choose Assignment</option>
+                                    @foreach (var division in Model.Components)
+                                    {
+                                        <option value="@division.Name" data-code="@division.DepartmentCode" data-address="@division.Address">@division.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="DepartmentDivision" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label asp-for="DepartmentDivisionCode" class="control-label"></label>
+                                <input asp-for="DepartmentDivisionCode" class="form-control" />
+                                <span asp-validation-for="DepartmentDivisionCode" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="WorkPlaceAddress" class="control-label"></label>
+                                <input asp-for="WorkPlaceAddress" class="form-control" />
+                                <span asp-validation-for="WorkPlaceAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label asp-for="AuthorUserId" class="control-label"></label>
+                                @Html.DropDownListFor(model => model.AuthorUserId,
+                                        new SelectList(Model.Users, "UserId", "DisplayName"),
+                                        new { @class = "form-control", id = "AuthorId" })
+                                <span asp-validation-for="AuthorUserId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4" id="supervisedByType">
+                                <label asp-for="SupervisedByEmployee" class="control-label"></label>
+                                <input asp-for="SupervisedByEmployee" class="form-control" placeholder="e.g. 'Squad 01'" />
+                                <small class="text-muted">Leave blank if the employee is not a supervisor for a component.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="PositionInfo" class="">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="JobId" class="control-label"></label>
+                                @Html.DropDownListFor(model => model.JobId,
+                                        new SelectList(Model.JobList, "JobId", "DisplayName"),
+                                        "Choose Job Description:",
+                                        new { @class = "form-control", id = "JobDescription" })
+                                <span asp-validation-for="JobId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        @if (Model.job != null)
+                        {
+                            <div id="JobDetails" style="display:block">
+                                Show Job Details here
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="JobDetails" style="display:none">
+
+                            </div>
+                        }
+                    </div>
+                    <div id="Done" class="">
+                        <div class="form-group">
+                            <h3>Click "Save" to Generate a Job Description from the information that you have provided.</h3>
+                            <p>You will be prompted to correct any items that you have missed. Once the Job Description is generated, a copy will be available under "My Documents" if you need to re-download or edit it later.</p>
+                            <input type="submit" value="Save" class="btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript" src="~/lib/smart_wizard/js/jquery.smartWizard.min.js"></script>
+    <script type="text/javascript" src="~/lib/moment/moment.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        (function ($) {
+            var defaultOptions = {
+                validClass: 'has-success',
+                errorClass: 'has-error',
+                highlight: function (element, errorClass, validClass) {
+                    $(element).closest(".form-group")
+                        .removeClass(validClass)
+                        .addClass('has-error');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).closest(".form-group")
+                        .removeClass('has-error')
+                        .addClass(validClass);
+                }
+            };
+
+            $.validator.setDefaults(defaultOptions);
+
+            $.validator.unobtrusive.options = {
+                errorClass: defaultOptions.errorClass,
+                validClass: defaultOptions.validClass,
+            };
+        })(jQuery);
+        $(document).ready(function () {
+            $('#smartwizard').smartWizard({
+                theme: 'arrows',
+                anchorSettings: {
+                    markDoneStep: true
+                },
+                toolbarSettings: {
+                    toolbarPosition: 'top'
+                }
+            });
+            $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
+                if (stepDirection == "forward") {
+                    var result = false;
+                    var message = "";
+                    switch (stepNumber) {
+                        case 0:
+                            result = ($("#EmployeeInfo :input").valid());
+                            break;
+                        case 1:
+                            result = ($("#PositionInfo :input").valid())
+                            break;
+                    }
+                    if (!result) {
+                        message = "Please correct the indicated fields before proceeding.";
+                    }
+                    $("#pageMessage").text(message);
+                    return result;
+                }
+                else {
+                    $("#pageMessage").text("");
+                }
+            });
+            $("#JobDescription").change(function () {
+                var Id = $(this).val();
+                var container = $("#JobDetails");
+                if (Id != 0) {
+                    $.get("/SmartJobDescription/GetJobDescriptionViewComponent", { jobId: Id }, function (data) {
+                        container.html(data);
+                        $("#JobDetails").show();
+                    });
+                } else {
+                    container.empty();
+                    $("#JobDetails").hide();
+                }
+            });
+            $("#DepartmentDivision").change(function () {
+                $("#DepartmentDivisionCode").val($(this).find(":selected").data("code"));
+                $("#DepartmentDivisionCode").closest(".form-group").removeClass("has-error").addClass("has-success");
+                $("#WorkPlaceAddress").val($(this).find(":selected").data("address"));
+                $("#WorkPlaceAddress").closest(".form-group").removeClass("has-error").addClass("has-success");
+            })
+            $('#datetimepicker1').datetimepicker({
+                format: "l"
+            });
+            $('#datetimepicker2').datetimepicker({
+                format: "l"
+            });
+            $("#waitSection").hide();
+            $("#formSection").show();
+        });
+    </script>
+}
+
+
+

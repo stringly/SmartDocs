@@ -1,0 +1,34 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+<div class="row">
+    <a class="card col-xs-4" href="@Url.Action("Create", "SmartPPA")" style="color: black">
+        <img src="~/lib/Images/PPA.JPG" alt="Avatar" style="width:270px; height:200px">
+        <h4><b>SmartPPA</b></h4>
+        <p>Prepare a Past Performance Appraisal</p>
+    </a>
+    <a class="card col-xs-4" href="@Url.Action("Create", "SmartJobDescription")" style="color: black">
+        <img src="~/lib/Images/JobDescriptionOnly.JPG" alt="Avatar" style="width:270px; height:200px">
+        <h4><b>Job Description</b></h4>
+        <p>Create a Job Description to serve a new Employee</p>
+    </a>
+    <a class="card col-xs-4" href="@Url.Action("Create", "AwardForm")" style="color: black">
+        <img src="~/lib/Images/Award.png" alt="Avatar" style="width:270px; height:200px">
+        <h4><b>Award Form</b></h4>
+        <p>Create an Award Nomination Form</p>
+    </a>
+    <a class="card col-xs-4" href="mailto:jcsmith1@co.pg.md.us?Subject=SmartDoc%20suggestion" style="color: black">
+        <img src="~/lib/Images/Message.png" alt="Avatar" style="width:270px; height:200px">
+        <h4><b>Message</b></h4>
+        <p>Email a comment or Suggestion to the Admin</p>
+    </a>
+</div>
+<hr />
+@if (ViewBag.UniqueUsersCount != null && ViewBag.DocumentsCreatedCount != null)
+{ 
+    <h5>
+        <span class="text-primary">@ViewBag.UniqueUsersCount</span> Unique Users have created <span class="text-primary">@ViewBag.DocumentsCreatedCount</span> documents using SmartDocs!
+    </h5>
+
+} 

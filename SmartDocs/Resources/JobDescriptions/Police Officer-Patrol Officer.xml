@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<JobDescription>
+  <JobId id="JobId">2</JobId>
+  <ClassTitle id="ClassTitle">Police Officer</ClassTitle>
+  <WorkingTitle id="WorkingTitle">Patrol Officer</WorkingTitle>
+  <Grade id="Grade">L01</Grade>
+  <Rank id="Rank">Police Officer</Rank>
+  <WorkingHours id="WorkingHours">Varied</WorkingHours>
+  <Categories id="Categories">
+    <Category id="Category">
+      <Letter id="Letter">A</Letter>
+      <Weight id="Weight">30</Weight>
+      <Title id="Title">Patrol</Title>
+      <PositionDescriptionFields id="PositionDescriptionFields">
+        <PositionDescriptionItem>Actively patrols within an assigned geographic area, responding to calls for service and taking appropriate action based upon personal observations.</PositionDescriptionItem>
+        <PositionDescriptionItem>Utilizes various sources to identify and respond to crime trends and patterns within assigned patrol area.</PositionDescriptionItem>
+        <PositionDescriptionItem>Utilizes various sources to identify and respond to traffic/pedestrian safety concerns within assigned patrol area.</PositionDescriptionItem>
+        <PositionDescriptionItem>Maintains a level of productivity consistent with the department's objectives.</PositionDescriptionItem>
+        <PositionDescriptionItem>Exhibits dependability and attention to duty.</PositionDescriptionItem>
+      </PositionDescriptionFields>
+      <PerformanceStandardFields id="PerformanceStandardFields">
+        <PerformanceStandardItem initial="A1">Conducts continuous high visibility patrols within the assigned area, taking appropriate police action based on observations made. Promptly responds to calls for service as directed or dispatched. Ensures that supervisor is kept abreast of relevant information pertaining to incidents occurring within the patrol area.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="A2">Seeks out information regarding crime trends and patterns currently impacting the patrol area. Implements strategies to respond to the identified criminal activity.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="A3">Seeks out information regarding traffic safety concerns currently impacting the patrol area. Implements various strategies to respond to the identified concerns.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="A4">Utilizes appropriate law enforcement methods to ensure that the department's objectives are being met.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="A5">Arrives for tour of duty on time, fully prepared for their assignment. Recognizes their role as a member of a squad and demonstrates teamwork in the execution of the department's objectives. Willingly accepts miscellaneous assignments as instructed. Uses personal skills and abilities as needed to accomplish departmental objectives. Adjusts schedule as necessary to accomplish required tasks. Utilizes and makes requests for leave appropriately and responsibly.</PerformanceStandardItem>
+      </PerformanceStandardFields>
+    </Category>
+    <Category id="Category">
+      <Letter id="Letter">B</Letter>
+      <Weight id="Weight">20</Weight>
+      <Title id="Title">Enforcement/Adjudication</Title>
+      <PositionDescriptionFields id="PositionDescriptionFields">
+        <PositionDescriptionItem>Takes appropriate enforcement action in response to observed violations.</PositionDescriptionItem>
+        <PositionDescriptionItem>Utilizes proper officer safety procedures during law enforcement contacts.</PositionDescriptionItem>
+        <PositionDescriptionItem>Follows appropriate procedures when preparing cases for judicial process.</PositionDescriptionItem>
+        <PositionDescriptionItem>Attends judicial hearings as required, prepared to present testimony and evidence as directed by the court.  </PositionDescriptionItem>
+      </PositionDescriptionFields>
+      <PerformanceStandardFields id="PerformanceStandardFields">
+        <PerformanceStandardItem initial="B1">Makes arrests and issues citations as appropriate based upon facts and circumstances known to the officer. Initiates enforcement action in a fair and impartial manner, utilizing proper levels of discretion as necessary.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="B2">Adheres to accepted officer safety practices while engaged in law enforcement activities. Employs appropriate tactics during citizen contacts</PerformanceStandardItem>
+        <PerformanceStandardItem initial="B3">Prepares charging documents and citations completely and properly, ensuring that appropriate charges are contemplated based on the specific facts of the case. Ensures that all essential witnesses are summoned for trial. Schedules and attends felony screening appointments as required.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="B4">Attends judicial hearings as required. When called upon, provides clear, concise, and accurate testimony. Ensures the integrity of all physical evidence under their control that is to be introduced to the court for consideration.</PerformanceStandardItem>
+      </PerformanceStandardFields>
+    </Category>
+    <Category id="Category">
+      <Letter id="Letter">C</Letter>
+      <Weight id="Weight">15</Weight>
+      <Title id="Title">Job Knowledge/Problem Solving</Title>
+      <PositionDescriptionFields id="PositionDescriptionFields">
+        <PositionDescriptionItem>Maintains an effective working knowledge of departmental policies and legal standards applicable in the performance of their duties.</PositionDescriptionItem>
+        <PositionDescriptionItem>Pursues training opportunities in order to maintain job knowledge and advance career development.</PositionDescriptionItem>
+        <PositionDescriptionItem>Applies clear reasoning and logical thinking in the pursuit of solutions to situations and conditions requiring police intervention.</PositionDescriptionItem>
+      </PositionDescriptionFields>
+      <PerformanceStandardFields id="PerformanceStandardFields">
+        <PerformanceStandardItem initial="C1">Understands and applies departmental policies in a manner consistent with the goals of the department. Maintains knowledge of the current criminal and traffic laws applicable to the performance of their duties. Maintains knowledge of applicable provisions of the Prince George's County Code.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="C2">Meets mandatory annual training requirements as defined by the Department and the Maryland Police Training Commission. Maintains certifications required to access law enforcement systems (CAD, METERS, etc.) necessary to accomplish departmental objectives.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="C3">Systematically gathers relevant facts in order to make appropriate, informed decisions. Identifies and utilizes internal and external resources to achieve successful solutions. Implements solutions based on sound reasoning without undue emotional influence.</PerformanceStandardItem>
+      </PerformanceStandardFields>
+    </Category>
+    <Category id="Category">
+      <Letter id="Letter">D</Letter>
+      <Weight id="Weight">15</Weight>
+      <Title id="Title">Preliminary Investigation/Reporting</Title>
+      <PositionDescriptionFields id="PositionDescriptionFields">
+        <PositionDescriptionItem>Conducts preliminary investigations pertaining to criminal activity brought to the attention of the officer through personal observation and/or citizen complaints.</PositionDescriptionItem>
+        <PositionDescriptionItem>Preserves, protects, and collects physical evidence, found property, and contraband that is to be taken into custody by the department.</PositionDescriptionItem>
+        <PositionDescriptionItem>Completes required reports in accordance with the applicable regulations and policies.</PositionDescriptionItem>
+      </PositionDescriptionFields>
+      <PerformanceStandardFields id="PerformanceStandardFields">
+        <PerformanceStandardItem initial="D1">Identifies and interviews victims and witnesses. Gathers all relevant details and properly classifies incidents. Ensures that notifications to appropriate investigative units are made in accordance with departmental guidelines. Conducts relevant follow-up investigations as necessary.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="D2">Takes appropriate steps to protect and secure crime scenes. Processes crime scenes for latent evidence. Collects and properly packages all items taken into the department's custody. Ensures that items are delivered to the appropriate departmental component for forensic analysis in accordance with the department's requirements.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="D3">Completes all reports required by departmental policy within the defined timeframe. Written communication is clear, concise, and accurate.</PerformanceStandardItem>
+      </PerformanceStandardFields>
+    </Category>
+    <Category id="Category">
+      <Letter id="Letter">E</Letter>
+      <Weight id="Weight">10</Weight>
+      <Title id="Title">Community Relations</Title>
+      <PositionDescriptionFields id="PositionDescriptionFields">
+        <PositionDescriptionItem>Works in partnership with citizens to assist in finding resolutions to immediate community problems.</PositionDescriptionItem>
+        <PositionDescriptionItem>Provides effective, professional police service to persons of diverse cultural, ethnic, and religious backgrounds.</PositionDescriptionItem>
+      </PositionDescriptionFields>
+      <PerformanceStandardFields id="PerformanceStandardFields">
+        <PerformanceStandardItem initial="E1">Acts as a public liaison in coordinating governmental services and resources for resolving community problems. Develops and uses creative strategies to respond to law enforcement, social, and environmental concerns.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="E2">Demonstrates professionalism, respect, and courtesy when dealing with community members. Directs efforts toward ensuring that the needs of the citizens are achieved in accordance with the Department's objectives.</PerformanceStandardItem>
+      </PerformanceStandardFields>
+    </Category>
+    <Category id="Category">
+      <Letter id="Letter">F</Letter>
+      <Weight id="Weight">10</Weight>
+      <Title id="Title">Uniform/Equipment</Title>
+      <PositionDescriptionFields id="PositionDescriptionFields">
+        <PositionDescriptionItem>Conforms to departmental uniform and grooming standards.</PositionDescriptionItem>
+        <PositionDescriptionItem>Maintains departmentally issued and authorized equipment.</PositionDescriptionItem>
+        <PositionDescriptionItem>Operates and maintains departmental vehicles as required.</PositionDescriptionItem>
+      </PositionDescriptionFields>
+      <PerformanceStandardFields id="PerformanceStandardFields">
+        <PerformanceStandardItem initial="F1">Present a professional, clean appearance. Wears departmental uniforms in the required manner as defined in the General Order Manual. Adheres to departmental grooming standards at all times.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="F2">Properly cares for and maintains all issued weapons and equipment. Ensures that all personally owned items authorized for official use are properly maintained in such a condition that renders them ready to be used in their approve fashion.</PerformanceStandardItem>
+        <PerformanceStandardItem initial="F3">Operates departmental vehicles in compliance with applicable laws and policies at all times whether on or off duty. Complies with vehicle maintenance procedures, to include preventive maintenance and emission testing. Ensures that their issued/assigned vehicle is clean and properly equipped as required.</PerformanceStandardItem>
+      </PerformanceStandardFields>
+    </Category>
+  </Categories>
+</JobDescription>

@@ -1,0 +1,43 @@
+﻿@model SmartDocs.Models.ViewModels.DocumentListViewModel
+@{
+    Layout = "_Layout";
+}
+<h2>My Documents</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                File Name
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Date Created
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Documents)
+        {
+            <tr>
+                <td>
+                    @item.DocumentName
+                </td>
+                <td>
+                    @item.DocumentTypeDisplayName
+                </td>
+                <td>
+                    @item.CreatedDate
+                </td>
+                <td>
+                    <a asp-action="Download" asp-controller="Home" asp-route-id="@item.DocumentId">Download</a> |
+                    <a asp-action="Edit" asp-controller="@item.ParentControllerName" asp-route-id="@item.DocumentId">Edit</a> |
+                    <a asp-action="Delete" asp-controller="@item.ParentControllerName" asp-route-id="@item.DocumentId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
