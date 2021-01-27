@@ -383,6 +383,27 @@
             <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
             <returns></returns>
         </member>
+        <member name="T:SmartDocs.Models.DataInitializer">
+            <summary>
+            Class that initializes Metadata for the application
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.DataInitializer.#ctor(SmartDocs.Models.SmartDocContext)">
+            <summary>
+            Constructor that initializes the class
+            </summary>
+            <param name="newContext">An instance of <see cref="T:SmartDocs.Models.SmartDocContext"/></param>
+        </member>
+        <member name="P:SmartDocs.Models.DataInitializer._newContext">
+            <summary>
+            An instance of <see cref="T:SmartDocs.Models.SmartDocContext"/>
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.DataInitializer.SeedTemplates">
+            <summary>
+            Method that seeds the Template documents into the Database from the FileSystem.
+            </summary>
+        </member>
         <member name="T:SmartDocs.Models.IDocumentRepository">
             <summary>
             Interface that encompasses Database Interactions
@@ -599,10 +620,392 @@
             The components.
             </value>
         </member>
+        <member name="T:SmartDocs.Models.SmartDocument">
+            <summary>
+            Class that represents a document entry in storage.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.DocumentId">
+            <summary>
+            The integer Id of the document entity.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.AuthorUserId">
+            <summary>
+            The integer id of the <see cref="T:SmartDocs.Models.SmartUser"/> that authored the document.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.Author">
+            <summary>
+            Navigation field for the <see cref="T:SmartDocs.Models.SmartUser"/> who authored the document.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.TemplateId">
+            <summary>
+            The integer Id of the template associated with the document type.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.Template">
+            <summary>
+            Navigation field to the <see cref="T:SmartDocs.Models.SmartTemplate"/> associated with the document type.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.Type">
+            <summary>
+            Enumeration for the document's <see cref="T:SmartDocs.Models.SmartDocument.SmartDocumentType"/>.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.Created">
+            <summary>
+            The Date the document was created.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.Edited">
+            <summary>
+            The Date that the document was last edited.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.FileName">
+            <summary>
+            The file name of the document.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.FormData">
+            <summary>
+            The document's user-provided form data, serialized to XML.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocument.FormDataXml">
+            <summary>
+            Returns an <see cref="T:System.Xml.Linq.XElement"/> assembled from the document's user-provided form data XML.
+            </summary>
+        </member>
+        <member name="T:SmartDocs.Models.SmartDocument.SmartDocumentType">
+            <summary>
+            Enumeration that represents the type of document.
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA">
+            <summary>
+            Past Performance Appraisal
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartDocument.SmartDocumentType.CounselingForm">
+            <summary>
+            Counseling Form / Performance Assessment Form
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartDocument.SmartDocumentType.JobDescription">
+            <summary>
+            Job Description Form
+            </summary>
+        </member>
+        <member name="F:SmartDocs.Models.SmartDocument.SmartDocumentType.AwardForm">
+            <summary>
+            Award Form
+            </summary>
+        </member>
+        <member name="T:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory">
+            <summary>
+            Factory that builds Award Forms
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Constructs a new instance of the class.
+            </summary>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory.#ctor(SmartDocs.Models.IDocumentRepository,SmartDocs.Models.SmartDocument)">
+            <summary>
+            Constructs a new instance of the class.
+            </summary>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+            <param name="award">The <see cref="T:SmartDocs.Models.SmartDocument"/> Award Form being generated.</param>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory.awardForm">
+            <summary>
+            The <see cref="T:SmartDocs.Models.SmartDocument"/> Award Form being generated.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory.CreateSmartAwardForm(SmartDocs.Models.ViewModels.SmartAwardViewModel)">
+            <summary>
+            Creates a new <see cref="T:SmartDocs.Models.SmartDocument"/> from the user-provided form data.
+            </summary>
+            <param name="vm">An instance of <see cref="T:SmartDocs.Models.ViewModels.SmartAwardViewModel"/> view model.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory.UpdateAwardForm(SmartDocs.Models.ViewModels.SmartAwardViewModel)">
+            <summary>
+            Updates an existing <see cref="T:SmartDocs.Models.SmartDocument"/> award form from user-provided form data.
+            </summary>
+            <param name="vm"></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory.ViewModelToXML(SmartDocs.Models.ViewModels.SmartAwardViewModel)">
+            <summary>
+            Private method that converts the user-provided form data into the XML field of the <see cref="T:SmartDocs.Models.SmartDocument"/>.
+            </summary>
+            <param name="vm"></param>
+            <returns>An <see cref="T:System.Xml.Linq.XElement"/></returns>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory.GetViewModelFromXML">
+            <summary>
+            Generates a <see cref="T:SmartDocs.Models.ViewModels.SmartAwardViewModel"/> from the <see cref="T:SmartDocs.Models.SmartDocument"/>
+            </summary>
+            <returns>A <see cref="T:SmartDocs.Models.ViewModels.SmartAwardViewModel"/></returns>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartAwardFactory.GenerateDocument">
+            <summary>
+            Generates and serialized the document.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartAwardMappedFieldSet.EmployeeClassTitle">
             <summary>
             The Employee's Work Class Title
             </summary>
+        </member>
+        <member name="T:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory">
+            <summary>
+            Factory class that generates and updates <see cref="T:SmartDocs.Models.SmartDocument"/>
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Constructs a new instance of the class
+            </summary>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory.#ctor(SmartDocs.Models.IDocumentRepository,SmartDocs.Models.SmartDocument)">
+            <summary>
+            Constructs a new instance of the class from an existing <see cref="T:SmartDocs.Models.SmartDocument"/>
+            </summary>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+            <param name="ppa">An <see cref="T:SmartDocs.Models.SmartDocument"/> representing an existing PPA.</param>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory.PPA">
+            <summary>
+            A <see cref="T:SmartDocs.Models.SmartDocument"/> that represents the PPA being generated. 
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory.CreatePPA(SmartDocs.Models.ViewModels.PPAFormViewModel)">
+            <summary>
+            Creates a new <see cref="T:SmartDocs.Models.SmartDocument"/> from the user-provided form data.
+            </summary>
+            <param name="vm">A <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory.UpdatePPA(SmartDocs.Models.ViewModels.PPAFormViewModel)">
+            <summary>
+            Updates an existing <see cref="T:SmartDocs.Models.SmartDocument"/> PPA from user-provided form data.
+            </summary>
+            <param name="vm">A <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory.ViewModelToXML(SmartDocs.Models.ViewModels.PPAFormViewModel)">
+            <summary>
+            Private method that converts the form data to XML
+            </summary>
+            <param name="vm"></param>
+            <returns>An <see cref="T:System.Xml.Linq.XElement"/></returns>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory.GetViewModelFromXML">
+            <summary>
+            Converts an existing <see cref="T:SmartDocs.Models.SmartDocument"/> 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory.GenerateDocument">
+            <summary>
+            Generates the Word Document
+            </summary>
+            <returns>A <see cref="T:System.IO.MemoryStream"/> containing the form field values injected into the template.</returns>
+        </member>
+        <member name="T:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet">
+            <summary>
+            Class that corresponds to fields on the pre-2021 Smart PPA form template that are populated by form data.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_EmployeeName">
+            <summary>
+            Employee name on the PPA form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_PayrollId">
+            <summary>
+            Employee payroll Id on the PPA Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_ClassTitle">
+            <summary>
+            Employee class title on the PPA Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_Grade">
+            <summary>
+            Employee Grade on PPA Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_PositionNumber">
+            <summary>
+            Employee Position Number on PPA form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_StartDate">
+            <summary>
+            Employee appraisal period start date on the PPA form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_EndDate">
+            <summary>
+            Employee appraisal period end date on the PPA form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_DistrictDivision">
+            <summary>
+            Employee District/Division name on the PPA form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_AgencyActivity">
+            <summary>
+            Employee Agency/Activity Code on the PPA form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_Categories">
+            <summary>
+            A list of <see cref="T:SmartDocs.Models.SmartDocumentClasses.SmartCategory"/> taken from the <see cref="T:SmartDocs.Models.SmartJob"/> associated with the PPA.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_TotalRatingValue">
+            <summary>
+            Appraisal total rating value for the appraisal.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_EmployeeName">
+            <summary>
+            The employee name on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_PayrollId">
+            <summary>
+            The employee Payroll Id on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_StartDate">
+            <summary>
+            The appraisal period start date on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_EndDate">
+            <summary>
+            The appraisal period end date on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_ClassGrade">
+            <summary>
+            The employee's class title/grade on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_DistrictDivision">
+            <summary>
+            The employee's district/division on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_Assessment">
+            <summary>
+            The supervisor's assessment on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_Assessment_Chunk">
+            <summary>
+            The chunk section containing the HTML rich text comments from the Performance Assessment Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_Recommendations">
+            <summary>
+            The supervisor's recommendations on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_Recommendations_Chunk">
+            <summary>
+            The chunk section containing the HTML rich text comments from the Performance Assessment Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_EmployeeName">
+            <summary>
+            The employee's name on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_DistrictDivision">
+            <summary>
+            The employee's District/Divison on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_AgencyActivity">
+            <summary>
+            The employees' Agency/Activity on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_PositionNumber">
+            <summary>
+            The employee's Position Number in the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_ClassTitle">
+            <summary>
+            The employee's Class Title on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_Grade">
+            <summary>
+            The employee's Grade on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_WorkingTitle">
+            <summary>
+            The employee's Working Title on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_WorkAddress">
+            <summary>
+            The employee's Work Address on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_WorkingHours">
+            <summary>
+            The employee's Working Hours on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_Supervisor">
+            <summary>
+            The employee's Supervisor's name on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JOB_Supervises">
+            <summary>
+            The employee's subordinate unit name, if any, on the Job Description Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.JobDescriptionTable">
+            <summary>
+            The <see cref="T:DocumentFormat.OpenXml.Wordprocessing.Table"/> that the Job Description fields.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.#ctor(DocumentFormat.OpenXml.Packaging.MainDocumentPart)">
+            <summary>
+            Constructs a new instance of the class. 
+            </summary>
+            <param name="mainPart">The template document's <see cref="T:DocumentFormat.OpenXml.Packaging.MainDocumentPart"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.WriteXMLToFields(System.Xml.Linq.XElement)">
+            <summary>
+            Method that writes the XML data to the template
+            </summary>
+            <param name="root">A <see cref="T:System.Xml.Linq.XElement"/> containing the XML form field data.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.ExtractJobDescriptionFromXMLFormData(System.Xml.Linq.XElement)">
+            <summary>
+            Method that extracts the Job Description data from the overall form field data in the XML Field and returns an instance of a <see cref="T:SmartDocs.Models.JobDescription"/>
+            </summary>
+            <param name="rootElement">The <see cref="T:System.Xml.Linq.XElement"/> containing the Job Description Data.</param>
+            <returns>A <see cref="T:SmartDocs.Models.JobDescription"/> initialized from the form field data.</returns>
         </member>
         <member name="T:SmartDocs.Models.SmartDocumentRepository">
             <summary>
@@ -615,7 +1018,6 @@
             Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartDocumentRepository"/> class.
             </summary>
             <param name="ctx">An injected <see cref="T:SmartDocs.Models.SmartDocContext"/> database context.</param>
-            <param name="userService">An injected <see cref="T:SmartDocs.Models.UserResolverService"/>.</param>
         </member>
         <member name="P:SmartDocs.Models.SmartDocumentRepository.Users">
             <summary>
@@ -628,6 +1030,14 @@
         <member name="P:SmartDocs.Models.SmartDocumentRepository.Templates">
             <summary>
             Gets the Templates.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartTemplate"/>s.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.Documents">
+            <summary>
+            Gets the Documents.
             </summary>
             <value>
             The <see cref="T:SmartDocs.Models.SmartTemplate"/>s.
@@ -646,7 +1056,7 @@
             Gets the PPAs.
             </summary>
             <value>
-            The <see cref="T:SmartDocs.Models.SmartPPA"/>s.
+            The <see cref="T:SmartDocs.Models.SmartDocument"/>s in the repo that are of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/>
             </value>
             <remarks>
             This list will return only the PPA records that belong to the Repo's currentUser
@@ -671,7 +1081,7 @@
         </member>
         <member name="M:SmartDocs.Models.SmartDocumentRepository.RemoveJob(SmartDocs.Models.SmartJob)">
             <summary>
-            Removes the <see cref="T:SmartDocs.Models.RemoveJob"/> from the repo.
+            Removes the <see cref="T:SmartDocs.Models.SmartJob"/> from the repo.
             </summary>
             <param name="job">The <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
         </member>
@@ -683,6 +1093,19 @@
             If this method is passed a SmartTemplate with a non-zero SmartTemplate.TemplateId, it will update the corresponding SmartTemplate in the repo. If this method is passed a SmartJob with a SmartTemplate.TemplateId = 0, then it will create a new SmartTemplate in the repo.
             </remarks>
             <param name="template">A <see cref="T:SmartDocs.Models.SmartTemplate"/> to add/update.</param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveSmartDoc(SmartDocs.Models.SmartDocument)">
+            <summary>
+            Saves a <see cref="T:SmartDocs.Models.SmartDocument"/>
+            </summary>
+            <param name="doc">The <see cref="T:SmartDocs.Models.SmartDocument"/> to save.</param>
+            <returns>The saved <see cref="T:SmartDocs.Models.SmartDocument"/></returns>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentRepository.RemoveSmartDoc(SmartDocs.Models.SmartDocument)">
+            <summary>
+            Removes a <see cref="T:SmartDocs.Models.SmartDocument"/>
+            </summary>
+            <param name="doc">The <see cref="T:SmartDocs.Models.SmartDocument"/> to remove.</param>
         </member>
         <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveUser(SmartDocs.Models.SmartUser)">
             <summary>
@@ -834,6 +1257,11 @@
             <value>
             The user's in-application display name.
             </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartUser.Documents">
+            <summary>
+            A collection of <see cref="T:SmartDocs.Models.SmartDocument"/>s authored by the user.
+            </summary>
         </member>
         <member name="T:SmartDocs.Models.Types.DocumentListViewModelItem">
             <summary>
@@ -1507,15 +1935,15 @@
         </member>
         <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.JobId">
             <summary>
-            Gets or sets the identifier for the <see cref="T:SmartDocs.Models.SmartJob"/> associated with the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            Gets or sets the identifier for the <see cref="T:SmartDocs.Models.SmartJob"/> associated with the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> from which the View Model is built.
             </summary>
             <value>
             The job identifier.
             </value>
         </member>
-        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.job">
+        <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.Job">
             <summary>
-            Gets or sets the <see cref="T:SmartDocs.Models.JobDescription"/> associated with the <see cref="!:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            Gets or sets the <see cref="T:SmartDocs.Models.JobDescription"/> associated with the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> from which the View Model is built.
             </summary>
             <value>
             The job.
@@ -1523,7 +1951,7 @@
         </member>
         <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.AuthorUserId">
             <summary>
-            Gets or sets the id of the <see cref="T:SmartDocs.Models.SmartUser"/> who is the author of the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            Gets or sets the id of the <see cref="T:SmartDocs.Models.SmartUser"/> who is the author of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> from which the View Model is built.
             </summary>
             <value>
             The author user identifier.
@@ -1598,16 +2026,6 @@
             This constructor is used when a new PPA is being created.
             </remarks>
             </summary>
-        </member>
-        <member name="M:SmartDocs.Models.ViewModels.PPAFormViewModel.#ctor(SmartDocs.OldModels.Ppas)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/> class.
-            </summary>
-            <remarks>
-            This method is designed to facilitate editing an existing PPA in the Db.
-            As of Version 1.1, this method is deprecated for all but conversions from the old format.
-            </remarks>
-            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/></param>
         </member>
         <member name="P:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel.DocumentId">
             <summary>
@@ -1796,7 +2214,7 @@
         </member>
         <member name="M:SmartDocs.Startup.#ctor(Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
             <summary>
-            Initializes a new instance of the <see cref="T:SmartPPA.Startup"/> class.
+            Initializes a new instance of the <see cref="T:SmartDocs.Startup"/> class.
             </summary>
             <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
         </member>
@@ -1806,13 +2224,14 @@
             </summary>
             <param name="services">An <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> object.</param>
         </member>
-        <member name="M:SmartDocs.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider,SmartDocs.Models.SmartDocContext,SmartDocs.OldModels.SmartDocsContext)">
+        <member name="M:SmartDocs.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider,SmartDocs.Models.SmartDocContext)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.  
             </summary>
             <param name="app">An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> object.</param>
             <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
             <param name="service">An <see cref="T:System.IServiceProvider"/> object.</param>
+            <param name="context">An instance of <see cref="T:SmartDocs.Models.SmartDocContext"/></param>
         </member>
         <member name="T:SmartDocs.ViewComponents.JobDescriptionCategoryEditorViewComponent">
             <summary>

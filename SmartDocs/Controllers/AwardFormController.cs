@@ -66,7 +66,7 @@ namespace SmartDocs.Controllers
                 // do Award Form Factory stuff
                 SmartAwardFactory factory = new SmartAwardFactory(_repository);                
                 factory.CreateSmartAwardForm(form);
-                return RedirectToAction("SaveSuccess", new { id = factory._awardForm.DocumentId });
+                return RedirectToAction("SaveSuccess", new { id = factory.awardForm.DocumentId });
             }
         }
 
@@ -105,7 +105,7 @@ namespace SmartDocs.Controllers
             }
             SmartAwardFactory factory = new SmartAwardFactory(_repository, awardDoc);
             factory.UpdateAwardForm(form);
-            return RedirectToAction("SaveSuccess", new { id = factory._awardForm.DocumentId });
+            return RedirectToAction("SaveSuccess", new { id = factory.awardForm.DocumentId });
 
         }
         public IActionResult SaveSuccess(int id)

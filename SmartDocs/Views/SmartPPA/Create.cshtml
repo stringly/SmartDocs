@@ -136,10 +136,10 @@
                                 <span asp-validation-for="JobId" class="text-danger"></span>
                             </div>
                         </div>
-                        @if (Model.job != null)
+                        @if (Model.Job != null)
                         {
                             <div id="RatingInfo" style="display:block">
-                                @(await Component.InvokeAsync("JobDescriptionCategoryList", Model.job));
+                                @(await Component.InvokeAsync("JobDescriptionCategoryList", Model.Job));
                             </div>
                         }
                         else

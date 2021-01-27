@@ -1,17 +1,14 @@
 ﻿using Google.Cloud.Diagnostics.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartDocs.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
-using SmartDocs.OldModels;
-using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
+using System;
 
 namespace SmartDocs
 {
@@ -23,9 +20,9 @@ namespace SmartDocs
         IConfigurationRoot Configuration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartPPA.Startup"/> class.
+        /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        /// <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
+        /// <param name="env">An <see cref="IHostingEnvironment"/> object.</param>
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -36,7 +33,7 @@ namespace SmartDocs
                 .AddEnvironmentVariables();
             if (env.IsDevelopment())
             {
-                builder.AddUserSecrets<Startup>();
+                builder.AddUserSecrets<Startup>(); // required to load user secrets in Dev
             }                
             Configuration = builder.Build();
         }
@@ -44,7 +41,7 @@ namespace SmartDocs
         /// <summary>
         /// Configures the application services.
         /// </summary>
-        /// <param name="services">An <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> object.</param>
+        /// <param name="services">An <see cref="IServiceCollection"/> object.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGoogleExceptionLogging(options =>
@@ -55,25 +52,24 @@ namespace SmartDocs
             });
 
             services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
-            services.AddDbContext<SmartDocsContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:OldConnectionString"]));
             services.AddScoped<IClaimsTransformation, ClaimsLoader>();
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();            
-            services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
-            //services.AddMvc();
+            services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);            
             services.AddMvc(options =>
             {
-                options.ModelBinderProviders.Insert(0, new AwardTypeModelBinderProvider());
+                options.ModelBinderProviders.Insert(0, new AwardTypeModelBinderProvider()); // custom binder for awards 
             });
         }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.  
         /// </summary>
-        /// <param name="app">An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> object.</param>
-        /// <param name="env">An <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/> object.</param>
-        /// <param name="service">An <see cref="T:System.IServiceProvider"/> object.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service, SmartDocContext newContext, SmartDocsContext oldContext)
+        /// <param name="app">An <see cref="IApplicationBuilder"/> object.</param>
+        /// <param name="env">An <see cref="IHostingEnvironment"/> object.</param>
+        /// <param name="service">An <see cref="IServiceProvider"/> object.</param>
+        /// <param name="context">An instance of <see cref="SmartDocContext"/></param>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider service, SmartDocContext context)
         {
             if (env.IsDevelopment())
             {
@@ -81,9 +77,8 @@ namespace SmartDocs
                 app.UseGoogleExceptionLogging();
             }
             // comment out these lines if there is no need to push the old PPAs into the new DB
-            DataInitializer initializer = new DataInitializer(newContext, oldContext);
-            initializer.SeedTemplates();
-            initializer.SeedOldPPAs();            
+            DataInitializer initializer = new DataInitializer(context);
+            initializer.SeedTemplates();       
 
             app.UseStatusCodePages();
             app.UseGoogleExceptionLogging();

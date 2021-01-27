@@ -1,11 +1,8 @@
-﻿using System;
-using System.Xml;
-using System.Xml.Linq;
-using SmartDocs.Models.Types;
-using System.Collections.Generic;
-using DocumentFormat.OpenXml.Packaging;
+﻿using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
-using SmartDocs.OldModels;
+using System;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace SmartDocs.Models
 {
@@ -78,7 +75,7 @@ namespace SmartDocs.Models
         public List<JobDescriptionCategory> Categories { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.JobDescription"/> class.
+        /// Initializes a new instance of the <see cref="JobDescription"/> class.
         /// </summary>
         /// <remarks>
         /// Parameterless class constructor
@@ -90,12 +87,12 @@ namespace SmartDocs.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.JobDescription"/> class.
+        /// Initializes a new instance of the <see cref="JobDescription"/> class.
         /// </summary>
         /// <remarks>
-        /// Class constructor that requires a <see cref="T:SmartDocs.Models.SmartJob"/>
+        /// Class constructor that requires a <see cref="SmartJob"/>
         /// </remarks>
-        /// <param name="job">A <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+        /// <param name="job">A <see cref="SmartJob"/>.</param>
         public JobDescription(SmartJob job)
         {
             SmartJobId = job.JobId;
@@ -153,71 +150,13 @@ namespace SmartDocs.Models
             // assign the assembled category list to the Job Description's Categories property
             Categories = results;
         }
-
-        public JobDescription(Jobs job)
-        {
-            SmartJobId = job.JobId;
-
-            // create a new category list
-            List<JobDescriptionCategory> results = new List<JobDescriptionCategory>();
-
-            // retrieve the XML data column from the SmartJob Entity parameter
-            XElement root = job.JobDataXml;
-
-            // assign the properties that are stored in the XML data
-            ClassTitle = root.Element("ClassTitle").Value;
-            WorkingTitle = root.Element("WorkingTitle").Value;
-            Grade = root.Element("Grade").Value;
-            WorkingHours = root.Element("WorkingHours").Value;
-            Rank = root.Element("Rank").Value;
-
-            // the XML has a child element named "Categories" that has children named "Category"
-            IEnumerable<XElement> CategoryList = root.Element("Categories").Elements("Category");
-
-            // loop through the categories and map them to JobDescriptionCategory class objects
-            foreach (XElement category in CategoryList)
-            {
-                JobDescriptionCategory cat = new JobDescriptionCategory
-                {
-                    Letter = category.Element("Letter").Value,
-                    Weight = Convert.ToInt32(category.Element("Weight").Value),
-                    Title = category.Element("Title").Value
-                };
-
-                // each category contains a child element named "PositionDescriptionFields" that contains children named "PositionDescriptionItem"
-                IEnumerable<XElement> positionDescriptionFields = category.Element("PositionDescriptionFields").Elements("PositionDescriptionItem");
-
-                // loop through the PositionDescriptionItems and map to PositionDescriptionItem class objects
-                foreach (XElement positionDescriptionItem in positionDescriptionFields)
-                {
-                    PositionDescriptionItem item = new PositionDescriptionItem { Detail = positionDescriptionItem.Value };
-                    // add each object to the Category Object's collection
-                    cat.PositionDescriptionItems.Add(item);
-                }
-
-                // each category contains a child element named "PerformanceStandardFields" that contains children named "PerformanceStandardItem"
-                IEnumerable<XElement> performanceStandardFields = category.Element("PerformanceStandardFields").Elements("PerformanceStandardItem");
-
-                // loop through the PerformanceStandardItems and map to PerformanceStandardItem class objects
-                foreach (XElement performanceStandardItem in performanceStandardFields)
-                {
-                    PerformanceStandardItem item = new PerformanceStandardItem { Initial = performanceStandardItem.Attribute("initial").Value, Detail = performanceStandardItem.Value };
-                    // add each object to the Category Object's collection
-                    cat.PerformanceStandardItems.Add(item);
-                }
-                // now, add the Category object itself to the "result" list of categories
-                results.Add(cat);
-            }
-            // assign the assembled category list to the Job Description's Categories property
-            Categories = results;
-        }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.JobDescription"/> class.
+        /// Initializes a new instance of the <see cref="JobDescription"/> class.
         /// </summary>
         /// <remarks>
-        /// This method is used to create a Job Description Object from the form data in a <see cref="SmartDocs.Models.ViewModels.JobDescriptionViewModel"/>
+        /// This method is used to create a Job Description Object from the form data in a <see cref="JobDescriptionViewModel"/>
         /// </remarks>
-        /// <param name="formData">The <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/>.</param>
+        /// <param name="formData">The <see cref="JobDescriptionViewModel"/>.</param>
         public JobDescription(JobDescriptionViewModel formData)
         {
             ClassTitle = formData.Rank;

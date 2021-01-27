@@ -5,81 +5,194 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace SmartDocs.Models.SmartDocumentClasses
 {
+    /// <summary>
+    /// Class that corresponds to fields on the pre-2021 Smart PPA form template that are populated by form data.
+    /// </summary>
     public class SmartPPAMappedFieldSet
     {
+        /// <summary>
+        /// Employee name on the PPA form.
+        /// </summary>
         public SmartParagraph PPA_EmployeeName { get; set; }
+        /// <summary>
+        /// Employee payroll Id on the PPA Form.
+        /// </summary>
         public SmartParagraph PPA_PayrollId { get; set; }
+        /// <summary>
+        /// Employee class title on the PPA Form.
+        /// </summary>
         public SmartParagraph PPA_ClassTitle { get; set; }
+        /// <summary>
+        /// Employee Grade on PPA Form.
+        /// </summary>
         public SmartParagraph PPA_Grade { get; set; }
+        /// <summary>
+        /// Employee Position Number on PPA form.
+        /// </summary>
         public SmartParagraph PPA_PositionNumber { get; set; }
+        /// <summary>
+        /// Employee appraisal period start date on the PPA form.
+        /// </summary>
         public SmartParagraph PPA_StartDate { get; set; }
+        /// <summary>
+        /// Employee appraisal period end date on the PPA form.
+        /// </summary>
         public SmartParagraph PPA_EndDate { get; set; }
+        /// <summary>
+        /// Employee District/Division name on the PPA form.
+        /// </summary>
         public SmartParagraph PPA_DistrictDivision { get; set; }
+        /// <summary>
+        /// Employee Agency/Activity Code on the PPA form.
+        /// </summary>
         public SmartParagraph PPA_AgencyActivity { get; set; }
+        /// <summary>
+        /// A list of <see cref="SmartCategory"/> taken from the <see cref="SmartJob"/> associated with the PPA.
+        /// </summary>
         public List<SmartCategory> PPA_Categories { get; set; }
+        /// <summary>
+        /// Appraisal total rating value for the appraisal.
+        /// </summary>
         public SmartParagraph PPA_TotalRatingValue { get; set; }
-        public SmartParagraph PPA_OverallAppraisal { get; set; }
+        /// <summary>
+        /// Overall appraisal rating.
+        /// </summary>
+        //public SmartParagraph PPA_OverallAppraisal { get; set; }
+        /// <summary>
+        /// The employee name on the Performance Appraisal Form.
+        /// </summary>
         public SmartParagraph PAF_EmployeeName { get; set; }
+        /// <summary>
+        /// The employee Payroll Id on the Performance Appraisal Form.
+        /// </summary>
         public SmartParagraph PAF_PayrollId { get; set; }
+        /// <summary>
+        /// The appraisal period start date on the Performance Appraisal Form.
+        /// </summary>
         public SmartParagraph PAF_StartDate { get; set; }
+        /// <summary>
+        /// The appraisal period end date on the Performance Appraisal Form.
+        /// </summary>
         public SmartParagraph PAF_EndDate { get; set; }
+        /// <summary>
+        /// The employee's class title/grade on the Performance Appraisal Form.
+        /// </summary>
         public SmartParagraph PAF_ClassGrade { get; set; }
+        /// <summary>
+        /// The employee's district/division on the Performance Appraisal Form.
+        /// </summary>
         public SmartParagraph PAF_DistrictDivision { get; set; }
+        /// <summary>
+        /// The supervisor's assessment on the Performance Appraisal Form.
+        /// </summary>
         public SmartParagraph PAF_Assessment { get; set; }
+        /// <summary>
+        /// The chunk section containing the HTML rich text comments from the Performance Assessment Form.
+        /// </summary>
         public AlternativeFormatImportPart PAF_Assessment_Chunk { get; set; }
+        /// <summary>
+        /// The supervisor's recommendations on the Performance Appraisal Form.
+        /// </summary>
         public SmartParagraph PAF_Recommendations { get; set; }
+        /// <summary>
+        /// The chunk section containing the HTML rich text comments from the Performance Assessment Form.
+        /// </summary>
         public AlternativeFormatImportPart PAF_Recommendations_Chunk { get; set; }
+        /// <summary>
+        /// The employee's name on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_EmployeeName { get; set; }
+        /// <summary>
+        /// The employee's District/Divison on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_DistrictDivision { get; set; }
+        /// <summary>
+        /// The employees' Agency/Activity on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_AgencyActivity { get; set; }
+        /// <summary>
+        /// The employee's Position Number in the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_PositionNumber { get; set; }
+        /// <summary>
+        /// The employee's Class Title on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_ClassTitle { get; set; }
+        /// <summary>
+        /// The employee's Grade on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_Grade { get; set; }
+        /// <summary>
+        /// The employee's Working Title on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_WorkingTitle { get; set; }
+        /// <summary>
+        /// The employee's Work Address on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_WorkAddress { get; set; }
+        /// <summary>
+        /// The employee's Working Hours on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_WorkingHours { get; set; }
+        /// <summary>
+        /// The employee's Supervisor's name on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_Supervisor { get; set; }
+        /// <summary>
+        /// The employee's subordinate unit name, if any, on the Job Description Form.
+        /// </summary>
         public SmartParagraph JOB_Supervises { get; set; }
+        /// <summary>
+        /// The <see cref="Table"/> that the Job Description fields.
+        /// </summary>
         public Table JobDescriptionTable { get; set; }
+        /// <summary>
+        /// Constructs a new instance of the class. 
+        /// </summary>
+        /// <param name="mainPart">The template document's <see cref="MainDocumentPart"/></param>
         public SmartPPAMappedFieldSet(MainDocumentPart mainPart)
         {
             // PPA Fields start in table 1
             Table PPAFields = mainPart.Document.Body.Elements<Table>().ElementAt(0);
-            PPA_EmployeeName = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(1));
-            PPA_PayrollId = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(2));
-            PPA_ClassTitle = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(3).Elements<TableCell>().ElementAt(1));
-            PPA_Grade = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(3).Elements<TableCell>().ElementAt(2));
-            PPA_PositionNumber = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(3).Elements<TableCell>().ElementAt(3));
-            PPA_StartDate = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(4).Elements<TableCell>().ElementAt(0));
-            PPA_EndDate = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(4).Elements<TableCell>().ElementAt(2));
-            PPA_DistrictDivision = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(6).Elements<TableCell>().ElementAt(3));
-            PPA_AgencyActivity = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(6).Elements<TableCell>().ElementAt(4));
+            PPA_EmployeeName = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(0).Elements<TableCell>().ElementAt(1));
+            PPA_PayrollId = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(0).Elements<TableCell>().ElementAt(3));
+            PPA_ClassTitle = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(2).Elements<TableCell>().ElementAt(3));
+            PPA_Grade = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(2).Elements<TableCell>().ElementAt(4));
+            PPA_PositionNumber = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(2).Elements<TableCell>().ElementAt(5));
+            PPA_StartDate = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(2).Elements<TableCell>().ElementAt(0));
+            PPA_EndDate = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(2).Elements<TableCell>().ElementAt(2));
+            PPA_DistrictDivision = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(4).Elements<TableCell>().ElementAt(3));
+            PPA_AgencyActivity = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(4).Elements<TableCell>().ElementAt(4));
 
             PPA_Categories = new List<SmartCategory>();
-            Table PPACategories = mainPart.Document.Body.Elements<Table>().ElementAt(1);
-            for (int i = 2; i < 8; i++)
+            Table PPACategories = mainPart.Document.Body.Elements<Table>().ElementAt(0);
+            for (int i = 6; i < 12; i++)
             {
                 PPA_Categories.Add(new SmartCategory(PPACategories.Elements<TableRow>().ElementAt(i)));
             }
-            PPA_TotalRatingValue = new SmartParagraph(PPACategories.Elements<TableRow>().ElementAt(8).Elements<TableCell>().ElementAt(2));
-            PPA_OverallAppraisal = new SmartParagraph(PPACategories.Elements<TableRow>().ElementAt(9).Elements<TableCell>().ElementAt(2));
-            Table PAFHeader = mainPart.HeaderParts.ElementAt(2).RootElement.Elements<Table>().ElementAt(0);
-            PAF_EmployeeName = new SmartParagraph(PAFHeader.Elements<TableRow>().ElementAt(3).Elements<TableCell>().ElementAt(1));
-            PAF_PayrollId = new SmartParagraph(PAFHeader.Elements<TableRow>().ElementAt(3).Elements<TableCell>().ElementAt(3));
-            PAF_StartDate = new SmartParagraph(PAFHeader.Elements<TableRow>().ElementAt(4).Elements<TableCell>().ElementAt(1));
-            PAF_EndDate = new SmartParagraph(PAFHeader.Elements<TableRow>().ElementAt(4).Elements<TableCell>().ElementAt(3));
-            PAF_ClassGrade = new SmartParagraph(PAFHeader.Elements<TableRow>().ElementAt(4).Elements<TableCell>().ElementAt(5));
-            PAF_DistrictDivision = new SmartParagraph(PAFHeader.Elements<TableRow>().ElementAt(5).Elements<TableCell>().ElementAt(1));
-            PAF_Assessment = new SmartParagraph(mainPart.Document.Body.Elements<Table>().ElementAt(3).Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(0));
+            PPA_TotalRatingValue = new SmartParagraph(PPACategories.Elements<TableRow>().ElementAt(12).Elements<TableCell>().ElementAt(1));
+            // TODO: Fix overall appraisal to insert checks
+            //PPA_OverallAppraisal = new SmartParagraph(PPACategories.Elements<TableRow>().ElementAt(9).Elements<TableCell>().ElementAt(2));
+
+            // TODO: Consider adding Probationary Midpoint/Rating Justification?
+            Table PAFFields = mainPart.Document.Body.Elements<Table>().ElementAt(1);
+            PAF_EmployeeName = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(5).Elements<TableCell>().ElementAt(1));
+            PAF_PayrollId = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(6).Elements<TableCell>().ElementAt(1));
+            PAF_StartDate = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(7).Elements<TableCell>().ElementAt(1));
+            PAF_EndDate = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(7).Elements<TableCell>().ElementAt(3));
+            PAF_ClassGrade = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(9).Elements<TableCell>().ElementAt(1));
+            PAF_DistrictDivision = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(9).Elements<TableCell>().ElementAt(1));
+
+            PAF_Assessment = new SmartParagraph(mainPart.Document.Body.Elements<Table>().ElementAt(2).Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(0));
             PAF_Assessment_Chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html, "assessmentChunk");
-            PAF_Recommendations = new SmartParagraph(mainPart.Document.Body.Elements<Table>().ElementAt(4).Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(0));
+            PAF_Recommendations = new SmartParagraph(mainPart.Document.Body.Elements<Table>().ElementAt(3).Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(0));
             PAF_Recommendations_Chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html, "recommendationsChunk");
-            Table JOBFields = mainPart.Document.Body.Elements<Table>().ElementAt(5);
+
+            Table JOBFields = mainPart.Document.Body.Elements<Table>().ElementAt(4);
             JOB_EmployeeName = new SmartParagraph(JOBFields.Elements<TableRow>().ElementAt(3).Elements<TableCell>().ElementAt(0));
             JOB_DistrictDivision = new SmartParagraph(JOBFields.Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(2));
             JOB_AgencyActivity = new SmartParagraph(JOBFields.Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(3));
@@ -91,8 +204,12 @@ namespace SmartDocs.Models.SmartDocumentClasses
             JOB_WorkingHours = new SmartParagraph(JOBFields.Elements<TableRow>().ElementAt(7).Elements<TableCell>().ElementAt(1));
             JOB_Supervisor = new SmartParagraph(JOBFields.Elements<TableRow>().ElementAt(9).Elements<TableCell>().ElementAt(0));
             JOB_Supervises = new SmartParagraph(JOBFields.Elements<TableRow>().ElementAt(11).Elements<TableCell>().ElementAt(0));
-            JobDescriptionTable = mainPart.Document.Body.Elements<Table>().ElementAt(6);
+            JobDescriptionTable = mainPart.Document.Body.Elements<Table>().ElementAt(5);
         }
+        /// <summary>
+        /// Method that writes the XML data to the template
+        /// </summary>
+        /// <param name="root">A <see cref="XElement"/> containing the XML form field data.</param>
         public void WriteXMLToFields(XElement root)
         {
             JobDescription job = ExtractJobDescriptionFromXMLFormData(root);
@@ -129,7 +246,8 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 i++;
             }
             PPA_TotalRatingValue.Write(job.GetOverallScore().ToString());
-            PPA_OverallAppraisal.Write(job.GetOverallRating());
+            // TODO: Update this to address the check box style of the new form.
+            //PPA_OverallAppraisal.Write(job.GetOverallRating());
 
             // Write PAF form fields
             PAF_EmployeeName.Write($"{root.Element("LastName").Value}, {root.Element("FirstName").Value}");
@@ -146,8 +264,10 @@ namespace SmartDocs.Models.SmartDocumentClasses
                     stringStream.Write($"<html>{root.Element("Assessment").Value}</html>");
                 }
             }
-            AltChunk assessmentChunk = new AltChunk();
-            assessmentChunk.Id = "assessmentChunk";
+            AltChunk assessmentChunk = new AltChunk
+            {
+                Id = "assessmentChunk"
+            };
             PAF_Assessment.Paragraph.InsertBeforeSelf(assessmentChunk);
             using (Stream chunkStream = PAF_Recommendations_Chunk.GetStream(FileMode.Create, FileAccess.Write))
             {
@@ -156,8 +276,10 @@ namespace SmartDocs.Models.SmartDocumentClasses
                     stringStream.Write($"<html>{root.Element("Recommendation").Value}</html>");
                 }
             }
-            AltChunk recommendationsChunk = new AltChunk();
-            recommendationsChunk.Id = "recommendationsChunk";
+            AltChunk recommendationsChunk = new AltChunk
+            {
+                Id = "recommendationsChunk"
+            };
             PAF_Recommendations.Paragraph.InsertBeforeSelf(recommendationsChunk);
 
             // Write Job Description Fields
@@ -173,6 +295,11 @@ namespace SmartDocs.Models.SmartDocumentClasses
             JOB_Supervisor.Write(root.Element("AuthorName").Value);
             JOB_Supervises.Write(root.Element("SupervisedByEmployee").Value);
         }
+        /// <summary>
+        /// Method that extracts the Job Description data from the overall form field data in the XML Field and returns an instance of a <see cref="JobDescription"/>
+        /// </summary>
+        /// <param name="rootElement">The <see cref="XElement"/> containing the Job Description Data.</param>
+        /// <returns>A <see cref="JobDescription"/> initialized from the form field data.</returns>
         public JobDescription ExtractJobDescriptionFromXMLFormData(XElement rootElement)
         {
             XElement jobDescription = rootElement.Element("JobDescription");

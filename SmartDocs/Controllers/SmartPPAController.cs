@@ -103,7 +103,7 @@ namespace SmartDocs.Controllers
                     {
                         job.Categories[i].SelectedScore = form.Categories[i]?.SelectedScore ?? 0;
                     }
-                    form.job = job;
+                    form.Job = job;
                 }
 
                 // next, re-populate the VM drop down lists
@@ -126,7 +126,7 @@ namespace SmartDocs.Controllers
                     {
                         job.Categories[i].SelectedScore = form.Categories[i]?.SelectedScore ?? 0;
                     }
-                    form.job = job;
+                    form.Job = job;
                 }
                 else
                 {
@@ -136,7 +136,7 @@ namespace SmartDocs.Controllers
                 // call generator method to pass form data
                 factory.CreatePPA(form);
                 // redirect to success view with PPA as querystring param
-                return RedirectToAction("SaveSuccess", new { id = factory._PPA.DocumentId });
+                return RedirectToAction("SaveSuccess", new { id = factory.PPA.DocumentId });
             }
         }
 
@@ -224,7 +224,7 @@ namespace SmartDocs.Controllers
                     {
                         job.Categories[i].SelectedScore = form.Categories[i]?.SelectedScore ?? 0;
                     }
-                    form.job = job;
+                    form.Job = job;
                 }
                 // next, re-populate the VM drop down lists
                 form.JobList = _repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList();
@@ -243,7 +243,7 @@ namespace SmartDocs.Controllers
                     {
                         job.Categories[i].SelectedScore = form.Categories[i]?.SelectedScore ?? 0;
                     }
-                    form.job = job;
+                    form.Job = job;
                 }
                 else
                 {
@@ -254,7 +254,7 @@ namespace SmartDocs.Controllers
                 // populate the form info into the generator
                 factory.UpdatePPA(form);
                 // redirect to the SaveSuccess view, passing the newly created PPA as a querystring param
-                return RedirectToAction("SaveSuccess", new { id = factory._PPA.DocumentId });
+                return RedirectToAction("SaveSuccess", new { id = factory.PPA.DocumentId });
             }
         }
 
