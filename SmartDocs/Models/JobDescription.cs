@@ -174,9 +174,9 @@ namespace SmartDocs.Models
         /// This method calculates the overall numerical score based on the Categories property.
         /// </remarks>
         /// <returns>A double representing the Calculated overall rating</returns>
-        public double GetOverallScore()
+        public decimal GetOverallScore()
         {
-            double results = 0.00;
+            decimal results = 0.00m;
             foreach (JobDescriptionCategory c in Categories)
             {
                 results += c.GetCategoryRatedScore();
@@ -193,17 +193,17 @@ namespace SmartDocs.Models
         /// <returns>A string representing the associated rating keyword.</returns>
         public string GetOverallRating()
         {
-            double sumOfScores = GetOverallScore();            
-            if (sumOfScores <= 0.5) {
+            decimal sumOfScores = GetOverallScore();            
+            if (sumOfScores <= 0.50m) {
                 return "Unsatisfactory";
             }
-            else if (sumOfScores >= 0.51 && sumOfScores <= 1.5) {
+            else if (sumOfScores >= 0.51m && sumOfScores <= 1.50m) {
                 return "Improvement Needed";
             }
-            else if (sumOfScores >= 1.51 && sumOfScores <= 2.5) {
+            else if (sumOfScores >= 1.51m && sumOfScores <= 2.50m) {
                 return "Satisfactory";
             }
-            else if (sumOfScores >= 2.51 && sumOfScores <= 3.5){
+            else if (sumOfScores >= 2.51m && sumOfScores <= 3.50m){
                 return "Exceeds Satisfactory";
             }
             else {

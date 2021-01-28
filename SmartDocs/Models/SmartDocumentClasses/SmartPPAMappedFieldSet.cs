@@ -59,9 +59,37 @@ namespace SmartDocs.Models.SmartDocumentClasses
         /// </summary>
         public SmartParagraph PPA_TotalRatingValue { get; set; }
         /// <summary>
-        /// Overall appraisal rating.
+        /// Check box for Unsatisfactory Rating
         /// </summary>
-        //public SmartParagraph PPA_OverallAppraisal { get; set; }
+        public SmartParagraph PPA_UnsatisfactoryRatingCheckBox { get; set; }
+        /// <summary>
+        /// Check box for Needs Improvement Rating
+        /// </summary>
+        public SmartParagraph PPA_NeedsImprovementRatingCheckBox { get; set; }
+        /// <summary>
+        /// Check box for Satisfactory Rating.
+        /// </summary>
+        public SmartParagraph PPA_SatisfactoryRatingCheckBox { get; set; }
+        /// <summary>
+        /// Check box for Exceeds Satisfactory Rating.
+        /// </summary>
+        public SmartParagraph PPA_ExceedsSatisfactoryRatingCheckBox { get; set; }
+        /// <summary>
+        /// Check box for Outstanding Rating.
+        /// </summary>
+        public SmartParagraph PPA_OutstandingRatingCheckBox { get; set; }
+        /// <summary>
+        /// Check box if Merit Increase is approved.
+        /// </summary>
+        public SmartParagraph PPA_MeritApprovedCheckBox { get; set; }
+        /// <summary>
+        /// Check box if Merit Increase is not approved.
+        /// </summary>
+        public SmartParagraph PPA_MeritNotApprovedCheckBox { get; set; }
+        /// <summary>
+        /// Check box if Merit Increase is not applicable.
+        /// </summary>
+        public SmartParagraph PPA_MeritNotApplicableCheckBox { get; set; }
         /// <summary>
         /// The employee name on the Performance Appraisal Form.
         /// </summary>
@@ -175,8 +203,14 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 PPA_Categories.Add(new SmartCategory(PPACategories.Elements<TableRow>().ElementAt(i)));
             }
             PPA_TotalRatingValue = new SmartParagraph(PPACategories.Elements<TableRow>().ElementAt(12).Elements<TableCell>().ElementAt(1));
-            // TODO: Fix overall appraisal to insert checks
-            //PPA_OverallAppraisal = new SmartParagraph(PPACategories.Elements<TableRow>().ElementAt(9).Elements<TableCell>().ElementAt(2));
+            PPA_UnsatisfactoryRatingCheckBox = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(13).Elements<TableCell>().ElementAt(1));
+            PPA_NeedsImprovementRatingCheckBox = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(13).Elements<TableCell>().ElementAt(3));
+            PPA_SatisfactoryRatingCheckBox = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(13).Elements<TableCell>().ElementAt(5));
+            PPA_ExceedsSatisfactoryRatingCheckBox = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(13).Elements<TableCell>().ElementAt(7));
+            PPA_OutstandingRatingCheckBox = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(13).Elements<TableCell>().ElementAt(9));
+            PPA_MeritApprovedCheckBox = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(16).Elements<TableCell>().ElementAt(1));
+            PPA_MeritNotApprovedCheckBox = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(16).Elements<TableCell>().ElementAt(5));
+            PPA_MeritNotApplicableCheckBox = new SmartParagraph(PPAFields.Elements<TableRow>().ElementAt(16).Elements<TableCell>().ElementAt(3));
 
             // TODO: Consider adding Probationary Midpoint/Rating Justification?
             Table PAFFields = mainPart.Document.Body.Elements<Table>().ElementAt(1);
@@ -185,7 +219,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
             PAF_StartDate = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(7).Elements<TableCell>().ElementAt(1));
             PAF_EndDate = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(7).Elements<TableCell>().ElementAt(3));
             PAF_ClassGrade = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(9).Elements<TableCell>().ElementAt(1));
-            PAF_DistrictDivision = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(9).Elements<TableCell>().ElementAt(1));
+            PAF_DistrictDivision = new SmartParagraph(PAFFields.Elements<TableRow>().ElementAt(8).Elements<TableCell>().ElementAt(1));
 
             PAF_Assessment = new SmartParagraph(mainPart.Document.Body.Elements<Table>().ElementAt(2).Elements<TableRow>().ElementAt(1).Elements<TableCell>().ElementAt(0));
             PAF_Assessment_Chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html, "assessmentChunk");
@@ -246,8 +280,35 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 i++;
             }
             PPA_TotalRatingValue.Write(job.GetOverallScore().ToString());
-            // TODO: Update this to address the check box style of the new form.
-            //PPA_OverallAppraisal.Write(job.GetOverallRating());
+            RunFonts checkBoxRun = new RunFonts { Ascii = "Wingdings" };
+            RunProperties checkBoxRunProperties = new RunProperties();
+            checkBoxRunProperties.Append(checkBoxRun);
+            RunFonts checkBoxRun1 = new RunFonts { Ascii = "Wingdings" };
+            RunProperties checkBoxRunProperties1 = new RunProperties();
+            checkBoxRunProperties1.Append(checkBoxRun1);
+            switch (job.GetOverallRating())
+            {
+                case "Unsatisfactory":
+                    PPA_UnsatisfactoryRatingCheckBox.Write("\u2713", true, checkBoxRunProperties);
+                    PPA_MeritNotApprovedCheckBox.Write("\u2713", true, checkBoxRunProperties1);
+                    break;
+                case "Improvement Needed":
+                    PPA_NeedsImprovementRatingCheckBox.Write("\u2713", true, checkBoxRunProperties);
+                    PPA_MeritNotApprovedCheckBox.Write("\u2713", true, checkBoxRunProperties1);
+                    break;
+                case "Satisfactory":
+                    PPA_SatisfactoryRatingCheckBox.Write("\u2713", true, checkBoxRunProperties);
+                    PPA_MeritApprovedCheckBox.Write("\u2713", true, checkBoxRunProperties1);
+                    break;
+                case "Exceeds Satisfactory":
+                    PPA_ExceedsSatisfactoryRatingCheckBox.Write("\u2713", true, checkBoxRunProperties);
+                    PPA_MeritApprovedCheckBox.Write("\u2713", true, checkBoxRunProperties1);
+                    break;
+                case "Outstanding":
+                    PPA_OutstandingRatingCheckBox.Write("\u2713", true, checkBoxRunProperties);
+                    PPA_MeritApprovedCheckBox.Write("\u2713", true, checkBoxRunProperties1);
+                    break;
+            }
 
             // Write PAF form fields
             PAF_EmployeeName.Write($"{root.Element("LastName").Value}, {root.Element("FirstName").Value}");

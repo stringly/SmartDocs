@@ -878,6 +878,46 @@
             Appraisal total rating value for the appraisal.
             </summary>
         </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_UnsatisfactoryRatingCheckBox">
+            <summary>
+            Check box for Unsatisfactory Rating
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_NeedsImprovementRatingCheckBox">
+            <summary>
+            Check box for Needs Improvement Rating
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_SatisfactoryRatingCheckBox">
+            <summary>
+            Check box for Satisfactory Rating.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_ExceedsSatisfactoryRatingCheckBox">
+            <summary>
+            Check box for Exceeds Satisfactory Rating.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_OutstandingRatingCheckBox">
+            <summary>
+            Check box for Outstanding Rating.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_MeritApprovedCheckBox">
+            <summary>
+            Check box if Merit Increase is approved.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_MeritNotApprovedCheckBox">
+            <summary>
+            Check box if Merit Increase is not approved.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PPA_MeritNotApplicableCheckBox">
+            <summary>
+            Check box if Merit Increase is not applicable.
+            </summary>
+        </member>
         <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPPAMappedFieldSet.PAF_EmployeeName">
             <summary>
             The employee name on the Performance Appraisal Form.

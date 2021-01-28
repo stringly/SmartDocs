@@ -2,22 +2,24 @@
 @{
     Layout = "_Layout";
 }
+
 <div class="row">
     <a class="card col-xs-4" href="@Url.Action("Create", "SmartPPA")" style="color: black">
         <img src="~/lib/Images/PPA.JPG" alt="Avatar" style="width:270px; height:200px">
         <h4><b>SmartPPA</b></h4>
         <p>Prepare a Past Performance Appraisal</p>
     </a>
+    <a class="card col-xs-4" href="@Url.Action("Create", "AwardForm")" style="color: black">
+        <img src="~/lib/Images/Award.JPG" alt="Avatar" style="width:270px; height:200px">
+        <h4><b>Award Form</b></h4>
+        <p>Create an Award Nomination Form</p>
+    </a>
     <a class="card col-xs-4" href="@Url.Action("Create", "SmartJobDescription")" style="color: black">
         <img src="~/lib/Images/JobDescriptionOnly.JPG" alt="Avatar" style="width:270px; height:200px">
         <h4><b>Job Description</b></h4>
         <p>Create a Job Description to serve a new Employee</p>
     </a>
-    <a class="card col-xs-4" href="@Url.Action("Create", "AwardForm")" style="color: black">
-        <img src="~/lib/Images/Award.png" alt="Avatar" style="width:270px; height:200px">
-        <h4><b>Award Form</b></h4>
-        <p>Create an Award Nomination Form</p>
-    </a>
+
     <a class="card col-xs-4" href="mailto:jcsmith1@co.pg.md.us?Subject=SmartDoc%20suggestion" style="color: black">
         <img src="~/lib/Images/Message.png" alt="Avatar" style="width:270px; height:200px">
         <h4><b>Message</b></h4>
@@ -26,9 +28,19 @@
 </div>
 <hr />
 @if (ViewBag.UniqueUsersCount != null && ViewBag.DocumentsCreatedCount != null)
-{ 
+{
     <h5>
         <span class="text-primary">@ViewBag.UniqueUsersCount</span> Unique Users have created <span class="text-primary">@ViewBag.DocumentsCreatedCount</span> documents using SmartDocs!
     </h5>
 
-} 
+}
+<div class="footer navbar-fixed-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-info" role="alert"> <strong>Please Note:</strong> This application is not supported by PGPD/County OIT, OHRM, or the Police Personnel Division. If you have trouble accessing the application or questions about its use, please <a href="mailto:jcsmith1@co.pg.md.us?Subject=SmartDoc%20suggestion" class="alert-link"> contact the creator</a>, download the <a class="alert-link" href="~/lib/SmartDocs User Guide.docx" download="SmartDocs User Guide.docx">User Guide</a>, or view the <a class="alert-link" asp-action="About" asp-controller="Home">Frequently Asked Questions.</a> Please do not contact OIT or the Help Desk to ask for assistance with using this site. </div>
+            </div>
+        </div>
+
+    </div>
+</div>
