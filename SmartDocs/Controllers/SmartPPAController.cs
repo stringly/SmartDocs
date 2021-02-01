@@ -14,12 +14,12 @@ using SmartDocs.Models.ViewModels;
 namespace SmartDocs.Controllers
 {
     /// <summary>
-    /// Controller for <see cref="T:SmartDocs.Models.SmartPPA"/> interactions
-    /// </summary>
-    /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+    /// Controller for <see cref="SmartDocument.SmartDocumentType.PPA"/> interactions
+    /// </summary>    
     [Authorize(Roles = "User, Administrator")]
     public class SmartPPAController : Controller
     {
+        // TODO: How to prevent user from accessing docs they didn't author via URL?
         private IDocumentRepository _repository;
 
         /// <summary>
@@ -143,9 +143,9 @@ namespace SmartDocs.Controllers
         /// <summary>
         /// View that shows success message and allows user to download file or navigate back to MyDocuments.
         /// </summary>
-        /// <remarks>This method displays a link that invokes the <see cref="M:SmartDocs.Controllers.SmartPPAController.Download(int)"/> method.</remarks>
-        /// <param name="id">The id of the newly generated <see cref="T:SmartDocs.Models.SmartPPA"/></param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        /// <remarks>This method displays a link that invokes the <see cref="HomeController.Download(int)"/> method.</remarks>
+        /// <param name="id">The id of the newly generated <see cref="SmartDocument.SmartDocumentType.PPA"/></param>
+        /// <returns>An <see cref="IActionResult"/></returns>
         public IActionResult SaveSuccess(int id)
         {
             // this is a simple view, so use VB instead of a VM            
@@ -159,8 +159,8 @@ namespace SmartDocs.Controllers
         /// <summary>
         /// GET: SmartPPA/Edit?id="" 
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to edit.</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
+        /// <param name="id">The identifier of the <see cref="SmartDocument.SmartDocumentType.PPA"/> to edit.</param>
+        /// <returns>An <see cref="ActionResult"/></returns>
         public ActionResult Edit(int id)
         {
             // pull the PPA from the repo
@@ -182,9 +182,9 @@ namespace SmartDocs.Controllers
         /// <summary>
         /// POST: SmartPPA/Edit?=""
         /// </summary>
-        /// <param name="id">The identifier for the <see cref="T:SmartDocs.Models.SmartPPA"/> to be edited.</param>
-        /// <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
+        /// <param name="id">The identifier for the <see cref="SmartDocument.SmartDocumentType.PPA"/> to be edited.</param>
+        /// <param name="form">The POSTed form data, bound to a <see cref="PPAFormViewModel"/>.</param>
+        /// <returns>An <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id,[Bind(

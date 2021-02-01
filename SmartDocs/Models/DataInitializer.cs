@@ -52,8 +52,20 @@ namespace SmartDocs.Models
                 };
                 _newContext.Add(template);
             }
+            if (!_newContext.Templates.Any(x => x.Name == "SmartPAF_2021"))
+            {
+                SmartTemplate template = new SmartTemplate
+                {
+                    Name = "SmartPAF_2021",
+                    Description = "Periodic Performance Assessment Form using the 2021 OHRM Updated Forms",
+                    Uploaded = DateTime.Now,
+                    IsActive = true,
+                    DataStream = File.ReadAllBytes("SmartPAF_2021_Template.docx")
+                };
+                _newContext.Add(template);
+            }
             // As of 2021, the Job Description form is unchanged.
-            if(!_newContext.Templates.Any(x => x.Name == "SmartJobDescription"))
+            if (!_newContext.Templates.Any(x => x.Name == "SmartJobDescription"))
             {
                 SmartTemplate template = new SmartTemplate
                 {

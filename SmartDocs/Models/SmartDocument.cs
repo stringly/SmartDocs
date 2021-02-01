@@ -77,7 +77,7 @@ namespace SmartDocs.Models
             /// Counseling Form / Performance Assessment Form
             /// </summary>
             [Display(Name = "Performance Assessment Form")]
-            CounselingForm,
+            PAF,
             /// <summary>
             /// Job Description Form
             /// </summary>

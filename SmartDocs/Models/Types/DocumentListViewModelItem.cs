@@ -45,7 +45,7 @@ namespace SmartDocs.Models.Types
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SmartDocs.Models.DocumentListViewModelItem"/> class.
+        /// Initializes a new instance of the <see cref="DocumentListViewModelItem"/> class.
         /// <remarks>
         /// Parameterless constructor
         /// </remarks>
@@ -55,12 +55,12 @@ namespace SmartDocs.Models.Types
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SmartDocs.Models.DocumentListViewModelItem"/> class.
+        /// Initializes a new instance of the <see cref="DocumentListViewModelItem"/> class.
         /// </summary>
         /// <remarks>
-        /// Builds a viewmodel from an existing <see cref="SmartDocs.Models.SmartDocument"/>
+        /// Builds a viewmodel from an existing <see cref="SmartDocument"/>
         /// </remarks>
-        /// <param name="ppa">A <see cref="SmartDocs.Models.SmartDocument"/>.</param>
+        /// <param name="doc">A <see cref="SmartDocument"/>.</param>
         public DocumentListViewModelItem(SmartDocument doc)
         {
             DocumentId = doc.DocumentId;
@@ -80,9 +80,9 @@ namespace SmartDocs.Models.Types
                     DocumentTypeDisplayName = "Award Form";
                     ParentControllerName = "AwardForm";
                     break;
-                case SmartDocument.SmartDocumentType.CounselingForm:
-                    DocumentTypeDisplayName = "Counseling Form";
-                    ParentControllerName = "CounselingForm";
+                case SmartDocument.SmartDocumentType.PAF:
+                    DocumentTypeDisplayName = "Performance Assessement Form";
+                    ParentControllerName = "SmartPAF";
                     break;
             }            
             CreatedDate = doc.Created;

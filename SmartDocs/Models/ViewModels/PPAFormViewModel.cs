@@ -11,10 +11,10 @@ namespace SmartDocs.Models.ViewModels
     public class PPAFormViewModel
     {
         /// <summary>
-        /// Gets or sets the ppa identifier.
+        /// Gets or sets the PPA document's identifier.
         /// </summary>
         /// <remarks>
-        /// This is the Id of the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+        /// This is the Id of the <see cref="Models.SmartDocument"/> from which the View Model is built.
         /// </remarks>
         /// <value>
         /// The ppa identifier.

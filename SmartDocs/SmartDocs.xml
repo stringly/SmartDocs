@@ -230,11 +230,59 @@
             <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
             <returns></returns>
         </member>
+        <member name="T:SmartDocs.Controllers.SmartPAFController">
+            <summary>
+            Controller for <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> interactions
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPAFController.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Controllers.SmartPAFController"/> class.
+            </summary>
+            <remarks>
+            This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
+            </remarks>
+            <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPAFController.Create">
+            <summary>
+            Shows the view to create a new SmartPAF.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPAFController.Create(SmartDocs.Models.ViewModels.PAFFormViewModel)">
+            <summary>
+            Creates a <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> from the POSTed form data.
+            </summary>
+            <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PAFFormViewModel"/></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPAFController.SaveSuccess(System.Int32)">
+            <summary>
+            View that shows success message and allows user to download file or navigate back to MyDocuments.
+            </summary>
+            <remarks>This method displays a link that invokes the <see cref="M:SmartDocs.Controllers.HomeController.Download(System.Int32)"/> method.</remarks>
+            <param name="id">The id of the newly generated <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/></param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPAFController.Delete(System.Nullable{System.Int32})">
+            <summary>
+            Shows the view to confirm deletion of a <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/>.
+            </summary>
+            <param name="id">The identifier of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPAFController.DeleteConfirmed(System.Int32)">
+            <summary>
+            Deletes <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> with the provided ID.
+            </summary>
+            <param name="id">The identifier of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> to be deleted.</param>
+            <returns>An <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/></returns>
+        </member>
         <member name="T:SmartDocs.Controllers.SmartPPAController">
             <summary>
-            Controller for <see cref="T:SmartDocs.Models.SmartPPA"/> interactions
-            </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+            Controller for <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> interactions
+            </summary>    
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.#ctor(SmartDocs.Models.IDocumentRepository)">
             <summary>
@@ -262,22 +310,22 @@
             <summary>
             View that shows success message and allows user to download file or navigate back to MyDocuments.
             </summary>
-            <remarks>This method displays a link that invokes the <see cref="M:SmartDocs.Controllers.SmartPPAController.Download(int)"/> method.</remarks>
-            <param name="id">The id of the newly generated <see cref="T:SmartDocs.Models.SmartPPA"/></param>
+            <remarks>This method displays a link that invokes the <see cref="M:SmartDocs.Controllers.HomeController.Download(System.Int32)"/> method.</remarks>
+            <param name="id">The id of the newly generated <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/></param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.Edit(System.Int32)">
             <summary>
             GET: SmartPPA/Edit?id="" 
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to edit.</param>
+            <param name="id">The identifier of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> to edit.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.Edit(System.Int32,SmartDocs.Models.ViewModels.PPAFormViewModel)">
             <summary>
             POST: SmartPPA/Edit?=""
             </summary>
-            <param name="id">The identifier for the <see cref="T:SmartDocs.Models.SmartPPA"/> to be edited.</param>
+            <param name="id">The identifier for the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> to be edited.</param>
             <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
@@ -690,7 +738,7 @@
             Past Performance Appraisal
             </summary>
         </member>
-        <member name="F:SmartDocs.Models.SmartDocument.SmartDocumentType.CounselingForm">
+        <member name="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF">
             <summary>
             Counseling Form / Performance Assessment Form
             </summary>
@@ -763,6 +811,136 @@
             <summary>
             The Employee's Work Class Title
             </summary>
+        </member>
+        <member name="T:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory">
+            <summary>
+            Factory class that generates and updates <see cref="T:SmartDocs.Models.SmartDocument"/>
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Constructs a new instance of the class
+            </summary>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.#ctor(SmartDocs.Models.IDocumentRepository,SmartDocs.Models.SmartDocument)">
+            <summary>
+            Constructs a new instance of the class from an existing <see cref="T:SmartDocs.Models.SmartDocument"/>
+            </summary>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+            <param name="ppa">An <see cref="T:SmartDocs.Models.SmartDocument"/> representing an existing PPA.</param>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.PAF">
+            <summary>
+            A <see cref="T:SmartDocs.Models.SmartDocument"/> that represents the PAF being generated. 
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.CreatePAF(SmartDocs.Models.ViewModels.PAFFormViewModel)">
+            <summary>
+            Creates a new <see cref="T:SmartDocs.Models.SmartDocument"/> from the user-provided form data.
+            </summary>
+            <param name="vm">A <see cref="T:SmartDocs.Models.ViewModels.PAFFormViewModel"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.ViewModelToXML(SmartDocs.Models.ViewModels.PAFFormViewModel)">
+            <summary>
+            Private method that converts the form data to XML
+            </summary>
+            <param name="vm"></param>
+            <returns>An <see cref="T:System.Xml.Linq.XElement"/></returns>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.GetViewModelFromXML">
+            <summary>
+            Converts an existing <see cref="T:SmartDocs.Models.SmartDocument"/> 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.GenerateDocument">
+            <summary>
+            Generates the Word Document
+            </summary>
+            <returns>A <see cref="T:System.IO.MemoryStream"/> containing the form field values injected into the template.</returns>
+        </member>
+        <member name="T:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet">
+            <summary>
+            Class that corresponds to fields on the pre-2021 Smart PPA form template that are populated by form data.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.#ctor(DocumentFormat.OpenXml.Packaging.MainDocumentPart)">
+            <summary>
+            Constructs a new instance of the class. 
+            </summary>
+            <param name="mainPart">The template document's <see cref="T:DocumentFormat.OpenXml.Packaging.MainDocumentPart"/></param>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_ProbationaryMidpoint">
+            <summary>
+            Probationary Midpoint checkbox
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_PeriodicPerformanceAssessment">
+            <summary>
+            Periodic Performance Assessment checkbox
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_RatingJustification">
+            <summary>
+            Rating Justification
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_EmployeeName">
+            <summary>
+            The employee name on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_PayrollId">
+            <summary>
+            The employee Payroll Id on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_StartDate">
+            <summary>
+            The appraisal period start date on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_EndDate">
+            <summary>
+            The appraisal period end date on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_ClassGrade">
+            <summary>
+            The employee's class title/grade on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_DistrictDivision">
+            <summary>
+            The employee's district/division on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_Assessment">
+            <summary>
+            The supervisor's assessment on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_Assessment_Chunk">
+            <summary>
+            The chunk section containing the HTML rich text comments from the Performance Assessment Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_Recommendations">
+            <summary>
+            The supervisor's recommendations on the Performance Appraisal Form.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.PAF_Recommendations_Chunk">
+            <summary>
+            The chunk section containing the HTML rich text comments from the Performance Assessment Form.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFMappedFieldSet.WriteXMLToFields(System.Xml.Linq.XElement)">
+            <summary>
+            Method that writes the XML data to the template
+            </summary>
+            <param name="root">A <see cref="T:System.Xml.Linq.XElement"/> containing the XML form field data.</param>
         </member>
         <member name="T:SmartDocs.Models.SmartDocumentClasses.SmartPPAFactory">
             <summary>
@@ -1342,7 +1520,7 @@
         </member>
         <member name="M:SmartDocs.Models.Types.DocumentListViewModelItem.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="!:SmartDocs.Models.DocumentListViewModelItem"/> class.
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.Types.DocumentListViewModelItem"/> class.
             <remarks>
             Parameterless constructor
             </remarks>
@@ -1350,12 +1528,12 @@
         </member>
         <member name="M:SmartDocs.Models.Types.DocumentListViewModelItem.#ctor(SmartDocs.Models.SmartDocument)">
             <summary>
-            Initializes a new instance of the <see cref="!:SmartDocs.Models.DocumentListViewModelItem"/> class.
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.Types.DocumentListViewModelItem"/> class.
             </summary>
             <remarks>
             Builds a viewmodel from an existing <see cref="T:SmartDocs.Models.SmartDocument"/>
             </remarks>
-            <param name="ppa">A <see cref="T:SmartDocs.Models.SmartDocument"/>.</param>
+            <param name="doc">A <see cref="T:SmartDocs.Models.SmartDocument"/>.</param>
         </member>
         <member name="T:SmartDocs.Models.Types.JobDescriptionCategory">
             <summary>
@@ -1869,6 +2047,177 @@
             </summary>
             <returns>A list of string Rank Names.</returns>
         </member>
+        <member name="T:SmartDocs.Models.ViewModels.PAFFormViewModel">
+            <summary>
+            View Model used to Create/Edit A PAF Document
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.PAFFormViewModel.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.PAFFormViewModel"/> class.
+            <remarks>
+            This constructor is used when a new PAF is being created.
+            </remarks>
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.ViewModels.PAFFormViewModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.PAFFormViewModel"/> class.
+            <remarks>
+            This constructor is used when a PAF is being edited and form data will be populated by <see cref="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.GetViewModelFromXML"/>.
+            </remarks>
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.DocumentId">
+            <summary>
+            Gets or sets the PAF's document Id
+            </summary>
+            <remarks>
+            This is the Id of the <see cref="T:SmartDocs.Models.SmartDocument"/> from which the View Model is built.
+            </remarks>
+            <value>
+            The PAF identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.SelectedPAFType">
+            <summary>
+            The type of PAF being preparted.
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.FirstName">
+            <summary>
+            Gets or sets the First Name of the employee who is the subject of the PAF.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.LastName">
+            <summary>
+            Gets or sets the Last Name of the employee who is the subject of the PAF.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.PayrollIdNumber">
+            <summary>
+            Gets or sets the Payroll Identifier Number (EIS) of the employee who is the subject of the PAF.
+            </summary>
+            <value>
+            The payroll identifier number.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.DepartmentIdNumber">
+            <summary>
+            Gets or sets the Departmental ID# (EIS) of the employee who is the subject of the PAF.
+            </summary>
+            <value>
+            The employee's departmental Id.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.StartDate">
+            <summary>
+            Gets or sets the Start Date for the rating period of the PAF.
+            </summary>
+            <value>
+            The start date.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.EndDate">
+            <summary>
+            Gets or sets the End Date for the rating period of the PAF.
+            </summary>
+            <value>
+            The end date.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.DepartmentDivision">
+            <summary>
+            Gets or sets the Department or Division to which the subject employee is assigned.
+            </summary>
+            <value>
+            The department division.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.DepartmentDivisionCode">
+            <summary>
+            Gets or sets the Code for the Department or Division to which the subject employee is assigned.
+            </summary>
+            <value>
+            The department division code.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.JobId">
+            <summary>
+            Gets or sets the identifier for the <see cref="T:SmartDocs.Models.SmartJob"/> associated with the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> from which the View Model is built.
+            </summary>
+            <value>
+            The job identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.AuthorUserId">
+            <summary>
+            Gets or sets the id of the <see cref="T:SmartDocs.Models.SmartUser"/> who is the author of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> from which the View Model is built.
+            </summary>
+            <value>
+            The author user identifier.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.Assessment">
+            <summary>
+            Gets or sets the Assessment narrative field text.
+            </summary>
+            <value>
+            The assessment.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.Recommendation">
+            <summary>
+            Gets or sets the Recommendation narrative field text.
+            </summary>
+            <value>
+            The recommendation.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.PAFTypeChoices">
+            <summary>
+            List of PAF Types used to populate a selection menu
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.JobList">
+            <summary>
+            Gets or sets the list of Job Descriptions available in the database.
+            </summary>
+            <remarks>
+            This builds a list of <see cref="T:SmartDocs.Models.Types.JobDescriptionListItem"/> from the available <see cref="T:SmartDocs.Models.SmartJob"/>s.
+            </remarks>
+            <value>
+            The job list.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.Components">
+            <summary>
+            Gets or sets the components.
+            </summary>
+            <remarkds>
+            This shows a list of <see cref="T:SmartDocs.Models.OrganizationComponent"/> in the database.
+            </remarkds>
+            <value>
+            The components.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.PAFFormViewModel.Users">
+            <summary>
+            Gets or sets the Users list.
+            </summary>
+            <remarks>
+            This assembles a List of <see cref="T:SmartDocs.Models.Types.UserListItem"/> from the available <see cref="T:SmartDocs.Models.SmartUser"/>s.
+            </remarks>
+            <value>
+            The users.
+            </value>
+        </member>
         <member name="T:SmartDocs.Models.ViewModels.PPAFormViewModel">
             <summary>
             The View Model used to Create/Edit a PPA Document
@@ -1876,10 +2225,10 @@
         </member>
         <member name="P:SmartDocs.Models.ViewModels.PPAFormViewModel.DocumentId">
             <summary>
-            Gets or sets the ppa identifier.
+            Gets or sets the PPA document's identifier.
             </summary>
             <remarks>
-            This is the Id of the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+            This is the Id of the <see cref="T:SmartDocs.Models.SmartDocument"/> from which the View Model is built.
             </remarks>
             <value>
             The ppa identifier.

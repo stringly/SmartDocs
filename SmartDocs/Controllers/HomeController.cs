@@ -99,7 +99,7 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         public IActionResult NotAuthorized()
         {
-            ViewBag.Message = "You are not authorized to take this action";
+            ViewBag.Message = "Unauthorized Action Attempted.";
             return View();
         }
         public ActionResult Download(int id)
@@ -112,17 +112,16 @@ namespace SmartDocs.Controllers
                 {
                     case SmartDocument.SmartDocumentType.PPA:
                         var ppaFactory = new SmartPPAFactory(_repository, document);
-                        return File(ppaFactory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", document.FileName);
-                        
+                        return File(ppaFactory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", document.FileName);                        
                     case SmartDocument.SmartDocumentType.JobDescription:
                         var jobFactory = new SmartJobDescriptionFactory(_repository, document);
                         return File(jobFactory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", document.FileName);                        
                     case SmartDocument.SmartDocumentType.AwardForm:
                         var awardFactory = new SmartAwardFactory(_repository, document);
                         return File(awardFactory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", document.FileName);                        
-                    case SmartDocument.SmartDocumentType.CounselingForm:
-                        // TODO: Add PAF
-                        return NotFound();
+                    case SmartDocument.SmartDocumentType.PAF:
+                        var pafFactory = new SmartPAFFactory(_repository, document);
+                        return File(pafFactory.GenerateDocument(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", document.FileName);
                     default:
                         return NotFound();
                 }
