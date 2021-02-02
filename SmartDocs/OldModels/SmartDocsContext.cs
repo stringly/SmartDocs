@@ -23,11 +23,6 @@ namespace SmartDocs.OldModels
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=PGPDSOD.co.pg.md.us;Database=SmartDocs;Trusted_Connection=True;MultipleActiveResultSets=true;MultipleActiveResultSets=true;");
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

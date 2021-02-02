@@ -1,43 +1,120 @@
-﻿@model SmartDocs.Models.ViewModels.DocumentListViewModel
+﻿@using SmartDocs.Extensions
+@model SmartDocs.Models.ViewModels.DocumentListViewModel
+
 @{
     Layout = "_Layout";
 }
 <h2>My Documents</h2>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>
-                File Name
-            </th>
-            <th>
-                Type
-            </th>
-            <th>
-                Date Created
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Documents)
-        {
-            <tr>
-                <td>
-                    @item.DocumentName
-                </td>
-                <td>
-                    @item.DocumentTypeDisplayName
-                </td>
-                <td>
-                    @item.CreatedDate
-                </td>
-                <td>
-                    <a asp-action="Download" asp-controller="Home" asp-route-id="@item.DocumentId">Download</a> |
-                    <a asp-action="Edit" asp-controller="@item.ParentControllerName" asp-route-id="@item.DocumentId">Edit</a> |
-                    <a asp-action="Delete" asp-controller="@item.ParentControllerName" asp-route-id="@item.DocumentId">Delete</a>
-                </td>
+<hr />
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-inline" asp-page="/Index" method="get">
+            <div class="form-group">
+                <label class="control-label" asp-for="CurrentFilter">Search:</label>
+                <input type="text" name="searchString" class="form-control" value="@Model.CurrentFilter">
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="SelectedDocumentType">Type:</label>
+                <select asp-for="SelectedDocumentType" class="form-control" asp-items="Html.GetEnumValueSelectList<SmartDocument.SmartDocumentType>()">
+                    <option value="" selected disabled>Choose a Document Type</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+            @if (!String.IsNullOrEmpty(Model.CurrentFilter) || !String.IsNullOrEmpty(Model.SelectedDocumentType))
+            {
+                <a asp-action="/Index" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Reset List</a>
+            }
+        </form>
+    </div>
+</div>
+
+@if (Model.Documents.Count() > 0)
+{
+    <table class="table table-striped">        
+        <thead>
+            <tr class="tablePageControlHeaderRow">
+                <th colspan="4">
+                    <div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
+                         page-class="" page-class-normal=""
+                         page-class-selected="active" page-url-searchString="@Model.CurrentFilter" page-url-sortOrder="@Model.CurrentSort" page-url-selectedDocumentType="@Model.SelectedDocumentType"
+                         class="btn-group">
+                    </div>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
-
-
+            <tr>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.FileNameSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedDocumentType="@Model.SelectedDocumentType" title="Sort by File Name">
+                        File Name
+                        @if (Model.CurrentSort == "fileName_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.DocumentTypeSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedDocumentType="@Model.SelectedDocumentType" title="Sort by Document Type">
+                        Document Type
+                        @if (Model.CurrentSort == "documentTypeName_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.CreatedDateSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedDocumentType="@Model.SelectedDocumentType" title="Sort by Date Created">
+                        Date Created
+                        @if (Model.CurrentSort == "createdDate_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-order"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-order-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Documents)
+            {
+                <tr>
+                    <td>
+                        @item.DocumentName
+                    </td>
+                    <td>
+                        @item.DocumentTypeDisplayName
+                    </td>
+                    <td>
+                        @item.CreatedDate
+                    </td>
+                    <td>
+                        <a asp-action="Download" asp-controller="Home" asp-route-id="@item.DocumentId">Download</a> |
+                        <a asp-action="Edit" asp-controller="@item.ParentControllerName" asp-route-id="@item.DocumentId">Edit</a> |
+                        <a asp-action="Delete" asp-controller="@item.ParentControllerName" asp-route-id="@item.DocumentId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <hr />
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <strong>No matching documents found.</strong>
+        </div>
+    </div>
+    <hr />
+}

@@ -60,6 +60,25 @@ namespace SmartDocs.Models.SmartDocumentClasses
             PAF = _repository.SaveSmartDoc(newDoc);
         }
         /// <summary>
+        /// Updates an existing <see cref="SmartDocument"/> PAF from user-provided form data.
+        /// </summary>
+        /// <param name="vm">A <see cref="PAFFormViewModel"/></param>
+        public void UpdatePAF(PAFFormViewModel vm)
+        {
+            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
+            if (toEdit != null)
+            {
+                toEdit.FormDataXml = ViewModelToXML(vm);
+                toEdit.AuthorUserId = vm.AuthorUserId;
+                toEdit.Edited = DateTime.Now;
+                toEdit.FileName = $"{vm.LastName}, {vm.FirstName} {vm.SelectedPAFType} {DateTime.Now:MM-dd-yy}.docx";
+                toEdit.FormDataXml = ViewModelToXML(vm);
+                toEdit.Template = _repository.Templates.FirstOrDefault(x => x.Name == ACTIVE_TEMPLATE_NAME);
+                _repository.SaveSmartDoc(toEdit);
+            }
+            PAF = toEdit;
+        }
+        /// <summary>
         /// Private method that converts the form data to XML
         /// </summary>
         /// <param name="vm"></param>

@@ -14,7 +14,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:SmartDocs.Controllers.HomeController"/> class.
             </summary>
-            <remarks>This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/></remarks>
+            <remarks>This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/></remarks>
             <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
         <member name="M:SmartDocs.Controllers.HomeController.Choices">
@@ -61,15 +61,15 @@
             <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/></remarks>
             <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
-        <member name="M:SmartDocs.Controllers.JobDescriptionController.Index">
+        <member name="M:SmartDocs.Controllers.JobDescriptionController.Index(System.String,System.String,System.String,System.String,System.Int32)">
             <summary>
             Shows the Index view.
             </summary>
             <remarks>This is a list of all the current Job Descriptions in the database. It includes links to Add/Edit/Delete. This is an administrative view.
-            A User-viewable list of Jobs is returned by <see cref="T:SmartDocs.Models.UserIndex"/>
+            A User-viewable list of Jobs is returned by <see cref="M:SmartDocs.Controllers.JobDescriptionController.UserIndex"/>
             </remarks>
             <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModel"/>
-            <seealso cref="T:SmartDocs.Models.Types.JobDescriptionListViewModelItem"/>
+            <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem"/>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.UserIndex">
@@ -265,6 +265,21 @@
             <param name="id">The id of the newly generated <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/></param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
+        <member name="M:SmartDocs.Controllers.SmartPAFController.Edit(System.Int32)">
+            <summary>
+            GET: SmartPAF/Edit?id="" 
+            </summary>
+            <param name="id">The identifier of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> to edit.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartPAFController.Edit(System.Int32,SmartDocs.Models.ViewModels.PAFFormViewModel)">
+            <summary>
+            POST: SmartPPA/Edit?=""
+            </summary>
+            <param name="id">The identifier for the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> to be edited.</param>
+            <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
+        </member>
         <member name="M:SmartDocs.Controllers.SmartPAFController.Delete(System.Nullable{System.Int32})">
             <summary>
             Shows the view to confirm deletion of a <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/>.
@@ -430,6 +445,93 @@
             </summary>
             <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
             <returns></returns>
+        </member>
+        <member name="T:SmartDocs.Infrastructure.PageLinkTagHelper">
+            <summary>
+            A Pagination Control Tag Helper Class
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper" />
+        </member>
+        <member name="M:SmartDocs.Infrastructure.PageLinkTagHelper.#ctor(Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartDocs.Infrastructure.PageLinkTagHelper"/> class.
+            </summary>
+            <param name="helperFactory">The helper factory.</param>
+        </member>
+        <member name="P:SmartDocs.Infrastructure.PageLinkTagHelper.ViewContext">
+            <summary>
+            Gets or sets the view context.
+            </summary>
+            <value>
+            The view context.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Infrastructure.PageLinkTagHelper.PageModel">
+            <summary>
+            Gets or sets the page model.
+            </summary>
+            <remarks>
+            This property is a <see cref="T:SmartDocs.Models.PagingInfo"/> class object.
+            </remarks>
+            <value>
+            The page model.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Infrastructure.PageLinkTagHelper.PageAction">
+            <summary>
+            Gets or sets the page action.
+            </summary>
+            <value>
+            The page action.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Infrastructure.PageLinkTagHelper.PageUrlValues">
+            <summary>
+            Gets or sets the page URL values.
+            </summary>
+            <value>
+            The page URL values.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Infrastructure.PageLinkTagHelper.PageClassesEnabled">
+            <summary>
+            Gets or sets a value indicating whether [page classes enabled].
+            </summary>
+            <value>
+              <c>true</c> if [page classes enabled]; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Infrastructure.PageLinkTagHelper.PageClass">
+            <summary>
+            Gets or sets the page class.
+            </summary>
+            <value>
+            The page class.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Infrastructure.PageLinkTagHelper.PageClassNormal">
+            <summary>
+            Gets or sets the page class normal.
+            </summary>
+            <value>
+            The page class normal.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Infrastructure.PageLinkTagHelper.PageClassSelected">
+            <summary>
+            Gets or sets the page class selected.
+            </summary>
+            <value>
+            The page class selected.
+            </value>
+        </member>
+        <member name="M:SmartDocs.Infrastructure.PageLinkTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <summary>
+            Synchronously executes the <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper" /> with the given <paramref name="context" /> and
+            <paramref name="output" />.
+            </summary>
+            <param name="context">Contains information associated with the current HTML tag.</param>
+            <param name="output">A stateful HTML element used to generate an HTML tag.</param>
         </member>
         <member name="T:SmartDocs.Models.DataInitializer">
             <summary>
@@ -838,6 +940,12 @@
         <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.CreatePAF(SmartDocs.Models.ViewModels.PAFFormViewModel)">
             <summary>
             Creates a new <see cref="T:SmartDocs.Models.SmartDocument"/> from the user-provided form data.
+            </summary>
+            <param name="vm">A <see cref="T:SmartDocs.Models.ViewModels.PAFFormViewModel"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.SmartDocumentClasses.SmartPAFFactory.UpdatePAF(SmartDocs.Models.ViewModels.PAFFormViewModel)">
+            <summary>
+            Updates an existing <see cref="T:SmartDocs.Models.SmartDocument"/> PAF from user-provided form data.
             </summary>
             <param name="vm">A <see cref="T:SmartDocs.Models.ViewModels.PAFFormViewModel"/></param>
         </member>

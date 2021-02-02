@@ -122,7 +122,80 @@ namespace SmartDocs.Controllers
             
 
         }
-
+        /// <summary>
+        /// GET: SmartPAF/Edit?id="" 
+        /// </summary>
+        /// <param name="id">The identifier of the <see cref="SmartDocument.SmartDocumentType.PAF"/> to edit.</param>
+        /// <returns>An <see cref="ActionResult"/></returns>
+        public ActionResult Edit(int id)
+        {
+            // pull the PAF from the repo
+            SmartDocument paf = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            SmartPAFFactory factory = new SmartPAFFactory(_repository, paf);
+            // pass the PPA to the factory method takes a SmartPPA parameter
+            PAFFormViewModel vm = factory.GetViewModelFromXML();
+            // populate the VM <select> lists
+            vm.HydrateLists(_repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(), _repository.Components.ToList(), _repository.Users.Select(x => new UserListItem(x)).ToList());
+            // return the view
+            ViewData["Title"] = "Edit PAF";
+            return View(vm);
+        }
+        /// <summary>
+        /// POST: SmartPPA/Edit?=""
+        /// </summary>
+        /// <param name="id">The identifier for the <see cref="SmartDocument.SmartDocumentType.PPA"/> to be edited.</param>
+        /// <param name="form">The POSTed form data, bound to a <see cref="PPAFormViewModel"/>.</param>
+        /// <returns>An <see cref="ActionResult"/></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, [Bind(
+            "DocumentId," +
+            "SelectedPAFType," +
+            "FirstName," +
+            "LastName," +
+            "DepartmentIdNumber," +
+            "PayrollIdNumber," +
+            "DepartmentIdNumber," +
+            "DepartmentDivision," +
+            "DepartmentDivisionCode," +
+            "WorkPlaceAddress," +
+            "AuthorUserId," +
+            "StartDate," +
+            "EndDate," +
+            "JobId," +
+            "Assessment," +
+            "Recommendation")] PAFFormViewModel form)
+        {
+            // if the querystring parameter id doesn't match the POSTed PAFId, return 404
+            if (id != form.DocumentId)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                // next, re-populate the VM drop down lists
+                form.HydrateLists(_repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(), _repository.Components.ToList(), _repository.Users.Select(x => new UserListItem(x)).ToList());
+                ViewData["Title"] = "Edit PAF: Error";
+                return View(form);
+            }
+            else
+            {
+                if (form.JobId != 0)
+                {
+                    JobDescription job = new JobDescription(_repository.Jobs.FirstOrDefault(x => x.JobId == form.JobId));
+                }
+                else
+                {
+                    return NotFound();
+                }
+                // validation success, create a new PAFGenerator and pass the repo as a parameter
+                SmartPAFFactory factory = new SmartPAFFactory(_repository);
+                // populate the form info into the generator
+                factory.UpdatePAF(form);
+                // redirect to the SaveSuccess view, passing the newly created PPA as a querystring param
+                return RedirectToAction("SaveSuccess", new { id = factory.PAF.DocumentId });
+            }
+        }
         /// <summary>
         /// Shows the view to confirm deletion of a <see cref="SmartDocument.SmartDocumentType.PAF"/>.
         /// </summary>

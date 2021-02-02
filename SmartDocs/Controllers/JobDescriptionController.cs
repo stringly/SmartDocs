@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,7 @@ namespace SmartDocs.Controllers
     public class JobDescriptionController : Controller
     {        
         private IDocumentRepository _repository;
+        public int PageSize = 15;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="JobDescriptionController"/> class.
@@ -30,17 +33,24 @@ namespace SmartDocs.Controllers
         /// Shows the Index view.
         /// </summary>
         /// <remarks>This is a list of all the current Job Descriptions in the database. It includes links to Add/Edit/Delete. This is an administrative view.
-        /// A User-viewable list of Jobs is returned by <see cref="T:SmartDocs.Models.UserIndex"/>
+        /// A User-viewable list of Jobs is returned by <see cref="UserIndex"/>
         /// </remarks>
-        /// <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModel"/>
-        /// <seealso cref="T:SmartDocs.Models.Types.JobDescriptionListViewModelItem"/>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        public IActionResult Index()
+        /// <seealso cref="JobDescriptionListViewModel"/>
+        /// <seealso cref="JobDescriptionListViewModeltem"/>
+        /// <returns>An <see cref="IActionResult"/></returns>
+        public IActionResult Index(string currentSort, string currentFilter, string SelectedRank, string SelectedGrade, int page = 1)
         {   
             JobDescriptionListViewModel vm = new JobDescriptionListViewModel
             {
                 Jobs = _repository.Jobs.Select(x => new JobDescriptionListViewModeltem(x)).ToList()
             };
+            vm.PagingInfo = new PagingInfo
+            {
+                CurrentPage = page,
+                TotalItems = vm.Jobs.Count(),
+                ItemsPerPage = PageSize
+            };
+            vm.HydrateLists(_repository.Jobs.Select(x => x.JobDataXml.Element("Rank").Value).Distinct().ToList(), _repository.Jobs.Select(x => x.JobDataXml.Element("Grade").Value).Distinct().ToList());            
             ViewData["Title"] = "Job Descriptions List";
             ViewData["ActiveNavBarMenuLink"] = "Job Descriptions";
             return View(vm);

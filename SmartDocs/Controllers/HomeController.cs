@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -17,32 +18,88 @@ namespace SmartDocs.Controllers
     /// <summary>
     /// Controller for "Home" interactions
     /// </summary>
-    /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+    /// <seealso cref="Controller" />
     [Authorize(Roles = "User, Administrator")]
     public class HomeController : Controller
     {
         private IDocumentRepository _repository;
+        public int PageSize = 15;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDocs.Controllers.HomeController"/> class.
+        /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
-        /// <remarks>This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/></remarks>
-        /// <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        /// <remarks>This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="Startup.ConfigureServices"/></remarks>
+        /// <param name="repo">An <see cref="IDocumentRepository"/></param>
         public HomeController(IDocumentRepository repo)
         {
             _repository = repo;
         }
-        public IActionResult Index()
+        public IActionResult Index(string sortOrder, string searchString, string selectedDocumentType, int page = 1)
         {
             if (User.HasClaim(x => x.Type == "UserId"))
             {
                 int UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
                 // create a new view model
                 DocumentListViewModel vm = new DocumentListViewModel();
+                vm.CurrentSort = sortOrder;
+                vm.CurrentFilter = searchString;
+                vm.SelectedDocumentType = selectedDocumentType;
+                vm.CreatedDateSort = String.IsNullOrEmpty(sortOrder) ? "createdDate_desc" : "";
+                vm.DocumentTypeSort = sortOrder == "DocumentTypeName" ? "documentTypeName_desc" : "DocumentTypeName";
+                vm.FileNameSort = sortOrder == "FileName" ? "fileName_desc" : "FileName";
+                string lowerSearchString = "";
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    char[] arr = searchString.ToCharArray();
+                    arr = Array.FindAll<char>(arr, (c => (char.IsLetterOrDigit(c)
+                                      || char.IsWhiteSpace(c)
+                                      || c == '-')));
+                    lowerSearchString = new string(arr);
+                    lowerSearchString = lowerSearchString.ToLower();
+                }
+                
                 // assign the Documents property of the viewmodel to the a list of DocumentListViewModelItems
                 // that is created by passing each of the repository's PPAs to the DocumentListViewModelItem
                 // constructor that takes a SmartPPA parameter
-                vm.Documents = _repository.Documents.Where(x => x.AuthorUserId == UserId).ToList().ConvertAll(x => new DocumentListViewModelItem(x));
+                vm.Documents = _repository.Documents.Where(x => (x.AuthorUserId == UserId)
+                    && (String.IsNullOrEmpty(selectedDocumentType) || x.Type.ToString() == selectedDocumentType)
+                    && (String.IsNullOrEmpty(searchString) || x.FileName.ToLower().Contains(lowerSearchString)
+                ))
+                .Skip((page-1) * PageSize)
+                .Take(PageSize)                    
+                .ToList().ConvertAll(x => new DocumentListViewModelItem(x));
+                int totalItems = _repository.Documents.Where(x => (x.AuthorUserId == UserId)
+                    && (String.IsNullOrEmpty(selectedDocumentType) || x.Type.ToString() == selectedDocumentType)
+                    && (String.IsNullOrEmpty(searchString) || x.FileName.ToLower().Contains(lowerSearchString)
+                ))
+                    .Count();
+                vm.PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = PageSize,
+                    TotalItems = totalItems
+                };
+                switch (sortOrder)
+                {
+                    case "DocumentTypeName":
+                        vm.Documents = vm.Documents.OrderBy(x => x.DocumentTypeDisplayName).ToList();
+                        break;
+                    case "documentTypeName_desc":
+                        vm.Documents = vm.Documents.OrderByDescending(x => x.DocumentTypeDisplayName).ToList();
+                        break;
+                    case "FileName":
+                        vm.Documents = vm.Documents.OrderBy(x => x.DocumentName).ToList();
+                        break;
+                    case "fileName_desc":
+                        vm.Documents = vm.Documents.OrderByDescending(x => x.DocumentName).ToList();
+                        break;
+                    case "createdDate_desc":
+                        vm.Documents = vm.Documents.OrderByDescending(x => x.CreatedDate).ToList();
+                        break;
+                    default:
+
+                        break;
+                }
                 ViewData["Title"] = "My Documents";
                 ViewData["ActiveNavBarMenuLink"] = "My Documents";
                 return View(vm);
@@ -53,6 +110,8 @@ namespace SmartDocs.Controllers
                 return RedirectToAction("Access Denied", "Home");
             }
         }
+
+        
         /// <summary>
         /// Shows the "Choices" view.
         /// </summary>
