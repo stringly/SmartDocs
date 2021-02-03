@@ -34,25 +34,6 @@ namespace SmartDocs.Models
                 if (dbUser != null)
                 {
                     var ci = (ClaimsIdentity)principal.Identity;
-                    //foreach (Role ur in dbUser.CurrentRoles)
-                    //{
-                    //    var c = new Claim(ci.RoleClaimType, ur.RoleType.RoleTypeName);
-                    //    ci.AddClaim(c);
-                    //    if (ur.RoleType.RoleTypeName == "ComponentAdmin")
-                    //    {
-                    //        int memberParentComponentId = dbUser.Position.ParentComponent.ComponentId;
-                    //        // TODO: Repo method to get tree of componentIds for the user's parent component
-                    //        List<ComponentSelectListItem> canEditComponents = _unitOfWork.Components.GetChildComponentsForComponentId(memberParentComponentId);
-                    //        var d = new Claim("CanEditComponents", JsonConvert.SerializeObject(canEditComponents));
-                    //        ci.AddClaim(d);
-                    //        List<MemberSelectListItem> canEditMembers = _unitOfWork.Members.GetMembersUserCanEdit(memberParentComponentId);
-                    //        var e = new Claim("CanEditUsers", JsonConvert.SerializeObject(canEditMembers));
-                    //        ci.AddClaim(e);
-                    //        List<PositionSelectListItem> canEditPositions = _unitOfWork.Positions.GetPositionsUserCanEdit(memberParentComponentId);
-                    //        var f = new Claim("CanEditPositions", JsonConvert.SerializeObject(canEditPositions));
-                    //        ci.AddClaim(f);
-                    //    }
-                    //}
                     if(logonName == "jcs30" || logonName == "jcsmith1")
                     {
                         ci.AddClaim(new Claim(ci.RoleClaimType, "Administrator"));

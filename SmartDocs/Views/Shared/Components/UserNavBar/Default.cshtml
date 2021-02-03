@@ -10,6 +10,8 @@
     {
         UserName  = ((ClaimsIdentity)User.Identity).FindFirst("DisplayName").Value;
     }
+    bool IsAdmin = User.IsInRole("Administrator");
+    bool IsUser = User.IsInRole("User") || User.IsInRole("Administrator");
     
 }
     <div class="navbar navbar-inverse" role="navigation">
@@ -25,16 +27,29 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="@(Model.ActiveLink == "Choices" ? "active" : "")">
-                        <a asp-action="Choices" asp-controller="Home">Create a Document</a>
-                    </li>
-                    <li class="@(Model.ActiveLink == "My Documents" ? "active" : "")">
-                        <a asp-action="Index" asp-controller="Home">My Documents</a>
-                    </li>
-                    <li class="@(Model.ActiveLink == "Job Descriptions" ? "active" : "")">
-                        <a asp-action="Index" asp-controller="JobDescription">Job Descriptions</a>
-                    </li>
-                    @if (User.IsInRole("Administrator"))
+                    @if (IsUser)
+                    {
+                        <li class="@(Model.ActiveLink == "Choices" ? "active" : "")">
+                            <a asp-action="Choices" asp-controller="Home">Create a Document</a>
+                        </li>
+                        <li class="@(Model.ActiveLink == "My Documents" ? "active" : "")">
+                            <a asp-action="Index" asp-controller="Home">My Documents</a>
+                        </li>
+                        @if (IsAdmin)
+                        {
+                            <li class="@(Model.ActiveLink == "Job Descriptions" ? "active" : "")">
+                                <a asp-action="Index" asp-controller="JobDescription">Job Descriptions</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="@(Model.ActiveLink == "Job Descriptions" ? "active" : "")">
+                                <a asp-action="UserIndex" asp-controller="JobDescription">Job Descriptions</a>
+                            </li>
+                        }
+                    }
+
+                    @if (IsAdmin)
                     {
                         <li class="@(Model.ActiveLink == "Users" ? "active" : "")">
                             <a asp-action="Index" asp-controller="SmartUsers">Users</a>
@@ -45,7 +60,7 @@
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    @if (UserId != 0)
+                    @if (IsUser)
                     {
                         <li class="@(Model.ActiveLink == "Edit User" ? "active" : "")">
                             <a asp-action="Edit" asp-controller="SmartUsers" asp-route-id="@UserId">@UserName</a>
@@ -53,10 +68,9 @@
                     }
                     else
                     {
-                <li>
-                    <a asp-action="About" asp-controller="Home">@UserName</a>
-                </li>
-                        
+                        <li>
+                            <a asp-action="About" asp-controller="Home">@UserName</a>
+                        </li>                        
                     }
 
                 </ul>

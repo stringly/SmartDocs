@@ -3,37 +3,118 @@
     Layout = "_Layout";
 }
 <h2>Current Job Descriptions</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Job Name
-            </th>
-            <th>
-                Rank
-            </th>
-            <th>
-                Grade
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Jobs)
-        {
-            <tr>
-                <td>
-                    @item.JobName
-                </td>
-                <td>
-                    @item.Rank
-                </td>
-                <td>
-                    @item.Grade
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.JobId">Details</a>
-                </td>
+<hr />
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-inline" asp-page="/UserIndex" method="get">
+            <div class="form-group">
+                <label class="control-label" asp-for="CurrentFilter">Search:</label>
+                <input type="text" name="searchString" class="form-control" value="@Model.CurrentFilter">
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="SelectedRank">Rank:</label>
+                <select asp-for="SelectedRank" class="form-control" asp-items="Model.Ranks">
+                    <option value="" selected disabled>Choose a Rank</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="SelectedGrade">Grade:</label>
+                <select asp-for="SelectedGrade" class="form-control" asp-items="Model.Grades">
+                    <option value="" selected disabled>Choose a Grade</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+            @if (!String.IsNullOrEmpty(Model.CurrentFilter) || !String.IsNullOrEmpty(Model.SelectedRank) || !String.IsNullOrEmpty(Model.SelectedGrade))
+            {
+                <a asp-action="/UserIndex" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Reset List</a>
+            }
+        </form>
+    </div>
+</div>
+@if (Model.Jobs.Count() > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr class="tablePageControlHeaderRow">
+                <th colspan="4">
+                    <div page-model="@Model.PagingInfo" page-action="UserIndex" page-classes-enabled="true"
+                         page-class="" page-class-normal=""
+                         page-class-selected="active" page-url-searchString="@Model.CurrentFilter" page-url-sortOrder="@Model.CurrentSort" page-url-selectedRank="@Model.SelectedRank" page-url-selectedGrade="@Model.SelectedGrade"
+                         class="btn-group">
+                    </div>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+            <tr>
+                <th>
+                    <a asp-page="/UserIndex" asp-route-sortOrder="@Model.NameSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedRank="@Model.SelectedRank" asp-route-selectedGrade="@Model.SelectedGrade" title="Sort by Job Name">
+                        Job Name
+                        @if (Model.CurrentSort == "jobName_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/UserIndex" asp-route-sortOrder="@Model.RankSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedRank="@Model.SelectedRank" asp-route-selectedGrade="@Model.SelectedGrade" title="Sort by Rank">
+                        Rank
+                        @if (Model.CurrentSort == "rank_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/UserIndex" asp-route-sortOrder="@Model.GradeSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedRank="@Model.SelectedRank" asp-route-selectedGrade="@Model.SelectedGrade" title="Sort by Grade">
+                        Grade
+                        @if (Model.CurrentSort == "grade_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Jobs)
+            {
+                <tr>
+                    <td>
+                        @item.JobName
+                    </td>
+                    <td>
+                        @item.Rank
+                    </td>
+                    <td>
+                        @item.Grade
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.JobId" asp-route-returnUrl="UserIndex@(!String.IsNullOrEmpty(Context.Request.QueryString.ToString()) ? $"{Context.Request.QueryString}" : "")">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <hr />
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <strong>No matching Job Descriptions found.</strong>
+        </div>
+    </div>
+    <hr />
+}

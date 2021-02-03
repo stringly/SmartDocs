@@ -69,7 +69,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
         /// <param name="vm"></param>
         public void UpdateAwardForm(SmartAwardViewModel vm)
         {
-            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
+            SmartDocument toEdit = _repository.AwardForms.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
             if (toEdit != null)
             {
                 toEdit.AuthorUserId = vm.AuthorUserId;

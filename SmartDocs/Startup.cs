@@ -1,5 +1,6 @@
 ﻿using Google.Cloud.Diagnostics.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartDocs.Models;
+using SmartDocs.Models.Auth;
+using SmartDocs.Models.Auth.CanEditDocument;
+using SmartDocs.Models.Auth.CanEditUser;
+using SmartDocs.Models.Auth.IsUser;
 using SmartDocs.Models.ViewModels;
 using System;
 
@@ -48,14 +53,39 @@ namespace SmartDocs
             {
                 options.ProjectId = "smartdocs-219705";
                 options.ServiceName = "SmartDocs";
-                options.Version = "0.01";
+                options.Version = "0.10";
             });
 
             services.AddDbContext<SmartDocContext>(options => options.UseSqlServer(Configuration["Data:SmartDocuments:ConnectionString"]));
             services.AddScoped<IClaimsTransformation, ClaimsLoader>();
             services.AddTransient<IDocumentRepository, SmartDocumentRepository>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();            
-            services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);            
+            services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
+            services.AddScoped<IAuthorizationHandler, IsDocumentAuthorHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsGlobalAdminForDocumentHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsEditingSelfHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsGlobalAdminForUserHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsGlobalAdminHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsUserHandler>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "CanEditUser",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new CanEditUserRequirement()));
+                options.AddPolicy(
+                    "CanEditDocument",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new CanEditDocumentRequirement()));
+                options.AddPolicy(
+                    "IsGlobalAdmin",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new IsGlobalAdminRequirement()));
+                options.AddPolicy(
+                    "IsUser",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new IsUserRequirement()));
+            });
             services.AddMvc(options =>
             {
                 options.ModelBinderProviders.Insert(0, new AwardTypeModelBinderProvider()); // custom binder for awards 
@@ -74,14 +104,13 @@ namespace SmartDocs
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseGoogleExceptionLogging();
+                
             }
             // comment out these lines if there is no need to push the old PPAs into the new DB
             DataInitializer initializer = new DataInitializer(context);
-            initializer.SeedTemplates();       
-
-            app.UseStatusCodePages();
+            initializer.SeedTemplates();
             app.UseGoogleExceptionLogging();
+            app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc(routes =>

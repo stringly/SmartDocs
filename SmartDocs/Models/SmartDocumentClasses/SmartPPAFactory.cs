@@ -64,7 +64,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
         /// <param name="vm">A <see cref="PPAFormViewModel"/></param>
         public void UpdatePPA(PPAFormViewModel vm)
         {
-            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
+            SmartDocument toEdit = _repository.PerformanceAppraisalForms.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
             if (toEdit != null)
             {
                 toEdit.FormDataXml = ViewModelToXML(vm);

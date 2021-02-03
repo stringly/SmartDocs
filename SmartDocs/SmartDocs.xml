@@ -4,6 +4,90 @@
         <name>SmartDocs</name>
     </assembly>
     <members>
+        <member name="T:SmartDocs.Controllers.AwardFormController">
+            <summary>
+            Controller for Award Form interactions
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Creates a new instance of the controller.
+            </summary>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.Create(System.String,System.String,System.String,System.String)">
+            <summary>
+            Returns a view that will allow a User to create a new Award Form.
+            </summary>
+            <param name="NomineeName">A string containing the name of the award nominee.</param>
+            <param name="ClassTitle">A string containing the nominee's class titme.</param>
+            <param name="Division">A string containing the nominee's Department/Division name.</param>
+            <param name="Agency">A string containing the name of the nominee's agency.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.Create(SmartDocs.Models.ViewModels.SmartAwardViewModel)">
+            <summary>
+            Handles the form POST from the GET/Create View
+            </summary>
+            <param name="form">User-provided form data bound to a <see cref="T:SmartDocs.Models.ViewModels.SmartAwardViewModel"/></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.Edit(System.Int32)">
+            <summary>
+            Returns a view that allows a User to edit an existing Award Form SmartDoc.
+            </summary>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the document to edit.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.Edit(System.Int32,SmartDocs.Models.ViewModels.SmartAwardViewModel)">
+            <summary>
+            Handles the form POST from the GET/Edit view.
+            </summary>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the document being edited.</param>
+            <param name="form">The user-provided form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.SmartAwardViewModel"/></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.SaveSuccess(System.Int32)">
+            <summary>
+            Shows the "SaveSuccess" View
+            </summary>
+            <param name="id">The id of the successfully saved <see cref="T:SmartDocs.Models.SmartDocument"/></param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.GetAwardFormViewComponent(System.Int32)">
+            <summary>
+            Returns a View Component to prompt the User for information specific to a type of award.
+            </summary>
+            <param name="awardId">The id of the award</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.Delete(System.Int32)">
+            <summary>
+            Returns the GET/Delete view to prompt a user to confirm that they want to delete an award.
+            </summary>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the award document to be deleted.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.AwardFormController.DeleteConfirmed(System.Int32)">
+            <summary>
+            Deletes a document.
+            </summary>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the document to be deleted.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.RedirectToActionResult"/></returns>
+        </member>
+        <member name="T:SmartDocs.Controllers.ErrorController">
+            <summary>
+            Controller that displays error views.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Controllers.ErrorController.Error(System.Nullable{System.Int32})">
+            <summary>
+            Returns a generic error view and message.
+            </summary>
+            <param name="statusCode"></param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
         <member name="T:SmartDocs.Controllers.HomeController">
             <summary>
             Controller for "Home" interactions
@@ -17,15 +101,20 @@
             <remarks>This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/></remarks>
             <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
+        <member name="M:SmartDocs.Controllers.HomeController.Index(System.String,System.String,System.String,System.Int32)">
+            <summary>
+            Returns the "My Documents" view that lists documents the User has created in SmartDocs.
+            </summary>
+            <param name="sortOrder">A sorting parameter</param>
+            <param name="searchString">A text string to search for in the file name of the User's Documents</param>
+            <param name="selectedDocumentType">A string that corresponds to a <see cref="T:SmartDocs.Models.SmartDocument.SmartDocumentType"/> enum that will filter the result list by that type.</param>
+            <param name="page">A paging value.</param>
+            <returns></returns>
+        </member>
         <member name="M:SmartDocs.Controllers.HomeController.Choices">
             <summary>
             Shows the "Choices" view.
             </summary>
-            <remarks>
-            This method shows the "Choices" landing page. It first checks the <see cref="M:SmartDocs.Models.IDocumentRepository.GetCurrentUser"/>
-            method to ensure the user is known to the application. If the user's LDAP name is not in the "Users" table, the repo method will
-            return "null" and the user will be redirected to the "Access Denied" view.
-            </remarks>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.HomeController.About">
@@ -35,121 +124,117 @@
             <remarks>This view shows the FAQ, help file link, and admin contact info.</remarks>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
-        <member name="M:SmartDocs.Controllers.HomeController.AccessDenied">
+        <member name="M:SmartDocs.Controllers.HomeController.Download(System.Int32)">
             <summary>
-            Shows the "Access Denied" view.
+            Downloads a document with the given Id.
             </summary>
-            <remarks>This view shows the user a message generic "not authorized" message.</remarks>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
-        </member>
-        <member name="M:SmartDocs.Controllers.HomeController.NotAuthorized">
-            <summary>
-            View that is returned when a user attempts an action for which they are not authorized.
-            </summary>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the document to download.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.FileResult"/></returns>
         </member>
         <member name="T:SmartDocs.Controllers.JobDescriptionController">
             <summary>
             Controller for "Job Description" views interactions
             </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />    
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.#ctor(SmartDocs.Models.IDocumentRepository)">
             <summary>
             Initializes a new instance of the <see cref="T:SmartDocs.Controllers.JobDescriptionController"/> class.
             </summary>
-            <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/></remarks>
+            <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="!:ConfigureServices"/></remarks>
             <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.Index(System.String,System.String,System.String,System.String,System.Int32)">
             <summary>
-            Shows the Index view.
+            Returns an Index list of all Job Descriptions in the database.
             </summary>
-            <remarks>This is a list of all the current Job Descriptions in the database. It includes links to Add/Edit/Delete. This is an administrative view.
-            A User-viewable list of Jobs is returned by <see cref="M:SmartDocs.Controllers.JobDescriptionController.UserIndex"/>
+            <remarks>
+            This view includes links to Create/Edit/Delete Job Descriptions, and is an administrator-level view. Users can see the Index via GET/UserIndex
             </remarks>
-            <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModel"/>
-            <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModeltem"/>
+            <param name="sortOrder">An optional string to sort the result list.</param>
+            <param name="searchString">An optional string to search and filter the Job Description Names in the result list.</param>
+            <param name="SelectedRank">An optional string parameter that correspondes to a rank as it appears in the XMLData of a Job Description.</param>
+            <param name="SelectedGrade">An optional string parameter that correspondes to a grade as it appears in the XMLData of a Job Description.</param>
+            <param name="page">An optional paging index. Defaults to 1.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
-        <member name="M:SmartDocs.Controllers.JobDescriptionController.UserIndex">
+        <member name="M:SmartDocs.Controllers.JobDescriptionController.UserIndex(System.String,System.String,System.String,System.String,System.Int32)">
             <summary>
-            Shows the User Index view.
+            Returns an Index list of all Job Descriptions in the database.
             </summary>
-            <remarks>This shows a list of all current Job Descriptions in the database. It is accessible to non-admin users.</remarks>'
-            <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModel"/>
-            <seealso cref="T:SmartDocs.Models.Types.JobDescriptionListViewModelItem"/>
+            <remarks>
+            This view includes a link to view the details of a Job Description.
+            </remarks>
+            <param name="sortOrder">An optional string to sort the result list.</param>
+            <param name="searchString">An optional string to search and filter the Job Description Names in the result list.</param>
+            <param name="SelectedRank">An optional string parameter that correspondes to a rank as it appears in the XMLData of a Job Description.</param>
+            <param name="SelectedGrade">An optional string parameter that correspondes to a grade as it appears in the XMLData of a Job Description.</param>
+            <param name="page">An optional paging index. Defaults to 1.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.Edit(System.Int32)">
             <summary>
-            GET: JobDescription/Edit?id=""
+            Returns a view that allows a User to edit an existing Job Description
             </summary>
-            <remarks>Shows a view to allow editing an existing Job Description.</remarks>
-            <param name="id">The id of the <see cref="T:SmartDocs.Models.SmartJob"/> to edit.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartJob.JobId"/> of the Job Description being edited.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.Edit(System.Int32,SmartDocs.Models.ViewModels.JobDescriptionViewModel)">
             <summary>
-            POST: JobDescription/Edit
+            Handles the POSTed form data from the GET/Edit view.
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartJob"/> that the user is attempting to edit.</param>
-            <param name="form">The POSTed form data bound to a <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/></param>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartJob.JobId"/> of the Job Description being edited.</param>
+            <param name="form">The user-provided form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/></param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.Create">
             <summary>
-            GET: JobDescription/Create
+            Returns a view that allows the User to create a new Job Description.
             </summary>
-            <remarks>Shows a view to allow creation of a Job Description.</remarks>        
-            <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.Create(SmartDocs.Models.ViewModels.JobDescriptionViewModel)">
             <summary>
-            POST: JobDescription/Create
-            </summary>        
-            <param name="form">The POSTed form data bound to a <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/></param>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+            Handles the POSTed form data and creates a new Job Description.
+            </summary>
+            <param name="form">The user-provided form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/></param>
+            <returns></returns>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.ShowJobDetails(System.Nullable{System.Int32})">
             <summary>
-            Shows the Details view for a Job Description.
+            Returns a view that shows details for a specific Job Description
             </summary>
-            <remarks>This view shows full details for a Job Description. It only displays the information; no CRUD is available via this view.</remarks>
-            <param name="id">The identifier of the SmartJob</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartJob.JobId"/> of the desired Job Description.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
-        <member name="M:SmartDocs.Controllers.JobDescriptionController.Details(System.Nullable{System.Int32})">
+        <member name="M:SmartDocs.Controllers.JobDescriptionController.Details(System.Nullable{System.Int32},System.String)">
             <summary>
-            Show the default Details page for the Job Description Object.
+            Returns a view that shows details for a specific Job Description
             </summary>
-            <remarks>This is deprecated.</remarks>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.JobDescription"/> .</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartJob.JobId"/> of the desired Job Description.</param>
+            <param name="returnUrl">An optional return Url String to aid in navigation.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
-        <member name="M:SmartDocs.Controllers.JobDescriptionController.Delete(System.Nullable{System.Int32})">
+        <member name="M:SmartDocs.Controllers.JobDescriptionController.Delete(System.Int32)">
             <summary>
-            GET: JobDescription/Delete?id=""
+            Returns a view to prompt the user to confirm that a specific Job Description will be deleted.
             </summary>
-            <remarks>This shows a view that asks the user to confirm deletion of the Job Description</remarks>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartJob"/> to be deleted.</param>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartJob.JobId"/> of the Job Description to be deleted.</param>
+            <returns></returns>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.DeleteConfirmed(System.Int32)">
             <summary>
-            POST: JobDescription/Delete
+            Deletes a Job Description and redirects the User.
             </summary>
-            <remarks>Deletes the <see cref="T:SmartDocs.Models.SmartJob"/> with the provided id.</remarks>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartJob"/> to be deleted.</param>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartJob.JobId"/> of the Job Description to delete.</param>
+            <returns></returns>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.SmartJobExists(System.Int32)">
             <summary>
-            Determines if a <see cref="T:SmartDocs.Models.SmartUser"/> with the provided id exists in the DB.
+            Determines if a <see cref="T:SmartDocs.Models.SmartJob"/> with the provided <see cref="P:SmartDocs.Models.SmartJob.JobId"/> exists in the database.
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/></param>
-            <returns>True if the user exists, otherwise false</returns>
+            <param name="id"></param>
+            <returns>True if a <see cref="T:SmartDocs.Models.SmartJob"/> with the provided <see cref="P:SmartDocs.Models.SmartJob.JobId"/> exists, otherwise false.</returns>
         </member>
         <member name="T:SmartDocs.Controllers.OrganizationComponentsController">
             <summary>
@@ -159,9 +244,9 @@
         </member>
         <member name="M:SmartDocs.Controllers.OrganizationComponentsController.#ctor(SmartDocs.Models.IDocumentRepository)">
             <summary>
-            Initializes a new instance of the <see cref="T:SmartDocs.Models.OrganizationComponentsController"/> class.
+            Initializes a new instance of the <see cref="T:SmartDocs.Controllers.OrganizationComponentsController"/> class.
             </summary>
-            <remarks>This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/></remarks>
+            <remarks>This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="!:ConfigureServices"/></remarks>
             <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
         <member name="M:SmartDocs.Controllers.OrganizationComponentsController.Index">
@@ -176,7 +261,7 @@
             </summary>
             <remarks>Returns a view that shows the details for the <see cref="T:SmartDocs.Models.OrganizationComponent"/> with the provided id
             </remarks>
-            <param name="id">The identifier for the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
+            <param name="id">The <see cref="P:SmartDocs.Models.OrganizationComponent.ComponentId"/> of the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.OrganizationComponentsController.Create">
@@ -197,14 +282,14 @@
             <summary>
             GET: OrganizationComponent/Edit?id=""
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
+            <param name="id">The <see cref="P:SmartDocs.Models.OrganizationComponent.ComponentId"/> of the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.OrganizationComponentsController.Edit(System.Int32,SmartDocs.Models.OrganizationComponent)">
             <summary>
             POST: OrganizationComponent/Edit
             </summary>
-            <param name="id">The identifier for the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
+            <param name="id">The <see cref="P:SmartDocs.Models.OrganizationComponent.ComponentId"/> of the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
             <param name="organizationComponent">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
@@ -213,22 +298,89 @@
             GET: OrganizationComponents/Delete
             </summary>
             <remarks>Displays the Delete confirmation page</remarks>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/> to be deleted.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.OrganizationComponent.ComponentId"/> of the <see cref="T:SmartDocs.Models.OrganizationComponent"/> to be deleted.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.OrganizationComponentsController.DeleteConfirmed(System.Int32)">
             <summary>
             POST: OrganizationComponents/Delete
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/> to be deleted</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.OrganizationComponent.ComponentId"/> of the <see cref="T:SmartDocs.Models.OrganizationComponent"/> to be deleted</param>
             <returns></returns>
         </member>
         <member name="M:SmartDocs.Controllers.OrganizationComponentsController.OrganizationComponentExists(System.Int32)">
             <summary>
-            Determines whether a component exists with the provided id
+            Determines whether a <see cref="T:SmartDocs.Models.OrganizationComponent"/> with the provided <see cref="P:SmartDocs.Models.OrganizationComponent.ComponentId"/> exists
             </summary>
             <param name="id">The identifier of the <see cref="T:SmartDocs.Models.OrganizationComponent"/></param>
-            <returns></returns>
+            <returns>True if the <see cref="T:SmartDocs.Models.OrganizationComponent"/> with the provided <see cref="P:SmartDocs.Models.OrganizationComponent.ComponentId"/> exists, otherwise false.</returns>
+        </member>
+        <member name="T:SmartDocs.Controllers.SmartJobDescriptionController">
+            <summary>
+            Controller class that handles interactions to create, edit, and delete Job Description Forms that are served on an employee.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Creates a new instance of the class
+            </summary>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.Create">
+            <summary>
+            GET: SmartJobDescription/Create view that allows a user to create a new form to serve.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.Create(SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel)">
+            <summary>
+            POST: SmartJobDescription/Create handles the POSTed form data and creates a new document.
+            </summary>
+            <param name="form">The user-provided form data, mapped to a <see cref="T:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel"/></param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.Edit(System.Int32)">
+            <summary>
+            GET: SmartJobDescription/Edit?{0} view that allows a user to edit an existing Job Description Form.
+            </summary>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the Job Description form to edit.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.Edit(System.Int32,SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel)">
+            <summary>
+            POST: SmartJobDescription/Edit?{0} handles the POSTed form data and updates the document.
+            </summary>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the Job Description form being edited.</param>
+            <param name="form">The user-provided form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.SmartJobDescriptionViewModel"/></param>        
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>        
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.SaveSuccess(System.Int32)">
+            <summary>
+            Shows the "SaveSuccess" View
+            </summary>
+            <param name="id">The id of the successfully saved <see cref="T:SmartDocs.Models.SmartDocument"/></param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.GetJobDescriptionViewComponent(System.Int32)">
+            <summary>
+            Returns a View Component that displays Job Description details.
+            </summary>
+            <param name="jobId">The <see cref="P:SmartDocs.Models.SmartJob.JobId"/> of Job Description.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.Delete(System.Nullable{System.Int32})">
+            <summary>
+            GET: SmartJobDescription/Delete?id={0} view which Prompts the User to confirm that they want to delete a Job Description Form.
+            </summary>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the Job Description Form to be deleted.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        </member>
+        <member name="M:SmartDocs.Controllers.SmartJobDescriptionController.DeleteConfirmed(System.Int32)">
+            <summary>
+            Deletes a Job Description Form and redirects the user.
+            </summary>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the Job Description Form to delete.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="T:SmartDocs.Controllers.SmartPAFController">
             <summary>
@@ -255,7 +407,7 @@
             Creates a <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> from the POSTed form data.
             </summary>
             <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PAFFormViewModel"/></param>
-            <returns></returns>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPAFController.SaveSuccess(System.Int32)">
             <summary>
@@ -280,18 +432,18 @@
             <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
-        <member name="M:SmartDocs.Controllers.SmartPAFController.Delete(System.Nullable{System.Int32})">
+        <member name="M:SmartDocs.Controllers.SmartPAFController.Delete(System.Int32)">
             <summary>
             Shows the view to confirm deletion of a <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/>.
             </summary>
-            <param name="id">The identifier of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/>.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> to be deleted.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPAFController.DeleteConfirmed(System.Int32)">
             <summary>
             Deletes <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> with the provided ID.
             </summary>
-            <param name="id">The identifier of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> to be deleted.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/> to be deleted.</param>
             <returns>An <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/></returns>
         </member>
         <member name="T:SmartDocs.Controllers.SmartPPAController">
@@ -301,12 +453,12 @@
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.#ctor(SmartDocs.Models.IDocumentRepository)">
             <summary>
-            Initializes a new instance of the <see cref="T:SmartDocs.Models.SmartPPAController"/> class.
+            Initializes a new instance of the <see cref="T:SmartDocs.Controllers.SmartPPAController"/> class.
             </summary>
             <remarks>
-            This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/>
+            This controller requires a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
             </remarks>
-            <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.Create">
             <summary>
@@ -316,10 +468,10 @@
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.Create(SmartDocs.Models.ViewModels.PPAFormViewModel)">
             <summary>
-            Creates a <see cref="T:SmartDocs.Models.SmartPPA"/> from the POSTed form data.
+            Creates a <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> from the POSTed form data.
             </summary>
             <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/></param>
-            <returns></returns>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.SaveSuccess(System.Int32)">
             <summary>
@@ -331,7 +483,7 @@
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.Edit(System.Int32)">
             <summary>
-            GET: SmartPPA/Edit?id="" 
+            GET: SmartPPA/Edit?id={0} returns a view that allows a user to edit and existing PPA. 
             </summary>
             <param name="id">The identifier of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> to edit.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
@@ -344,45 +496,45 @@
             <param name="form">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/>.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/></returns>
         </member>
-        <member name="M:SmartDocs.Controllers.SmartPPAController.Delete(System.Nullable{System.Int32})">
+        <member name="M:SmartDocs.Controllers.SmartPPAController.Delete(System.Int32)">
             <summary>
-            Shows the view to confirm deletion of a <see cref="T:SmartDocs.Models.SmartPPA"/>.
+            Shows the view to confirm deletion of a <see cref="T:SmartDocs.Models.SmartDocument"/> of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/>.
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> to be deleted.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.DeleteConfirmed(System.Int32)">
             <summary>
-            Deletes <see cref="T:SmartDocs.Models.SmartPPA"/> with the provided ID.
+            Deletes <see cref="T:SmartDocs.Models.SmartDocument"/> of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> from the database.
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/> to be deleted.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/>> to be deleted.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.SmartPPAExists(System.Int32)">
             <summary>
-            Determines if a <see cref="T:SmartDocs.Models.SmartPPA"/> with a given id exists in the repo.
+            Determines if a <see cref="T:SmartDocs.Models.SmartDocument"/> of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/> with a given <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> exists.
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartPPA"/>.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartDocument.DocumentId"/> of the <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/>.</param>
             <returns></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartPPAController.GetJobDescriptionViewComponent(System.Int32)">
             <summary>
-            Gets the <see cref="T:SmartDocs.ViewComponents.JobDescriptionCategoryListViewComponent"/> for a specified JobId.
+            Gets a <see cref="T:SmartDocs.ViewComponents.JobDescriptionCategoryListViewComponent"/> for a specified JobId.
             </summary>
-            <param name="jobId">The identifier of a <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
+            <param name="jobId">The <see cref="P:SmartDocs.Models.SmartJob.JobId"/> of a <see cref="T:SmartDocs.Models.SmartJob"/>.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="T:SmartDocs.Controllers.SmartUsersController">
             <summary>
             Controller for <see cref="T:SmartDocs.Models.SmartUser"/> interactions
             </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />    
         </member>
         <member name="M:SmartDocs.Controllers.SmartUsersController.#ctor(SmartDocs.Models.IDocumentRepository)">
             <summary>
             Initializes a new instance of the <see cref="T:SmartDocs.Controllers.SmartUsersController"/> class.
             </summary>
-            <param name="repo">A <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+            <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
         <member name="M:SmartDocs.Controllers.SmartUsersController.Index(System.String)">
             <summary>
@@ -392,7 +544,7 @@
             This is an admin only view.
             </remarks>
             <param name="searchString">The search string that limits the list.</param>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> list of users in the repo.</returns>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> list of users in the repo.</returns>      
         </member>
         <member name="M:SmartDocs.Controllers.SmartUsersController.Create">
             <summary>
@@ -401,7 +553,7 @@
             <remarks>
             View that allows Admin to create a new SmartUser
             </remarks>
-            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>  
         </member>
         <member name="M:SmartDocs.Controllers.SmartUsersController.Create(SmartDocs.Models.SmartUser)">
             <summary>
@@ -410,18 +562,18 @@
             <param name="smartUser">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.SmartUser"/></param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
-        <member name="M:SmartDocs.Controllers.SmartUsersController.Edit(System.Nullable{System.Int32})">
+        <member name="M:SmartDocs.Controllers.SmartUsersController.Edit(System.Int32)">
             <summary>
-            GET: SmartUsers/Edit?id=""
+            GET: SmartUsers/Edit?id={0}
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/></param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartUser.UserId"/> of the <see cref="T:SmartDocs.Models.SmartUser"/> to edit.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartUsersController.Edit(System.Int32,SmartDocs.Models.SmartUser)">
             <summary>
-            POST: SmartUsers/Edit?id=""
+            POST: SmartUsers/Edit?id={0}
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/> to edit.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartUser.UserId"/> of the <see cref="T:SmartDocs.Models.SmartUser"/> to edit.</param>
             <param name="smartUser">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.SmartUser"/> object.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
@@ -429,21 +581,21 @@
             <summary>
             GET: SmartUsers/Delete?id=""
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartUser.UserId"/> of the <see cref="T:SmartDocs.Models.SmartUser"/> to delete.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartUsersController.DeleteConfirmed(System.Int32)">
             <summary>
             POST: SmartUsers/Delete?id=""
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/> to be deleted.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartUser.UserId"/> of the <see cref="T:SmartDocs.Models.SmartUser"/> to delete.</param>
             <returns></returns>
         </member>
         <member name="M:SmartDocs.Controllers.SmartUsersController.SmartUserExists(System.Int32)">
             <summary>
             Determines if a <see cref="T:SmartDocs.Models.SmartUser"/> exists in the repo.
             </summary>
-            <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
+            <param name="id">The <see cref="P:SmartDocs.Models.SmartUser.UserId"/> of the <see cref="T:SmartDocs.Models.SmartUser"/> to delete.</param>
             <returns></returns>
         </member>
         <member name="T:SmartDocs.Infrastructure.PageLinkTagHelper">
@@ -532,6 +684,74 @@
             </summary>
             <param name="context">Contains information associated with the current HTML tag.</param>
             <param name="output">A stateful HTML element used to generate an HTML tag.</param>
+        </member>
+        <member name="T:SmartDocs.Models.Auth.CanEditDocument.CanEditDocumentRequirement">
+            <summary>
+            Authorization Policy that determines if an application user can edit a document.
+            </summary>
+        </member>
+        <member name="T:SmartDocs.Models.Auth.CanEditDocument.IsDocumentAuthorHandler">
+            <summary>
+            Policy Handler that determines if an application user is the author of a given document.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.Auth.CanEditDocument.IsDocumentAuthorHandler.#ctor(SmartDocs.Models.IDocumentRepository)">
+            <summary>
+            Creates a new instance of the handler
+            </summary>
+            <param name="repository">A <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        </member>
+        <member name="M:SmartDocs.Models.Auth.CanEditDocument.IsDocumentAuthorHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,SmartDocs.Models.Auth.CanEditDocument.CanEditDocumentRequirement)">
+            <summary>
+            Handles the Requirement
+            </summary>
+            <param name="context">An <see cref="T:Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext"/></param>
+            <param name="requirement">The <see cref="T:SmartDocs.Models.Auth.CanEditDocument.CanEditDocumentRequirement"/></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartDocs.Models.Auth.CanEditDocument.IsGlobalAdminForDocumentHandler">
+            <summary>
+            Policy Handler that determines if the application user attempting to edit a document is a Global Administrator.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.Auth.CanEditDocument.IsGlobalAdminForDocumentHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,SmartDocs.Models.Auth.CanEditDocument.CanEditDocumentRequirement)">
+            <summary>
+            Handles the Requirement
+            </summary>
+            <param name="context">An <see cref="T:Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext"/></param>
+            <param name="requirement">The <see cref="T:SmartDocs.Models.Auth.CanEditDocument.CanEditDocumentRequirement"/></param>
+            <returns>Success if the user is an admin, otherwise fail.</returns>
+        </member>
+        <member name="T:SmartDocs.Models.Auth.CanEditUser.CanEditUserRequirement">
+            <summary>
+            Requirement that sets policy to determine if an application User can edit User information.
+            </summary>
+        </member>
+        <member name="T:SmartDocs.Models.Auth.CanEditUser.IsEditingSelfHandler">
+            <summary>
+            Handler that determines if a User is attempting to Edit their own information.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.Auth.CanEditUser.IsEditingSelfHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,SmartDocs.Models.Auth.CanEditUser.CanEditUserRequirement)">
+            <summary>
+            Handles the requirement
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext"/></param>
+            <param name="requirement">The <see cref="T:SmartDocs.Models.Auth.CanEditUser.CanEditUserRequirement"/></param>
+            <returns>Success if the User is editing their own info, otherwise fails.</returns>
+        </member>
+        <member name="T:SmartDocs.Models.Auth.CanEditUser.IsGlobalAdminForUserHandler">
+            <summary>
+            Policy Handler that determines if the application user attempting to edit a user is a Global Administrator.
+            </summary>
+        </member>
+        <member name="M:SmartDocs.Models.Auth.CanEditUser.IsGlobalAdminForUserHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,SmartDocs.Models.Auth.CanEditUser.CanEditUserRequirement)">
+            <summary>
+            Handles the Requirement
+            </summary>
+            <param name="context">An <see cref="T:Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext"/></param>
+            <param name="requirement">The <see cref="!:CanEditDocumentRequirement"/></param>
+            <returns>Success if the user is an admin, otherwise fail.</returns>
         </member>
         <member name="T:SmartDocs.Models.DataInitializer">
             <summary>
@@ -1377,23 +1597,44 @@
             The <see cref="T:SmartDocs.Models.SmartJob"/>s.
             </value>
         </member>
-        <member name="P:SmartDocs.Models.SmartDocumentRepository.PPAs">
-            <summary>
-            Gets the PPAs.
-            </summary>
-            <value>
-            The <see cref="T:SmartDocs.Models.SmartDocument"/>s in the repo that are of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/>
-            </value>
-            <remarks>
-            This list will return only the PPA records that belong to the Repo's currentUser
-            </remarks>
-        </member>
         <member name="P:SmartDocs.Models.SmartDocumentRepository.Components">
             <summary>
             Gets the Components.
             </summary>
             <value>
             The <see cref="T:SmartDocs.Models.OrganizationComponent"/>s.
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.PerformanceAppraisalForms">
+            <summary>
+            Gets the <see cref="T:SmartDocs.Models.SmartDocument"/> of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/>.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartDocument"/>s in the repo that are of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PPA"/>
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.PerformanceAssessmentForms">
+            <summary>
+            Gets the <see cref="T:SmartDocs.Models.SmartDocument"/> of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/>.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartDocument"/>s in the repo that are of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.PAF"/>
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.AwardForms">
+            <summary>
+            Gets the <see cref="T:SmartDocs.Models.SmartDocument"/> of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.AwardForm"/>.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartDocument"/>s in the repo that are of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.AwardForm"/>
+            </value>
+        </member>
+        <member name="P:SmartDocs.Models.SmartDocumentRepository.JobDescriptionForms">
+            <summary>
+            Gets the <see cref="T:SmartDocs.Models.SmartDocument"/> of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.JobDescription"/>.
+            </summary>
+            <value>
+            The <see cref="T:SmartDocs.Models.SmartDocument"/>s in the repo that are of the type <see cref="F:SmartDocs.Models.SmartDocument.SmartDocumentType.JobDescription"/>
             </value>
         </member>
         <member name="M:SmartDocs.Models.SmartDocumentRepository.SaveJob(SmartDocs.Models.SmartJob)">
@@ -2695,14 +2936,6 @@
             Class constructor that requires an IEnumerable list of <see cref="T:SmartDocs.Models.SmartUser"/> as a parameter.
             </remarks>
             <param name="users">An IEnumerable list of <see cref="T:SmartDocs.Models.SmartUser"/>s.</param>
-        </member>
-        <member name="P:SmartDocs.OldModels.Jobs.JobDataXml">
-            <summary>
-            Gets or sets the job data XML via XElement.
-            </summary>
-            <value>
-            The job data XML in an XElement Object.
-            </value>
         </member>
         <member name="T:SmartDocs.Startup">
             <summary>

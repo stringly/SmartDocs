@@ -65,7 +65,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
         /// <param name="vm">A <see cref="PAFFormViewModel"/></param>
         public void UpdatePAF(PAFFormViewModel vm)
         {
-            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
+            SmartDocument toEdit = _repository.PerformanceAssessmentForms.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
             if (toEdit != null)
             {
                 toEdit.FormDataXml = ViewModelToXML(vm);

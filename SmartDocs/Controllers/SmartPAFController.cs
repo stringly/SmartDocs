@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using SmartDocs.Models;
 using SmartDocs.Models.SmartDocumentClasses;
 using SmartDocs.Models.Types;
@@ -14,7 +13,7 @@ namespace SmartDocs.Controllers
     /// <summary>
     /// Controller for <see cref="SmartDocument.SmartDocumentType.PAF"/> interactions
     /// </summary>
-    [Authorize(Roles = "User, Administrator")]
+    [Authorize(Policy = "IsUser")]
     public class SmartPAFController : Controller
     {
         private IDocumentRepository _repository;
@@ -35,26 +34,19 @@ namespace SmartDocs.Controllers
         /// <returns>An <see cref="ActionResult"/></returns>
         public ActionResult Create()
         {
-            if (User.HasClaim(x => x.Type == "UserId"))
-            {
-                // create a new, empty ViewModel
-                int currentUserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
-                PAFFormViewModel vm = new PAFFormViewModel(currentUserId);
-                vm.HydrateLists(_repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(), _repository.Components.ToList(), _repository.Users.Select(x => new UserListItem(x)).ToList());
-                ViewData["Title"] = "Create PAF";
-                return View(vm);
-            }
-            else
-            {
-                return RedirectToAction("AccessDenied", "Home");
-            }
+            // create a new, empty ViewModel
+            int currentUserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
+            PAFFormViewModel vm = new PAFFormViewModel(currentUserId);
+            vm.HydrateLists(_repository.Jobs.Select(x => new JobDescriptionListItem(x)).ToList(), _repository.Components.ToList(), _repository.Users.Select(x => new UserListItem(x)).ToList());
+            ViewData["Title"] = "Create PAF";
+            return View(vm);
         }
 
         /// <summary>
         /// Creates a <see cref="SmartDocument.SmartDocumentType.PPA"/> from the POSTed form data.
         /// </summary>
         /// <param name="form">The POSTed form data, bound to a <see cref="PAFFormViewModel"/></param>
-        /// <returns></returns>
+        /// <returns>An <see cref="ActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(
@@ -99,38 +91,26 @@ namespace SmartDocs.Controllers
         /// <remarks>This method displays a link that invokes the <see cref="HomeController.Download(int)"/> method.</remarks>
         /// <param name="id">The id of the newly generated <see cref="SmartDocument.SmartDocumentType.PAF"/></param>
         /// <returns>An <see cref="IActionResult"/></returns>
+        [Authorize(Policy = "CanEditDocument")]
         public IActionResult SaveSuccess(int id)
         {
             // this is a simple view, so use VB instead of a VM                        
-            SmartDocument doc = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
-            if (User.HasClaim(x => x.Type == "UserId"))
-            {                
-                int currentUserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
-                if (doc.AuthorUserId == currentUserId)
-                {
-                    ViewBag.PAFId = id;
-                    ViewBag.FileName = doc.FileName;
-                    ViewData["Title"] = "Success!";
-                    return View();
-                }                
-            }
-            else
-            {
-                return RedirectToAction("AccessDenied", "Home");
-            }
-            return RedirectToAction("NotAuthorized", "Home");
-            
-
+            SmartDocument doc = _repository.PerformanceAssessmentForms.FirstOrDefault(x => x.DocumentId == id);
+            ViewBag.PAFId = id;
+            ViewBag.FileName = doc.FileName;
+            ViewData["Title"] = "Success!";
+            return View();                         
         }
         /// <summary>
         /// GET: SmartPAF/Edit?id="" 
         /// </summary>
         /// <param name="id">The identifier of the <see cref="SmartDocument.SmartDocumentType.PAF"/> to edit.</param>
         /// <returns>An <see cref="ActionResult"/></returns>
+        [Authorize(Policy = "CanEditDocument")]
         public ActionResult Edit(int id)
         {
             // pull the PAF from the repo
-            SmartDocument paf = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            SmartDocument paf = _repository.PerformanceAssessmentForms.FirstOrDefault(x => x.DocumentId == id);
             SmartPAFFactory factory = new SmartPAFFactory(_repository, paf);
             // pass the PPA to the factory method takes a SmartPPA parameter
             PAFFormViewModel vm = factory.GetViewModelFromXML();
@@ -146,6 +126,7 @@ namespace SmartDocs.Controllers
         /// <param name="id">The identifier for the <see cref="SmartDocument.SmartDocumentType.PPA"/> to be edited.</param>
         /// <param name="form">The POSTed form data, bound to a <see cref="PPAFormViewModel"/>.</param>
         /// <returns>An <see cref="ActionResult"/></returns>
+        [Authorize(Policy = "CanEditDocument")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, [Bind(
@@ -199,68 +180,40 @@ namespace SmartDocs.Controllers
         /// <summary>
         /// Shows the view to confirm deletion of a <see cref="SmartDocument.SmartDocumentType.PAF"/>.
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="SmartDocument.SmartDocumentType.PAF"/>.</param>
+        /// <param name="id">The <see cref="SmartDocument.DocumentId"/> of the <see cref="SmartDocument.SmartDocumentType.PAF"/> to be deleted.</param>
         /// <returns>An <see cref="IActionResult"/></returns>
-        public IActionResult Delete(int? id)
+        [Authorize(Policy = "CanEditDocument")]
+        public IActionResult Delete(int id)
         {
-            // query string is empty, return 404
-            if (id == null)
+            var toDelete = _repository.PerformanceAssessmentForms.FirstOrDefault(m => m.DocumentId == id);
+            if (toDelete == null)
             {
+                // no SmartDoc could be found with the provided id
                 return NotFound();
             }
-            if (User.HasClaim(x => x.Type == "UserId"))
-            {
-                int currentUserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
-                // retrieve the SmartPPA from the repo
-                var toDelete = _repository.Documents.FirstOrDefault(m => m.DocumentId == id);
-                if (toDelete == null)
-                {
-                    // no SmartDoc could be found with the provided id
-                    return NotFound();
-                }
-                if (toDelete.AuthorUserId == currentUserId)
-                {
-                    // return the View (which uses the Domain Object as a model)
-                    ViewData["Title"] = "Delete PAF";
-                    return View(toDelete);
-                }
-            }
-            else
-            {
-                return RedirectToAction("AccessDenied", "Home");
-            }
-            return RedirectToAction("NotAuthorized", "Home");
+            // return the View (which uses the Domain Object as a model)
+            ViewData["Title"] = "Delete PAF";
+            return View(toDelete);                
         }
 
         /// <summary>
         /// Deletes <see cref="SmartDocument.SmartDocumentType.PAF"/> with the provided ID.
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="SmartDocument.SmartDocumentType.PAF"/> to be deleted.</param>
+        /// <param name="id">The <see cref="SmartDocument.DocumentId"/> of the <see cref="SmartDocument.SmartDocumentType.PAF"/> to be deleted.</param>
         /// <returns>An <see cref="SmartDocument.SmartDocumentType.PAF"/></returns>
+        [Authorize(Policy = "CanEditDocument")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
             // retrieve the SmartPPA from the repo
-            var toDelete = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            var toDelete = _repository.PerformanceAssessmentForms.FirstOrDefault(x => x.DocumentId == id);
             if (toDelete == null)
             {
                 return NotFound();
             }
-            if (User.HasClaim(x => x.Type == "UserId"))
-            {
-                int currentUserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
-                if (toDelete.AuthorUserId == currentUserId)
-                {
-                    _repository.RemoveSmartDoc(toDelete);
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            else
-            {
-                return RedirectToAction("AccessDenied", "Home");
-            }
-            return RedirectToAction("NotAuthorized", "Home");
+            _repository.RemoveSmartDoc(toDelete);
+            return RedirectToAction("Index", "Home");
 
         }
     }

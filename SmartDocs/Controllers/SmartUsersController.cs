@@ -1,26 +1,23 @@
-﻿using System;
-using System.Linq;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
 using SmartDocs.Models.ViewModels;
+using System.Linq;
 
 namespace SmartDocs.Controllers
 {
     /// <summary>
-    /// Controller for <see cref="T:SmartDocs.Models.SmartUser"/> interactions
+    /// Controller for <see cref="SmartUser"/> interactions
     /// </summary>
-    /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
-    
+    /// <seealso cref="Controller" />    
     public class SmartUsersController : Controller
     {
         private IDocumentRepository _repo;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDocs.Controllers.SmartUsersController"/> class.
+        /// Initializes a new instance of the <see cref="SmartUsersController"/> class.
         /// </summary>
-        /// <param name="repo">A <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        /// <param name="repo">An implementation of <see cref="IDocumentRepository"/></param>
         public SmartUsersController(IDocumentRepository repo)
         {
             _repo = repo;
@@ -33,10 +30,11 @@ namespace SmartDocs.Controllers
         /// This is an admin only view.
         /// </remarks>
         /// <param name="searchString">The search string that limits the list.</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> list of users in the repo.</returns>
-        [Authorize(Roles = "Administrator")]
+        /// <returns>An <see cref="IActionResult"/> list of users in the repo.</returns>      
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Index(string searchString)
         {
+            // TODO: Make this a proper sorting index
             UserIndexListViewModel vm = new UserIndexListViewModel { CurrentFilter = searchString };
             
             // if the searchstring isn't empty, sort the user list against the string
@@ -61,8 +59,8 @@ namespace SmartDocs.Controllers
         /// <remarks>
         /// View that allows Admin to create a new SmartUser
         /// </remarks>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        [Authorize(Roles = "Administrator")]
+        /// <returns>An <see cref="IActionResult"/></returns>  
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Create()
         {
             ViewData["Title"] = "Create User";
@@ -72,11 +70,11 @@ namespace SmartDocs.Controllers
         /// <summary>
         /// POST: SmartUsers/Create
         /// </summary>
-        /// <param name="smartUser">The POSTed form data, bound to a <see cref="T:SmartDocs.Models.SmartUser"/></param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        /// <param name="smartUser">The POSTed form data, bound to a <see cref="SmartUser"/></param>
+        /// <returns>An <see cref="IActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Create([Bind("UserId,BlueDeckId,LogonName,DisplayName")] SmartUser smartUser)
         {
             // check if POSTed data is valid
@@ -91,40 +89,19 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// GET: SmartUsers/Edit?id=""
+        /// GET: SmartUsers/Edit?id={0}
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/></param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        [Authorize(Roles = "User, Administrator")]
-        public IActionResult Edit(int? id)
-        {            
-            SmartUser smartUser = null;
-            if (id == null)
+        /// <param name="id">The <see cref="SmartUser.UserId"/> of the <see cref="SmartUser"/> to edit.</param>
+        /// <returns>An <see cref="IActionResult"/></returns>
+        [Authorize(Policy = "CanEditUser")]
+        public IActionResult Edit(int id)
+        {
+            // retrieve the SmartUser from the repo
+            SmartUser smartUser = _repo.Users.FirstOrDefault(x => x.UserId == id);
+            if (smartUser == null)
             {
-                // querystring is null, return 404
+                // no SmartUser with the given id exists in the repo
                 return NotFound();
-            }
-            if (User.IsInRole("Administrator"))
-            {
-                // retrieve the SmartUser from the repo
-                smartUser = _repo.Users.FirstOrDefault(x => x.UserId == id);
-                if (smartUser == null)
-                {
-                    // no SmartUser with the given id exists in the repo
-                    return NotFound();
-                }
-            }
-            else
-            {                
-                if (User.HasClaim(x => x.Type == "UserId"))
-                {
-                    int UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
-                    smartUser = _repo.Users.FirstOrDefault(x => x.UserId == UserId);
-                }
-            }
-            if(smartUser == null)
-            {
-                return RedirectToAction("Not Authorized", "Home");
             }
             // return the view
             ViewData["Title"] = "Edit User";
@@ -133,14 +110,14 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// POST: SmartUsers/Edit?id=""
+        /// POST: SmartUsers/Edit?id={0}
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/> to edit.</param>
-        /// <param name="smartUser">The POSTed form data, bound to a <see cref="SmartDocs.Models.SmartUser"/> object.</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        /// <param name="id">The <see cref="SmartUser.UserId"/> of the <see cref="SmartUser"/> to edit.</param>
+        /// <param name="smartUser">The POSTed form data, bound to a <see cref="SmartUser"/> object.</param>
+        /// <returns>An <see cref="IActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "User, Administrator")]
+        [Authorize(Policy = "CanEditUser")]
         public IActionResult Edit(int id, [Bind("UserId,DisplayName")] SmartUser smartUser)
         {
             // if querystring id doesn't match the POSTed form UserId
@@ -165,9 +142,9 @@ namespace SmartDocs.Controllers
         /// <summary>
         /// GET: SmartUsers/Delete?id=""
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        [Authorize(Roles = "Administrator")]
+        /// <param name="id">The <see cref="SmartUser.UserId"/> of the <see cref="SmartUser"/> to delete.</param>
+        /// <returns>An <see cref="IActionResult"/></returns>
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -190,11 +167,11 @@ namespace SmartDocs.Controllers
         /// <summary>
         /// POST: SmartUsers/Delete?id=""
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="SmartDocs.Models.SmartUser"/> to be deleted.</param>
+        /// <param name="id">The <see cref="SmartUser.UserId"/> of the <see cref="SmartUser"/> to delete.</param>
         /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult DeleteConfirmed(int id)
         {
             // retrieve the SmartUser from the repo
@@ -206,9 +183,9 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// Determines if a <see cref="T:SmartDocs.Models.SmartUser"/> exists in the repo.
+        /// Determines if a <see cref="SmartUser"/> exists in the repo.
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/>.</param>
+        /// <param name="id">The <see cref="SmartUser.UserId"/> of the <see cref="SmartUser"/> to delete.</param>
         /// <returns></returns>
         private bool SmartUserExists(int id)
         {

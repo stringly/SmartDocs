@@ -52,23 +52,41 @@ namespace SmartDocs.Models
         public IEnumerable<SmartJob> Jobs => context.Jobs.OrderBy(x => x.JobName);
 
         /// <summary>
-        /// Gets the PPAs.
-        /// </summary>
-        /// <value>
-        /// The <see cref="SmartDocument"/>s in the repo that are of the type <see cref="SmartDocument.SmartDocumentType.PPA"/>
-        /// </value>
-        /// <remarks>
-        /// This list will return only the PPA records that belong to the Repo's currentUser
-        /// </remarks>
-        public IEnumerable<SmartDocument> PPAs => context.Documents.Include(y => y.Template).Include(z => z.Author).Where(x => x.Type == SmartDocument.SmartDocumentType.PPA);
-
-        /// <summary>
         /// Gets the Components.
         /// </summary>
         /// <value>
         /// The <see cref="OrganizationComponent"/>s.
         /// </value>
         public IEnumerable<OrganizationComponent> Components => context.Components;
+
+        /// <summary>
+        /// Gets the <see cref="SmartDocument"/> of the type <see cref="SmartDocument.SmartDocumentType.PPA"/>.
+        /// </summary>
+        /// <value>
+        /// The <see cref="SmartDocument"/>s in the repo that are of the type <see cref="SmartDocument.SmartDocumentType.PPA"/>
+        /// </value>
+        public IEnumerable<SmartDocument> PerformanceAppraisalForms => context.Documents.Include(y => y.Template).Include(z => z.Author).Where(x => x.Type == SmartDocument.SmartDocumentType.PPA);
+        /// <summary>
+        /// Gets the <see cref="SmartDocument"/> of the type <see cref="SmartDocument.SmartDocumentType.PAF"/>.
+        /// </summary>
+        /// <value>
+        /// The <see cref="SmartDocument"/>s in the repo that are of the type <see cref="SmartDocument.SmartDocumentType.PAF"/>
+        /// </value>
+        public IEnumerable<SmartDocument> PerformanceAssessmentForms => context.Documents.Include(y => y.Template).Include(z => z.Author).Where(x => x.Type == SmartDocument.SmartDocumentType.PAF);
+        /// <summary>
+        /// Gets the <see cref="SmartDocument"/> of the type <see cref="SmartDocument.SmartDocumentType.AwardForm"/>.
+        /// </summary>
+        /// <value>
+        /// The <see cref="SmartDocument"/>s in the repo that are of the type <see cref="SmartDocument.SmartDocumentType.AwardForm"/>
+        /// </value>
+        public IEnumerable<SmartDocument> AwardForms => context.Documents.Include(y => y.Template).Include(z => z.Author).Where(x => x.Type == SmartDocument.SmartDocumentType.AwardForm);
+        /// <summary>
+        /// Gets the <see cref="SmartDocument"/> of the type <see cref="SmartDocument.SmartDocumentType.JobDescription"/>.
+        /// </summary>
+        /// <value>
+        /// The <see cref="SmartDocument"/>s in the repo that are of the type <see cref="SmartDocument.SmartDocumentType.JobDescription"/>
+        /// </value>
+        public IEnumerable<SmartDocument> JobDescriptionForms => context.Documents.Include(y => y.Template).Include(z => z.Author).Where(x => x.Type == SmartDocument.SmartDocumentType.JobDescription);
 
         /// <summary>
         /// Saves/Updates the <see cref="SmartJob"/>.

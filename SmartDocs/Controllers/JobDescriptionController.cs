@@ -1,85 +1,199 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
 using SmartDocs.Models.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartDocs.Controllers
 {
     /// <summary>
     /// Controller for "Job Description" views interactions
     /// </summary>
-    /// <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
-    [Authorize(Roles = "User, Administrator")]
+    /// <seealso cref="Controller" />    
     public class JobDescriptionController : Controller
-    {        
+    {
         private IDocumentRepository _repository;
-        public int PageSize = 15;
-        
+        private int PageSize = 15;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="JobDescriptionController"/> class.
         /// </summary>
-        /// <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices"/></remarks>
-        /// <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
+        /// <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="ConfigureServices"/></remarks>
+        /// <param name="repo">An <see cref="IDocumentRepository"/></param>
         public JobDescriptionController(IDocumentRepository repo)
         {
             _repository = repo;
         }
 
         /// <summary>
-        /// Shows the Index view.
+        /// Returns an Index list of all Job Descriptions in the database.
         /// </summary>
-        /// <remarks>This is a list of all the current Job Descriptions in the database. It includes links to Add/Edit/Delete. This is an administrative view.
-        /// A User-viewable list of Jobs is returned by <see cref="UserIndex"/>
+        /// <remarks>
+        /// This view includes links to Create/Edit/Delete Job Descriptions, and is an administrator-level view. Users can see the Index via GET/UserIndex
         /// </remarks>
-        /// <seealso cref="JobDescriptionListViewModel"/>
-        /// <seealso cref="JobDescriptionListViewModeltem"/>
+        /// <param name="sortOrder">An optional string to sort the result list.</param>
+        /// <param name="searchString">An optional string to search and filter the Job Description Names in the result list.</param>
+        /// <param name="SelectedRank">An optional string parameter that correspondes to a rank as it appears in the XMLData of a Job Description.</param>
+        /// <param name="SelectedGrade">An optional string parameter that correspondes to a grade as it appears in the XMLData of a Job Description.</param>
+        /// <param name="page">An optional paging index. Defaults to 1.</param>
         /// <returns>An <see cref="IActionResult"/></returns>
-        public IActionResult Index(string currentSort, string currentFilter, string SelectedRank, string SelectedGrade, int page = 1)
-        {   
-            JobDescriptionListViewModel vm = new JobDescriptionListViewModel
+        [Authorize(Policy = "IsGlobalAdmin")]
+        public IActionResult Index(string sortOrder, string searchString, string SelectedRank, string SelectedGrade, int page = 1)
+        {
+            // init the VM class
+            JobDescriptionListViewModel vm = new JobDescriptionListViewModel();
+            // set the VM properties to the parameters
+            vm.CurrentFilter = searchString;
+            vm.CurrentSort = sortOrder;
+            vm.SelectedGrade = SelectedGrade;
+            vm.SelectedRank = SelectedRank;
+            // set the sorts to the opposite of the current sortOrder to facilitate building sorting hyperlinks
+            vm.GradeSort = String.IsNullOrEmpty(sortOrder) ? "grade_desc" : "";
+            vm.NameSort = sortOrder == "JobName" ? "jobName_desc" : "JobName";
+            vm.RankSort = sortOrder == "Rank" ? "rank_desc" : "Rank";
+            // lower any search string text to facilitate comparison.
+            string lowerSearchString = "";
+            if (!String.IsNullOrEmpty(searchString))
             {
-                Jobs = _repository.Jobs.Select(x => new JobDescriptionListViewModeltem(x)).ToList()
-            };
+                char[] arr = searchString.ToCharArray();
+                arr = Array.FindAll<char>(arr, (c => (char.IsLetterOrDigit(c)
+                                  || char.IsWhiteSpace(c)
+                                  || c == '-')));
+                lowerSearchString = new string(arr);
+                lowerSearchString = lowerSearchString.ToLower();
+            }
+            // Query for documents that match the provided parameters, if any, and convert them to List Items
+            vm.Jobs = _repository.Jobs.Where(x => (String.IsNullOrEmpty(SelectedRank) || x.JobDataXml.Element("Rank").Value == SelectedRank)
+                && (String.IsNullOrEmpty(SelectedGrade) || x.JobDataXml.Element("Grade").Value == SelectedGrade)
+                && (String.IsNullOrEmpty(searchString) || x.JobName.ToLower().Contains(lowerSearchString)))
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToList().ConvertAll(x => new JobDescriptionListViewModeltem(x));
+            // Separate Query to determine total number of matching documents, as the list above is Skip().Take()
+            int totalItems = _repository.Jobs.Where(x => (String.IsNullOrEmpty(SelectedRank) || x.JobDataXml.Element("Rank").Value == SelectedRank)
+                && (String.IsNullOrEmpty(SelectedGrade) || x.JobDataXml.Element("Grade").Value == SelectedGrade)
+                && (String.IsNullOrEmpty(searchString) || x.JobName.ToLower().Contains(lowerSearchString)))
+                .Count();
+            // Sort the list according to the provided sorting parameter, if any. Defaults to order by ascending Grade if no sorting parameter is present.
+            switch (sortOrder)
+            {
+                case "grade_desc":
+                    vm.Jobs = vm.Jobs.OrderByDescending(x => x.Grade).ToList();
+                    break;
+                case "jobName_desc":
+                    vm.Jobs = vm.Jobs.OrderByDescending(x => x.JobName).ToList();
+                    break;
+                case "JobName":
+                    vm.Jobs = vm.Jobs.OrderBy(x => x.JobName).ToList();
+                    break;
+                case "rank_desc":
+                    vm.Jobs = vm.Jobs.OrderByDescending(x => x.Rank).ToList();
+                    break;
+                case "Rank":
+                    vm.Jobs = vm.Jobs.OrderBy(x => x.Rank).ToList();
+                    break;
+                default:
+                    vm.Jobs = vm.Jobs.OrderBy(x => x.Grade).ToList();
+                    break;
+            }
+            // Set the PagingInfo to facilitate page control
             vm.PagingInfo = new PagingInfo
             {
                 CurrentPage = page,
-                TotalItems = vm.Jobs.Count(),
+                TotalItems = totalItems,
                 ItemsPerPage = PageSize
             };
-            vm.HydrateLists(_repository.Jobs.Select(x => x.JobDataXml.Element("Rank").Value).Distinct().ToList(), _repository.Jobs.Select(x => x.JobDataXml.Element("Grade").Value).Distinct().ToList());            
+            // Populate the VM's lists to populate the search form drop downs
+            vm.HydrateLists(_repository.Jobs.Select(x => x.JobDataXml.Element("Rank").Value).Distinct().ToList(), _repository.Jobs.Select(x => x.JobDataXml.Element("Grade").Value).Distinct().ToList());
             ViewData["Title"] = "Job Descriptions List";
             ViewData["ActiveNavBarMenuLink"] = "Job Descriptions";
             return View(vm);
         }
 
         /// <summary>
-        /// Shows the User Index view.
+        /// Returns an Index list of all Job Descriptions in the database.
         /// </summary>
-        /// <remarks>This shows a list of all current Job Descriptions in the database. It is accessible to non-admin users.</remarks>'
-        /// <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionListViewModel"/>
-        /// <seealso cref="T:SmartDocs.Models.Types.JobDescriptionListViewModelItem"/>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        public IActionResult UserIndex()
+        /// <remarks>
+        /// This view includes a link to view the details of a Job Description.
+        /// </remarks>
+        /// <param name="sortOrder">An optional string to sort the result list.</param>
+        /// <param name="searchString">An optional string to search and filter the Job Description Names in the result list.</param>
+        /// <param name="SelectedRank">An optional string parameter that correspondes to a rank as it appears in the XMLData of a Job Description.</param>
+        /// <param name="SelectedGrade">An optional string parameter that correspondes to a grade as it appears in the XMLData of a Job Description.</param>
+        /// <param name="page">An optional paging index. Defaults to 1.</param>
+        /// <returns>An <see cref="IActionResult"/></returns>
+        [AllowAnonymous]
+        public IActionResult UserIndex(string sortOrder, string searchString, string SelectedRank, string SelectedGrade, int page = 1)
         {
-            JobDescriptionListViewModel vm = new JobDescriptionListViewModel
+            JobDescriptionListViewModel vm = new JobDescriptionListViewModel();
+            vm.CurrentFilter = searchString;
+            vm.CurrentSort = sortOrder;
+            vm.SelectedGrade = SelectedGrade;
+            vm.SelectedRank = SelectedRank;
+            vm.GradeSort = String.IsNullOrEmpty(sortOrder) ? "grade_desc" : "";
+            vm.NameSort = sortOrder == "JobName" ? "jobName_desc" : "JobName";
+            vm.RankSort = sortOrder == "Rank" ? "rank_desc" : "Rank";
+            string lowerSearchString = "";
+            if (!String.IsNullOrEmpty(searchString))
             {
-                Jobs = _repository.Jobs.Select(x => new JobDescriptionListViewModeltem(x)).ToList()
+                char[] arr = searchString.ToCharArray();
+                arr = Array.FindAll<char>(arr, (c => (char.IsLetterOrDigit(c)
+                                  || char.IsWhiteSpace(c)
+                                  || c == '-')));
+                lowerSearchString = new string(arr);
+                lowerSearchString = lowerSearchString.ToLower();
+            }
+            vm.Jobs = _repository.Jobs.Where(x => (String.IsNullOrEmpty(SelectedRank) || x.JobDataXml.Element("Rank").Value == SelectedRank)
+                && (String.IsNullOrEmpty(SelectedGrade) || x.JobDataXml.Element("Grade").Value == SelectedGrade)
+                && (String.IsNullOrEmpty(searchString) || x.JobName.ToLower().Contains(lowerSearchString)))
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToList().ConvertAll(x => new JobDescriptionListViewModeltem(x));
+            int totalItems = _repository.Jobs.Where(x => (String.IsNullOrEmpty(SelectedRank) || x.JobDataXml.Element("Rank").Value == SelectedRank)
+                && (String.IsNullOrEmpty(SelectedGrade) || x.JobDataXml.Element("Grade").Value == SelectedGrade)
+                && (String.IsNullOrEmpty(searchString) || x.JobName.ToLower().Contains(lowerSearchString)))
+                .Count();
+            switch (sortOrder)
+            {
+                case "grade_desc":
+                    vm.Jobs = vm.Jobs.OrderByDescending(x => x.Grade).ToList();
+                    break;
+                case "jobName_desc":
+                    vm.Jobs = vm.Jobs.OrderByDescending(x => x.JobName).ToList();
+                    break;
+                case "JobName":
+                    vm.Jobs = vm.Jobs.OrderBy(x => x.JobName).ToList();
+                    break;
+                case "rank_desc":
+                    vm.Jobs = vm.Jobs.OrderByDescending(x => x.Rank).ToList();
+                    break;
+                case "Rank":
+                    vm.Jobs = vm.Jobs.OrderBy(x => x.Rank).ToList();
+                    break;
+                default:
+                    vm.Jobs = vm.Jobs.OrderBy(x => x.Grade).ToList();
+                    break;
+            }
+            vm.PagingInfo = new PagingInfo
+            {
+                CurrentPage = page,
+                TotalItems = totalItems,
+                ItemsPerPage = PageSize
             };
-
+            vm.HydrateLists(_repository.Jobs.Select(x => x.JobDataXml.Element("Rank").Value).Distinct().ToList(), _repository.Jobs.Select(x => x.JobDataXml.Element("Grade").Value).Distinct().ToList());
+            ViewData["Title"] = "Job Descriptions List";
+            ViewData["ActiveNavBarMenuLink"] = "Job Descriptions";
             return View(vm);
         }
-
         /// <summary>
-        /// GET: JobDescription/Edit?id=""
+        /// Returns a view that allows a User to edit an existing Job Description
         /// </summary>
-        /// <remarks>Shows a view to allow editing an existing Job Description.</remarks>
-        /// <param name="id">The id of the <see cref="T:SmartDocs.Models.SmartJob"/> to edit.</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        [Authorize(Roles = "Administrator")]
+        /// <param name="id">The <see cref="SmartJob.JobId"/> of the Job Description being edited.</param>
+        /// <returns>An <see cref="IActionResult"/></returns>
+        [HttpGet]
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Edit(int id)
         {
             SmartJob job = _repository.Jobs.FirstOrDefault(j => j.JobId == id);
@@ -89,14 +203,14 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// POST: JobDescription/Edit
+        /// Handles the POSTed form data from the GET/Edit view.
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartJob"/> that the user is attempting to edit.</param>
-        /// <param name="form">The POSTed form data bound to a <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/></param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        /// <param name="id">The <see cref="SmartJob.JobId"/> of the Job Description being edited.</param>
+        /// <param name="form">The user-provided form data, bound to a <see cref="JobDescriptionViewModel"/></param>
+        /// <returns>A <see cref="IActionResult"/></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Edit(int id, [Bind("JobId,WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
         {
             if (id != form.JobId)
@@ -133,12 +247,11 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// GET: JobDescription/Create
+        /// Returns a view that allows the User to create a new Job Description.
         /// </summary>
-        /// <remarks>Shows a view to allow creation of a Job Description.</remarks>        
-        /// <seealso cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        [Authorize(Roles = "Administrator")]
+        /// <returns>A <see cref="IActionResult"/></returns>
+        [HttpGet]
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Create()
         {
             JobDescriptionViewModel vm = new JobDescriptionViewModel();
@@ -147,13 +260,13 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// POST: JobDescription/Create
-        /// </summary>        
-        /// <param name="form">The POSTed form data bound to a <see cref="T:SmartDocs.Models.ViewModels.JobDescriptionViewModel"/></param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        /// Handles the POSTed form data and creates a new Job Description.
+        /// </summary>
+        /// <param name="form">The user-provided form data, bound to a <see cref="JobDescriptionViewModel"/></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Create([Bind("WorkingTitle,Grade,WorkingHours,Rank,Categories")] JobDescriptionViewModel form)
         {
             if (!ModelState.IsValid)
@@ -183,11 +296,11 @@ namespace SmartDocs.Controllers
             }
         }
         /// <summary>
-        /// Shows the Details view for a Job Description.
+        /// Returns a view that shows details for a specific Job Description
         /// </summary>
-        /// <remarks>This view shows full details for a Job Description. It only displays the information; no CRUD is available via this view.</remarks>
-        /// <param name="id">The identifier of the SmartJob</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        /// <param name="id">The <see cref="SmartJob.JobId"/> of the desired Job Description.</param>
+        /// <returns>An <see cref="IActionResult"/></returns>
+        [Authorize(Policy = "IsUser")]
         public IActionResult ShowJobDetails(int? id)
         {
             if (id == null)
@@ -211,12 +324,13 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// Show the default Details page for the Job Description Object.
+        /// Returns a view that shows details for a specific Job Description
         /// </summary>
-        /// <remarks>This is deprecated.</remarks>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.JobDescription"/> .</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        public IActionResult Details(int? id)
+        /// <param name="id">The <see cref="SmartJob.JobId"/> of the desired Job Description.</param>
+        /// <param name="returnUrl">An optional return Url String to aid in navigation.</param>
+        /// <returns>An <see cref="IActionResult"/></returns>
+        [Authorize(Policy = "IsUser")]
+        public IActionResult Details(int? id, string returnUrl)
         {
             if (id == null)
             {
@@ -230,23 +344,19 @@ namespace SmartDocs.Controllers
             }
             JobDescription vmJob = new JobDescription(SmartJob);
             ViewData["Title"] = "Job Description Details";
+            ViewBag.ReturnUrl = returnUrl;
             return View(vmJob);
         }
 
         /// <summary>
-        /// GET: JobDescription/Delete?id=""
+        /// Returns a view to prompt the user to confirm that a specific Job Description will be deleted.
         /// </summary>
-        /// <remarks>This shows a view that asks the user to confirm deletion of the Job Description</remarks>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartJob"/> to be deleted.</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
-        [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(int? id)
+        /// <param name="id">The <see cref="SmartJob.JobId"/> of the Job Description to be deleted.</param>
+        /// <returns></returns>
+        [Authorize(Policy = "IsGlobalAdmin")]
+        public IActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            // TODO: Delete/JobDescription should probably be soft delete, or documents already generated will be borked.
             var SmartJob = _repository.Jobs
                 .FirstOrDefault(m => m.JobId == id);
             if (SmartJob == null)
@@ -258,14 +368,13 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// POST: JobDescription/Delete
+        /// Deletes a Job Description and redirects the User.
         /// </summary>
-        /// <remarks>Deletes the <see cref="T:SmartDocs.Models.SmartJob"/> with the provided id.</remarks>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartJob"/> to be deleted.</param>
-        /// <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/></returns>
+        /// <param name="id">The <see cref="SmartJob.JobId"/> of the Job Description to delete.</param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult DeleteConfirmed(int id)
         {
             var smartJob = _repository.Jobs.FirstOrDefault(x => x.JobId == id);
@@ -281,10 +390,10 @@ namespace SmartDocs.Controllers
         }
 
         /// <summary>
-        /// Determines if a <see cref="T:SmartDocs.Models.SmartUser"/> with the provided id exists in the DB.
+        /// Determines if a <see cref="SmartJob"/> with the provided <see cref="SmartJob.JobId"/> exists in the database.
         /// </summary>
-        /// <param name="id">The identifier of the <see cref="T:SmartDocs.Models.SmartUser"/></param>
-        /// <returns>True if the user exists, otherwise false</returns>
+        /// <param name="id"></param>
+        /// <returns>True if a <see cref="SmartJob"/> with the provided <see cref="SmartJob.JobId"/> exists, otherwise false.</returns>
         private bool SmartJobExists(int id)
         {
             return _repository.Jobs.Any(e => e.JobId == id);

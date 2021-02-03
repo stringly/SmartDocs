@@ -1,13 +1,9 @@
 ﻿@model SmartDocs.Models.ViewModels.JobDescriptionListViewModel
 @{
     Layout = "_Layout";
-    bool IsAdmin = User.IsInRole("Administrator");
 }
 <h2>Current Job Descriptions</h2>
-@if (IsAdmin)
-{
-    <a asp-action="Create">Add New</a>
-}
+<a asp-action="Create">Add New</a>
 <hr />
 <div class="row">
     <div class="col-sm-12">
@@ -51,13 +47,43 @@
             </tr>
             <tr>
                 <th>
-                    Job Name
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.NameSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedRank="@Model.SelectedRank" asp-route-selectedGrade="@Model.SelectedGrade" title="Sort by Job Name">
+                        Job Name
+                        @if (Model.CurrentSort == "jobName_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>                    
                 </th>
                 <th>
-                    Rank
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.RankSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedRank="@Model.SelectedRank" asp-route-selectedGrade="@Model.SelectedGrade" title="Sort by Rank">
+                        Rank
+                        @if (Model.CurrentSort == "rank_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>                    
                 </th>
                 <th>
-                    Grade
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.GradeSort" asp-route-searchString="@Model.CurrentFilter" asp-route-selectedRank="@Model.SelectedRank" asp-route-selectedGrade="@Model.SelectedGrade" title="Sort by Grade">
+                        Grade
+                        @if (Model.CurrentSort == "grade_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>                    
                 </th>
                 <th></th>
             </tr>
@@ -76,16 +102,9 @@
                         @item.Grade
                     </td>
                     <td>
-                        @if (IsAdmin)
-                        {
-                            <a asp-action="Details" asp-route-id="@item.JobId">Details</a> @:|
-                            <a asp-action="Edit" asp-route-id="@item.JobId">Edit</a> @:|
-                            <a asp-action="Delete" asp-route-id="@item.JobId">Delete</a>
-                        }
-                        else
-                        {
-                            <a asp-action="Details" asp-route-id="@item.JobId">Details</a>
-                        }
+                        <a asp-action="Details" asp-route-id="@item.JobId" asp-route-returnUrl="Index@(!String.IsNullOrEmpty(Context.Request.QueryString.ToString()) ? $"{Context.Request.QueryString}" : "")">Details</a> |
+                        <a asp-action="Edit" asp-route-id="@item.JobId">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.JobId">Delete</a>                        
                     </td>
                 </tr>
             }
