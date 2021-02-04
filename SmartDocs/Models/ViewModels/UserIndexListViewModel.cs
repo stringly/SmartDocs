@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SmartDocs.Models.ViewModels
 {
     /// <summary>
     /// View Model class used to display a list of <see cref="T:SmartDocs.Models.SmartUser"/>
     /// </summary>
-    public class UserIndexListViewModel
+    public class UserIndexListViewModel : IndexViewModelBase
     {
         /// <summary>
         /// Gets or sets the list of <see cref="T:SmartDocs.Models.SmartUser"/>.
@@ -17,22 +14,22 @@ namespace SmartDocs.Models.ViewModels
         /// The users.
         /// </value>
         public IEnumerable<SmartUser> Users { get; set; }
-
         /// <summary>
-        /// Gets or sets the current filter string being applied to the list.
+        /// Optional string that sorts the list by the <see cref="SmartUser.BlueDeckId"/>
         /// </summary>
-        /// <value>
-        /// The current filter.
-        /// </value>
-        public string CurrentFilter { get; set; }
-
+        public string BlueDeckIdSort { get; set; }
         /// <summary>
-        /// Gets or sets the current sort string being applied to the list.
+        /// Optional string that sorts the list by the <see cref="SmartUser.UserId"/>
         /// </summary>
-        /// <value>
-        /// The current sort.
-        /// </value>
-        public string CurrentSort { get; set; }
+        public string UserIdSort { get; set; }
+        /// <summary>
+        /// Optional string that sorts the list by the <see cref="SmartUser.DisplayName"/>
+        /// </summary>
+        public string DisplayNameSort { get; set; }
+        /// <summary>
+        /// Optional string that sorts the list by the <see cref="SmartUser.LDAPName"/>
+        /// </summary>
+        public string LDAPNameSort { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.UserIndexListViewModel"/> class.

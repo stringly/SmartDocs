@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
 using SmartDocs.Models.ViewModels;
+using System;
 using System.Linq;
 
 namespace SmartDocs.Controllers
@@ -13,6 +14,7 @@ namespace SmartDocs.Controllers
     public class SmartUsersController : Controller
     {
         private IDocumentRepository _repo;
+        private int PageSize = 25;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SmartUsersController"/> class.
@@ -32,19 +34,42 @@ namespace SmartDocs.Controllers
         /// <param name="searchString">The search string that limits the list.</param>
         /// <returns>An <see cref="IActionResult"/> list of users in the repo.</returns>      
         [Authorize(Policy = "IsGlobalAdmin")]
-        public IActionResult Index(string searchString)
+        public IActionResult Index(string searchString, string sortOrder, int page = 1)
         {
             // TODO: Make this a proper sorting index
-            UserIndexListViewModel vm = new UserIndexListViewModel { CurrentFilter = searchString };
+            UserIndexListViewModel vm = new UserIndexListViewModel();
+            vm.CurrentFilter = searchString;
+            vm.CurrentSort = sortOrder;
+            vm.LDAPNameSort = String.IsNullOrEmpty(sortOrder) ? "LDAPName_desc" : "";
+            vm.BlueDeckIdSort = sortOrder == "BlueDeckId" ? "BlueDeckId" : "blueDeckId_Desc";
+            vm.UserIdSort = sortOrder == "" // TODO: HERE
             
-            // if the searchstring isn't empty, sort the user list against the string
-            if (!string.IsNullOrEmpty(searchString))
+            string lowerSearchString = "";
+            if (!String.IsNullOrEmpty(searchString))
             {
-                vm.Users = _repo.Users.Where(x => x.DisplayName.Contains(searchString));
+                char[] arr = searchString.ToCharArray();
+                arr = Array.FindAll<char>(arr, (c => (char.IsLetterOrDigit(c)
+                                    || char.IsWhiteSpace(c)
+                                    || c == '-')));
+                lowerSearchString = new string(arr);
+                lowerSearchString = lowerSearchString.ToLower();
             }
-            else
+            vm.PagingInfo = new PagingInfo
             {
-                vm.Users = _repo.Users.ToList();
+                CurrentPage = page,
+                ItemsPerPage = PageSize
+            };
+            // if the searchstring isn't empty, sort the user list against the string
+            vm.Users = _repo.Users
+                .Where(x => (String.IsNullOrEmpty(searchString) || x.DisplayName.Contains(lowerSearchString)))
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize);
+            vm.PagingInfo.TotalItems = _repo.Users
+                .Where(x => (String.IsNullOrEmpty(searchString) || x.DisplayName.Contains(lowerSearchString)))                
+                .Count();            
+            switch (sortOrder)
+            {
+                
             }
             // return the view
             ViewData["Title"] = "Current User List";
