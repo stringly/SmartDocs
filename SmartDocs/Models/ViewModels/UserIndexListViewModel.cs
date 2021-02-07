@@ -27,7 +27,7 @@ namespace SmartDocs.Models.ViewModels
         /// </summary>
         public string DisplayNameSort { get; set; }
         /// <summary>
-        /// Optional string that sorts the list by the <see cref="SmartUser.LDAPName"/>
+        /// Optional string that sorts the list by the <see cref="SmartUser.LogonName"/>
         /// </summary>
         public string LDAPNameSort { get; set; }
 

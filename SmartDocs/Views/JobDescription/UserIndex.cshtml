@@ -101,7 +101,7 @@
                         @item.Grade
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.JobId" asp-route-returnUrl="UserIndex@(!String.IsNullOrEmpty(Context.Request.QueryString.ToString()) ? $"{Context.Request.QueryString}" : "")">Details</a>
+                        <a asp-action="Details" asp-route-id="@item.JobId" target="_blank">Details</a>
                     </td>
                 </tr>
             }

@@ -20,7 +20,7 @@ namespace SmartDocs.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="JobDescriptionController"/> class.
         /// </summary>
-        /// <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="ConfigureServices"/></remarks>
+        /// <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="Startup.ConfigureServices"/></remarks>
         /// <param name="repo">An <see cref="IDocumentRepository"/></param>
         public JobDescriptionController(IDocumentRepository repo)
         {
@@ -43,16 +43,18 @@ namespace SmartDocs.Controllers
         public IActionResult Index(string sortOrder, string searchString, string SelectedRank, string SelectedGrade, int page = 1)
         {
             // init the VM class
-            JobDescriptionListViewModel vm = new JobDescriptionListViewModel();
-            // set the VM properties to the parameters
-            vm.CurrentFilter = searchString;
-            vm.CurrentSort = sortOrder;
-            vm.SelectedGrade = SelectedGrade;
-            vm.SelectedRank = SelectedRank;
-            // set the sorts to the opposite of the current sortOrder to facilitate building sorting hyperlinks
-            vm.GradeSort = String.IsNullOrEmpty(sortOrder) ? "grade_desc" : "";
-            vm.NameSort = sortOrder == "JobName" ? "jobName_desc" : "JobName";
-            vm.RankSort = sortOrder == "Rank" ? "rank_desc" : "Rank";
+            JobDescriptionListViewModel vm = new JobDescriptionListViewModel
+            {
+                // set the VM properties to the parameters
+                CurrentFilter = searchString,
+                CurrentSort = sortOrder,
+                SelectedGrade = SelectedGrade,
+                SelectedRank = SelectedRank,
+                // set the sorts to the opposite of the current sortOrder to facilitate building sorting hyperlinks
+                GradeSort = String.IsNullOrEmpty(sortOrder) ? "grade_desc" : "",
+                NameSort = sortOrder == "JobName" ? "jobName_desc" : "JobName",
+                RankSort = sortOrder == "Rank" ? "rank_desc" : "Rank"
+            };
             // lower any search string text to facilitate comparison.
             string lowerSearchString = "";
             if (!String.IsNullOrEmpty(searchString))

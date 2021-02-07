@@ -135,10 +135,10 @@ namespace SmartDocs.Infrastructure
                 // first page button
                 TagBuilder firstLiTag = new TagBuilder("li");
                 TagBuilder firstTag = new TagBuilder("a");
-                TagBuilder firstFaTag = new TagBuilder("i");
+                TagBuilder firstFaTag = new TagBuilder("span");
                 firstTag.AddCssClass("page-link");
-                firstFaTag.AddCssClass("fas");
-                firstFaTag.AddCssClass("fa-angle-double-left");
+                firstFaTag.AddCssClass("glyphicon");
+                firstFaTag.AddCssClass("glyphicon-fast-backward");
                 if (PageModel.CurrentPage == 1)
                 {
                     firstLiTag.AddCssClass("disabled");
@@ -155,10 +155,10 @@ namespace SmartDocs.Infrastructure
                 // previous page button
                 TagBuilder backLiTag = new TagBuilder("li");
                 TagBuilder backTag = new TagBuilder("a");
-                TagBuilder faTag = new TagBuilder("i");
+                TagBuilder faTag = new TagBuilder("span");
                 backTag.AddCssClass("page-link");
-                faTag.AddCssClass("fas");
-                faTag.AddCssClass("fa-angle-left");
+                faTag.AddCssClass("glyphicon");
+                faTag.AddCssClass("glyphicon-step-backward");
                 if (PageModel.CurrentPage == 1)
                 {
                     backLiTag.AddCssClass("disabled");
@@ -199,10 +199,10 @@ namespace SmartDocs.Infrastructure
                 // next page button
                 TagBuilder nextLiTag = new TagBuilder("li");
                 TagBuilder nextTag = new TagBuilder("a");
-                TagBuilder nextFaTag = new TagBuilder("i");
+                TagBuilder nextFaTag = new TagBuilder("span");
                 nextTag.AddCssClass("page-link");
-                nextFaTag.AddCssClass("fas");
-                nextFaTag.AddCssClass("fa-angle-right");
+                nextFaTag.AddCssClass("glyphicon");
+                nextFaTag.AddCssClass("glyphicon-step-forward");
                 if (PageModel.CurrentPage == PageModel.TotalPages)
                 {
                     nextLiTag.AddCssClass("disabled");
@@ -219,10 +219,10 @@ namespace SmartDocs.Infrastructure
                 // last page button
                 TagBuilder lastLiTag = new TagBuilder("li");
                 TagBuilder lastTag = new TagBuilder("a");
-                TagBuilder lastFaTag = new TagBuilder("i");
+                TagBuilder lastFaTag = new TagBuilder("span");
                 lastTag.AddCssClass("page-link");
-                lastFaTag.AddCssClass("fas");
-                lastFaTag.AddCssClass("fa-angle-double-right");
+                lastFaTag.AddCssClass("glyphicon");
+                lastFaTag.AddCssClass("glyphicon-fast-forward");
                 if (PageModel.CurrentPage == PageModel.TotalPages)
                 {
                     lastLiTag.AddCssClass("disabled");

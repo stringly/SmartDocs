@@ -141,7 +141,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:SmartDocs.Controllers.JobDescriptionController"/> class.
             </summary>
-            <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="!:ConfigureServices"/></remarks>
+            <remarks>This controller requires the Hosting Environment and a Repository to be injected when it is created. Refer to middleware in <see cref="M:SmartDocs.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/></remarks>
             <param name="repo">An <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
         <member name="M:SmartDocs.Controllers.JobDescriptionController.Index(System.String,System.String,System.String,System.String,System.Int32)">
@@ -536,7 +536,7 @@
             </summary>
             <param name="repo">An implementation of <see cref="T:SmartDocs.Models.IDocumentRepository"/></param>
         </member>
-        <member name="M:SmartDocs.Controllers.SmartUsersController.Index(System.String)">
+        <member name="M:SmartDocs.Controllers.SmartUsersController.Index(System.String,System.String,System.Int32)">
             <summary>
             GET: SmartUsers/Index
             </summary>
@@ -544,6 +544,8 @@
             This is an admin only view.
             </remarks>
             <param name="searchString">The search string that limits the list.</param>
+            <param name="sortOrder">An optional sort order string used to order the list.</param>
+            <param name="page">An optional integer page number. Defaults to 1.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> list of users in the repo.</returns>      
         </member>
         <member name="M:SmartDocs.Controllers.SmartUsersController.Create">
@@ -2904,21 +2906,25 @@
             The users.
             </value>
         </member>
-        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.CurrentFilter">
+        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.BlueDeckIdSort">
             <summary>
-            Gets or sets the current filter string being applied to the list.
+            Optional string that sorts the list by the <see cref="P:SmartDocs.Models.SmartUser.BlueDeckId"/>
             </summary>
-            <value>
-            The current filter.
-            </value>
         </member>
-        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.CurrentSort">
+        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.UserIdSort">
             <summary>
-            Gets or sets the current sort string being applied to the list.
+            Optional string that sorts the list by the <see cref="P:SmartDocs.Models.SmartUser.UserId"/>
             </summary>
-            <value>
-            The current sort.
-            </value>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.DisplayNameSort">
+            <summary>
+            Optional string that sorts the list by the <see cref="P:SmartDocs.Models.SmartUser.DisplayName"/>
+            </summary>
+        </member>
+        <member name="P:SmartDocs.Models.ViewModels.UserIndexListViewModel.LDAPNameSort">
+            <summary>
+            Optional string that sorts the list by the <see cref="P:SmartDocs.Models.SmartUser.LogonName"/>
+            </summary>
         </member>
         <member name="M:SmartDocs.Models.ViewModels.UserIndexListViewModel.#ctor">
             <summary>

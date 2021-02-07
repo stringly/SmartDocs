@@ -32,18 +32,22 @@ namespace SmartDocs.Controllers
         /// This is an admin only view.
         /// </remarks>
         /// <param name="searchString">The search string that limits the list.</param>
+        /// <param name="sortOrder">An optional sort order string used to order the list.</param>
+        /// <param name="page">An optional integer page number. Defaults to 1.</param>
         /// <returns>An <see cref="IActionResult"/> list of users in the repo.</returns>      
         [Authorize(Policy = "IsGlobalAdmin")]
         public IActionResult Index(string searchString, string sortOrder, int page = 1)
         {
-            // TODO: Make this a proper sorting index
-            UserIndexListViewModel vm = new UserIndexListViewModel();
-            vm.CurrentFilter = searchString;
-            vm.CurrentSort = sortOrder;
-            vm.LDAPNameSort = String.IsNullOrEmpty(sortOrder) ? "LDAPName_desc" : "";
-            vm.BlueDeckIdSort = sortOrder == "BlueDeckId" ? "BlueDeckId" : "blueDeckId_Desc";
-            vm.UserIdSort = sortOrder == "" // TODO: HERE
-            
+            UserIndexListViewModel vm = new UserIndexListViewModel
+            {
+                CurrentFilter = searchString,
+                CurrentSort = sortOrder,
+                LDAPNameSort = String.IsNullOrEmpty(sortOrder) ? "LDAPName_desc" : "",
+                BlueDeckIdSort = sortOrder == "BlueDeckId" ? "blueDeckId_Desc" : "BlueDeckId",
+                UserIdSort = sortOrder == "UserId" ? "userId_desc" : "UserId",
+                DisplayNameSort = sortOrder == "DisplayName" ? "displayName_desc" : "DisplayName"
+            };
+
             string lowerSearchString = "";
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -61,15 +65,39 @@ namespace SmartDocs.Controllers
             };
             // if the searchstring isn't empty, sort the user list against the string
             vm.Users = _repo.Users
-                .Where(x => (String.IsNullOrEmpty(searchString) || x.DisplayName.Contains(lowerSearchString)))
+                .Where(x => (String.IsNullOrEmpty(searchString) || x.DisplayName.ToLower().Contains(lowerSearchString)))
                 .Skip((page - 1) * PageSize)
                 .Take(PageSize);
             vm.PagingInfo.TotalItems = _repo.Users
-                .Where(x => (String.IsNullOrEmpty(searchString) || x.DisplayName.Contains(lowerSearchString)))                
+                .Where(x => (String.IsNullOrEmpty(searchString) || x.DisplayName.ToLower().Contains(lowerSearchString)))                
                 .Count();            
             switch (sortOrder)
             {
-                
+                case "BlueDeckId":
+                    vm.Users = vm.Users.OrderBy(x => x.BlueDeckId).ToList();
+                    break;
+                case "blueDeckId_desc":
+                    vm.Users = vm.Users.OrderByDescending(x => x.BlueDeckId).ToList();
+                    break;
+                case "UserId":
+                    vm.Users = vm.Users.OrderBy(x => x.UserId).ToList();
+                    break;
+                case "userId_desc":
+                    vm.Users = vm.Users.OrderByDescending(x => x.UserId).ToList();
+                    break;
+                case "DisplayName":
+                    vm.Users = vm.Users.OrderBy(x => x.DisplayName).ToList();
+                    break;
+                case "displayName_desc":
+                    vm.Users = vm.Users.OrderByDescending(x => x.DisplayName).ToList();
+                    break;
+                case "LDAPName_desc":
+                    vm.Users = vm.Users.OrderByDescending(x => x.LogonName).ToList();
+                    break;
+                default:
+                    vm.Users = vm.Users.OrderBy(x => x.LogonName).ToList();
+                    break;
+              
             }
             // return the view
             ViewData["Title"] = "Current User List";
