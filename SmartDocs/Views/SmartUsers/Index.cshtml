@@ -4,52 +4,122 @@
     Layout = "_Layout";
 }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<form asp-page="/Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find:
-            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-page="/Index">Back to full List</a>
-        </p>
+<h2>Current User Index</h2>
+<a asp-action="Create">Add New</a>
+<hr />
+<form class="form-inline" asp-page="/Index" method="get">
+    <div class="form-group">
+        <label class="control-label" asp-for="CurrentFilter">Search:</label>
+        <input type="text" name="searchString" class="form-control" value="@Model.CurrentFilter">
     </div>
+    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+    @if (!String.IsNullOrEmpty(Model.CurrentFilter))
+    {
+        <a asp-action="/Index" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Reset List</a>
+    }
 </form>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>
-                BlueDeck Id
-            </th>
-            <th>
-                Logon Name
-            </th>
-            <th>
-                Display Name
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Users) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BlueDeckId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LogonName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DisplayName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
+@if (Model.Users.Count() > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr class="tablePageControlHeaderRow">
+                <th colspan="5">
+                    <div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
+                         page-class="" page-class-normal=""
+                         page-class-selected="active" page-url-searchString="@Model.CurrentFilter" page-url-sortOrder="@Model.CurrentSort"
+                         class="btn-group">
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.UserIdSort" asp-route-searchString="@Model.CurrentFilter" title="Sort by User Id">
+                        User Id
+                        @if (Model.CurrentSort == "userId_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.BlueDeckIdSort" asp-route-searchString="@Model.CurrentFilter" title="Sort by BlueDeck Id">
+                        BlueDeck Id
+                        @if (Model.CurrentSort == "blueDeckId_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.LDAPNameSort" asp-route-searchString="@Model.CurrentFilter" title="Sort by Logon Name">
+                        Logon Name
+                        @if (Model.CurrentSort == "LDAPName_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.DisplayNameSort" asp-route-searchString="@Model.CurrentFilter" title="Sort by Display Name">
+                        Display Name
+                        @if (Model.CurrentSort == "displayName_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BlueDeckId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LogonName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DisplayName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
+else
+{
+    <hr />
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <strong>No matching Users found.</strong>
+        </div>
+    </div>
+    <hr />
+}
 

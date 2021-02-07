@@ -1,11 +1,14 @@
 ﻿@model SmartDocs.Models.JobDescription
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";   
 }
     <div class="col-md-12 col-lg-10 col-lg-offset-1">
         <div class="container-fluid" style="width: 100%">
-            <a asp-action="Index">Back to List</a>
+            @if (!String.IsNullOrEmpty(ViewBag.ReturnUrl))
+            {
+                <a asp-action="@ViewBag.ReturnUrl">Back to List</a>
+            }
             <h2>Job Description Detail</h2>
             <h4>@Model.Rank : @Model.WorkingTitle</h4>
             <div>

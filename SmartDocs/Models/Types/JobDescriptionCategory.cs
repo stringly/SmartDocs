@@ -87,9 +87,9 @@ namespace SmartDocs.Models.Types
         /// This calculates based on the Category's weight and the selected rating
         /// </remarks>
         /// <returns>A double representing the category's rated score</returns>
-        public double GetCategoryRatedScore()
+        public decimal GetCategoryRatedScore()
         {
-            return Math.Round((Weight * SelectedScore * 0.01), 2);
+            return Math.Round((Weight * SelectedScore * 0.01m), 2);
         }
 
         /// <summary>

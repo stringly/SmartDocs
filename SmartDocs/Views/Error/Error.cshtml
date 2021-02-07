@@ -1,0 +1,40 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link asp-href-include="lib/bootstrap/css/*.min.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>Not Authorized</title>
+</head>
+<body>
+    <div class="navbar navbar-inverse" role="navigation">
+        <a class="navbar-brand" href="#">SmartDocs</a>
+    </div>
+    <div class="col-xs-12" style="text-align: center">
+        @if (ViewBag.Title == "Not Authorized")
+        {
+            <span class="glyphicon glyphicon-ban-circle text-danger" style="font-size: 40px;" aria-hidden="true"></span>
+        }
+        else if (ViewBag.Title == "Not Found")
+        {
+            <span class="glyphicon glyphicon-question-sign" style="font-size: 40px;" aria-hidden="true"></span>
+        }
+        else
+        {
+            <span class="glyphicon glyphicon-alert" style="font-size: 40px;" aria-hidden="true"></span>
+        }
+        <h3 class="text-danger">@ViewBag.Title</h3>
+        <div>
+            <h4>@ViewBag.Message Please contact the <a href="mailto:jcsmith1@co.pg.md.us?Subject=SmartDocs%20Access">administrator</a> if you believe you are seeing this message in error.</h4>
+        </div>
+    </div>
+</body>
+</html>

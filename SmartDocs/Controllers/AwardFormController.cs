@@ -1,58 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartDocs.Models;
 using SmartDocs.Models.SmartDocumentClasses;
-using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
+using System;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SmartDocs.Controllers
 {
-    [Authorize(Roles = "User, Administrator")]
+    /// <summary>
+    /// Controller for Award Form interactions
+    /// </summary>
+    /// <seealso cref="Controller" />
+    [Authorize(Policy = "IsUser")]
     public class AwardFormController : Controller
     {
         private IDocumentRepository _repository;
 
-
+        /// <summary>
+        /// Creates a new instance of the controller.
+        /// </summary>
+        /// <param name="repo">An implementation of <see cref="IDocumentRepository"/></param>
         public AwardFormController(IDocumentRepository repo)
         {
             _repository = repo;
         }
-        public IActionResult Index()
+        /// <summary>
+        /// Returns a view that will allow a User to create a new Award Form.
+        /// </summary>
+        /// <param name="NomineeName">A string containing the name of the award nominee.</param>
+        /// <param name="ClassTitle">A string containing the nominee's class titme.</param>
+        /// <param name="Division">A string containing the nominee's Department/Division name.</param>
+        /// <param name="Agency">A string containing the name of the nominee's agency.</param>
+        /// <returns>A <see cref="IActionResult"/></returns>
+        [HttpGet]
+        public IActionResult Create(string NomineeName, string ClassTitle, string Division, string Agency = "Prince George's County Police Department")
         {
-            return View();
-        }
+            int UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
+            EmptyAwardViewModel vm = new EmptyAwardViewModel();
+            vm.AuthorUserId = UserId;
+            vm.AgencyName = Agency;
+            vm.NomineeName = NomineeName;
+            vm.ClassTitle = ClassTitle;
+            vm.Division = Division;
+            vm.Components = _repository.Components.ToList();
+            vm.Users = _repository.Users.ToList();
+            ViewData["Title"] = "Create Award Form";
+            return View(vm);
 
-        public async Task<IActionResult> Create(string NomineeName, string ClassTitle, string Division, string Agency = "Prince George's County Police Department")
-        {
-            int UserId = 0;
-            if(User.HasClaim(x => x.Type == "UserId"))
-            {
-                UserId = Convert.ToInt32(((ClaimsIdentity)User.Identity).FindFirst("UserId").Value);
-                EmptyAwardViewModel vm = new EmptyAwardViewModel();
-                vm.AuthorUserId = UserId;
-                vm.AgencyName = Agency;
-                vm.NomineeName = NomineeName;
-                vm.ClassTitle = ClassTitle;
-                vm.Division = Division;
-                vm.Components = _repository.Components.ToList();
-                vm.Users = _repository.Users.ToList();
-
-                ViewData["Title"] = "Create Award Form";
-                return View(vm);
-            }
-            else
-            {
-                return RedirectToAction("Access Denied", "Home");
-            }
         }
+        /// <summary>
+        /// Handles the form POST from the GET/Create View
+        /// </summary>
+        /// <param name="form">User-provided form data bound to a <see cref="SmartAwardViewModel"/></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,SelectedAward,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
+        public IActionResult Create([Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,SelectedAward,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
         {            
             if (!ModelState.IsValid)
             {
@@ -66,13 +71,19 @@ namespace SmartDocs.Controllers
                 // do Award Form Factory stuff
                 SmartAwardFactory factory = new SmartAwardFactory(_repository);                
                 factory.CreateSmartAwardForm(form);
-                return RedirectToAction("SaveSuccess", new { id = factory._awardForm.DocumentId });
+                return RedirectToAction("SaveSuccess", new { id = factory.awardForm.DocumentId });
             }
         }
-
-        public async Task<IActionResult> Edit(int id)
+        /// <summary>
+        /// Returns a view that allows a User to edit an existing Award Form SmartDoc.
+        /// </summary>
+        /// <param name="id">The <see cref="SmartDocument.DocumentId"/> of the document to edit.</param>
+        /// <returns>A <see cref="IActionResult"/></returns>
+        [HttpGet]
+        [Authorize(Policy = "CanEditDocument")]
+        public IActionResult Edit(int id)
         {
-            SmartDocument award = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            SmartDocument award = _repository.AwardForms.FirstOrDefault(x => x.DocumentId == id);
             if (award == null)
             {
                 return NotFound();
@@ -83,8 +94,15 @@ namespace SmartDocs.Controllers
             return View(vm);
 
         }
+        /// <summary>
+        /// Handles the form POST from the GET/Edit view.
+        /// </summary>
+        /// <param name="id">The <see cref="SmartDocument.DocumentId"/> of the document being edited.</param>
+        /// <param name="form">The user-provided form data, bound to a <see cref="SmartAwardViewModel"/></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,SelectedAward,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
+        [Authorize(Policy = "CanEditDocument")]
+        public IActionResult Edit(int id, [Bind("DocumentId,AuthorUserId,AgencyName,NomineeName,ClassTitle,Division,SelectedAward,Kind,AwardClass,AwardName,ComponentViewName,Description,HasRibbon,EligibilityConfirmationDate,StartDate,EndDate,SelectedAwardType")] SmartAwardViewModel form)
         {
             if(id != form.DocumentId)
             {
@@ -98,26 +116,37 @@ namespace SmartDocs.Controllers
                 form.Users = _repository.Users.ToList();
                 return View(form);
             }
-            SmartDocument awardDoc = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
+            SmartDocument awardDoc = _repository.AwardForms.FirstOrDefault(x => x.DocumentId == id);
             if (awardDoc == null)
             {
                 return NotFound();
             }
             SmartAwardFactory factory = new SmartAwardFactory(_repository, awardDoc);
             factory.UpdateAwardForm(form);
-            return RedirectToAction("SaveSuccess", new { id = factory._awardForm.DocumentId });
+            return RedirectToAction("SaveSuccess", new { id = factory.awardForm.DocumentId });
 
         }
+        /// <summary>
+        /// Shows the "SaveSuccess" View
+        /// </summary>
+        /// <param name="id">The id of the successfully saved <see cref="SmartDocument"/></param>
+        /// <returns>A <see cref="IActionResult"/></returns>
+        [Authorize(Policy = "CanEditDocument")]
         public IActionResult SaveSuccess(int id)
         {
             
             // this is a simple view, so use VB instead of a VM            
             ViewBag.SmartDocumentId = id;
-            ViewBag.FileName = _repository.Documents.FirstOrDefault(x => x.DocumentId == id).FileName;
+            ViewBag.FileName = _repository.AwardForms.FirstOrDefault(x => x.DocumentId == id).FileName;
             ViewData["Title"] = "Success!";
             return View();
 
         }
+        /// <summary>
+        /// Returns a View Component to prompt the User for information specific to a type of award.
+        /// </summary>
+        /// <param name="awardId">The id of the award</param>
+        /// <returns>An <see cref="IActionResult"/></returns>
         public IActionResult GetAwardFormViewComponent(int awardId)
         {
             AwardTypeFormViewComponentViewModel awardVM;
@@ -148,35 +177,43 @@ namespace SmartDocs.Controllers
                 return NotFound();
             }
         }
-
-        public IActionResult Delete(int? id)
-        {
-            // query string is empty, return 404
-            if (id == null)
-            {
-                return NotFound();
-            }
-            // retrieve the SmartPPA from the repo
-            var toDelete = _repository.Documents.FirstOrDefault(m => m.DocumentId == id);
+        /// <summary>
+        /// Returns the GET/Delete view to prompt a user to confirm that they want to delete an award.
+        /// </summary>
+        /// <param name="id">The <see cref="SmartDocument.DocumentId"/> of the award document to be deleted.</param>
+        /// <returns>A <see cref="IActionResult"/></returns>
+        [Authorize(Policy = "CanEditDocument")]
+        public IActionResult Delete(int id)
+        {            
+            // retrieve the SmartDoc from the repo
+            var toDelete = _repository.AwardForms.FirstOrDefault(m => m.DocumentId == id);
 
             if (toDelete == null)
             {
-                // no SmartPPA could be found with the provided id
+                // SmartDoc could not be found or is not award type.
                 return NotFound();
             }
             // return the View (which uses the Domain Object as a model)
             ViewData["Title"] = "Delete Award Form";
             return View(toDelete);
         }
-
+        /// <summary>
+        /// Deletes a document.
+        /// </summary>
+        /// <param name="id">The <see cref="SmartDocument.DocumentId"/> of the document to be deleted.</param>
+        /// <returns>A <see cref="RedirectToActionResult"/></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "CanEditDocument")]
         public IActionResult DeleteConfirmed(int id)
         {
-            // retrieve the SmartPPA from the repo
-            var toDelete = _repository.Documents.FirstOrDefault(x => x.DocumentId == id);
-            // invoke the repo method to remove the SmartPPA
-            _repository.RemoveSmartDoc(toDelete);
+            // retrieve the SmartDoc from the repo
+            var toDelete = _repository.AwardForms.FirstOrDefault(x => x.DocumentId == id);
+            // invoke the repo method to remove the SmartDoc
+            if (toDelete.Type == SmartDocument.SmartDocumentType.AwardForm)
+            {
+                _repository.RemoveSmartDoc(toDelete);
+            }            
             // redirect to the Index
             return RedirectToAction("Index", "Home");
         }

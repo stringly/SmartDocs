@@ -27,7 +27,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
 
         }
 
-        public void Write(string categoryTitle, int categoryWeight, int selectedScore, double categoryScore)
+        public void Write(string categoryTitle, int categoryWeight, int selectedScore, decimal categoryScore)
         {
             CategoryTitle.Write(categoryTitle);
             CategoryWeight.Write(categoryWeight.ToString());

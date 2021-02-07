@@ -49,7 +49,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
         }
         public void UpdateSmartJobDescription(SmartJobDescriptionViewModel vm)
         {
-            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
+            SmartDocument toEdit = _repository.JobDescriptionForms.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
             if (toEdit != null)
             {
                 toEdit.AuthorUserId = vm.AuthorUserId;

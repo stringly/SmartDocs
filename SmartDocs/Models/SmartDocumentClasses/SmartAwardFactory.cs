@@ -1,25 +1,32 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
-using SmartDocs.Models.Types;
 using SmartDocs.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace SmartDocs.Models.SmartDocumentClasses
 {
+    /// <summary>
+    /// Factory that builds Award Forms
+    /// </summary>
     public class SmartAwardFactory
     {
-        private IDocumentRepository _repository { get; set; }
-        public SmartDocument _awardForm { get; private set;}
-
+        /// <summary>
+        /// Constructs a new instance of the class.
+        /// </summary>
+        /// <param name="repo">An implementation of <see cref="IDocumentRepository"/></param>
         public SmartAwardFactory(IDocumentRepository repo)
         {
             _repository = repo;
         }
+        /// <summary>
+        /// Constructs a new instance of the class.
+        /// </summary>
+        /// <param name="repo">An implementation of <see cref="IDocumentRepository"/></param>
+        /// <param name="award">The <see cref="SmartDocument"/> Award Form being generated.</param>
         public SmartAwardFactory(IDocumentRepository repo, SmartDocument award)
         {
             if (award.Type != SmartDocument.SmartDocumentType.AwardForm)
@@ -29,9 +36,18 @@ namespace SmartDocs.Models.SmartDocumentClasses
             else
             {
                 _repository = repo;
-                _awardForm = award;
+                awardForm = award;
             }
         }
+        private IDocumentRepository _repository { get; set; }
+        /// <summary>
+        /// The <see cref="SmartDocument"/> Award Form being generated.
+        /// </summary>
+        public SmartDocument awardForm { get; private set; }
+        /// <summary>
+        /// Creates a new <see cref="SmartDocument"/> from the user-provided form data.
+        /// </summary>
+        /// <param name="vm">An instance of <see cref="SmartAwardViewModel"/> view model.</param>
         public void CreateSmartAwardForm(SmartAwardViewModel vm)
         {
             SmartDocument newDoc = new SmartDocument
@@ -40,28 +56,36 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 Type = SmartDocument.SmartDocumentType.AwardForm,
                 Created = DateTime.Now,
                 Edited = DateTime.Now,
-                FileName = $"{vm.NomineeName} {vm.AwardName} Form {DateTime.Now.ToString("MM-dd-yy")}.docx",
+                FileName = $"{vm.NomineeName} {vm.AwardName} Form {DateTime.Now:MM-dd-yy}.docx",
                 Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartAwardForm"),
                 FormDataXml = ViewModelToXML(vm)
             };
             _repository.SaveSmartDoc(newDoc);
-            _awardForm = newDoc;
+            awardForm = newDoc;
         }
+        /// <summary>
+        /// Updates an existing <see cref="SmartDocument"/> award form from user-provided form data.
+        /// </summary>
+        /// <param name="vm"></param>
         public void UpdateAwardForm(SmartAwardViewModel vm)
         {
-            SmartDocument toEdit = _repository.Documents.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
+            SmartDocument toEdit = _repository.AwardForms.FirstOrDefault(x => x.DocumentId == vm.DocumentId);
             if (toEdit != null)
             {
                 toEdit.AuthorUserId = vm.AuthorUserId;
                 toEdit.Edited = DateTime.Now;
-                toEdit.FileName = $"{vm.NomineeName} {vm.AwardName} Form {DateTime.Now.ToString("MM-dd-yy")}.docx";
+                toEdit.FileName = $"{vm.NomineeName} {vm.AwardName} Form {DateTime.Now:MM-dd-yy}.docx";
                 toEdit.Template = _repository.Templates.FirstOrDefault(x => x.Name == "SmartAwardForm");
                 toEdit.FormDataXml = ViewModelToXML(vm);
                 _repository.SaveSmartDoc(toEdit);
             }
-            _awardForm = toEdit;
+            awardForm = toEdit;
         }
-
+        /// <summary>
+        /// Private method that converts the user-provided form data into the XML field of the <see cref="SmartDocument"/>.
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns>An <see cref="XElement"/></returns>
         private XElement ViewModelToXML(SmartAwardViewModel vm)
         {
             XElement root = new XElement("SmartAward");
@@ -78,7 +102,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
                     throw new NotImplementedException("The Viewmodel has an unrecognized SelectedAwardType");
             }
             
-            root.Add(new XElement("DocumentId", _awardForm?.DocumentId ?? vm.DocumentId, new XAttribute("DocumentId", _awardForm?.DocumentId ?? vm.DocumentId)));
+            root.Add(new XElement("DocumentId", awardForm?.DocumentId ?? vm.DocumentId, new XAttribute("DocumentId", awardForm?.DocumentId ?? vm.DocumentId)));
             foreach(PropertyInfo property in properties)
             {
                 if (property.Name != "DocumentId" && property.Name != "Components" && property.Name != "Users" && property.Name != "AwardList" && property.Name != "Components" && property.Name != "Users" && property.Name != "AwardTypes")
@@ -93,16 +117,20 @@ namespace SmartDocs.Models.SmartDocumentClasses
             return (root);
         }
 
+        /// <summary>
+        /// Generates a <see cref="SmartAwardViewModel"/> from the <see cref="SmartDocument"/>
+        /// </summary>
+        /// <returns>A <see cref="SmartAwardViewModel"/></returns>
         public SmartAwardViewModel GetViewModelFromXML()
         {
-            XElement root = _awardForm.FormDataXml;           
+            XElement root = awardForm.FormDataXml;           
             SmartAwardViewModel vm;
             switch (root.Element("ComponentViewName").Value)
             {
                 case "GoodConduct":
                     vm = new GoodConductAwardViewModel
                     {
-                        DocumentId = _awardForm.DocumentId,
+                        DocumentId = awardForm.DocumentId,
                         AuthorUserId = Convert.ToInt32(root.Element("AuthorUserId").Value),
                         AgencyName = root.Element("AgencyName").Value,
                         NomineeName = root.Element("NomineeName").Value,
@@ -122,7 +150,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 case "Exemplary":
                     vm = new OutstandingPerformanceAwardViewModel
                     {
-                        DocumentId = _awardForm.DocumentId,
+                        DocumentId = awardForm.DocumentId,
                         AuthorUserId = Convert.ToInt32(root.Element("AuthorUserId").Value),
                         AgencyName = root.Element("AgencyName").Value,
                         NomineeName = root.Element("NomineeName").Value,
@@ -163,7 +191,10 @@ namespace SmartDocs.Models.SmartDocumentClasses
             };
             return vm;
         }
-
+        /// <summary>
+        /// Generates and serialized the document.
+        /// </summary>
+        /// <returns></returns>
         public MemoryStream GenerateDocument()
         {
             var mem = new MemoryStream();
@@ -173,7 +204,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
             {
                 MainDocumentPart mainPart = wordDocument.MainDocumentPart;
                 SmartAwardMappedFieldSet fields = new SmartAwardMappedFieldSet(mainPart);
-                fields.WriteXMLToFields(_awardForm.FormDataXml);
+                fields.WriteXMLToFields(awardForm.FormDataXml);
                 mainPart.Document.Save();
             }
             mem.Seek(0, SeekOrigin.Begin);

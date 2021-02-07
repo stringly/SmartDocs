@@ -14,8 +14,11 @@ namespace SmartDocs.Models
         IEnumerable<SmartTemplate> Templates { get; }
         IEnumerable<SmartDocument> Documents { get; }
         IEnumerable<SmartJob> Jobs { get; }
-        IEnumerable<SmartDocument> PPAs { get;}
         IEnumerable<OrganizationComponent> Components { get; }
+        IEnumerable<SmartDocument> PerformanceAppraisalForms { get;}        
+        IEnumerable<SmartDocument> PerformanceAssessmentForms { get; }
+        IEnumerable<SmartDocument> AwardForms { get; }
+        IEnumerable<SmartDocument> JobDescriptionForms { get; }
 
         
         void SaveJob(SmartJob job);

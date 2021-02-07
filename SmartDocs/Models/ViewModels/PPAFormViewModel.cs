@@ -1,13 +1,7 @@
 ﻿using SmartDocs.Models.Types;
-using SmartDocs.OldModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace SmartDocs.Models.ViewModels
 {
@@ -17,10 +11,10 @@ namespace SmartDocs.Models.ViewModels
     public class PPAFormViewModel
     {
         /// <summary>
-        /// Gets or sets the ppa identifier.
+        /// Gets or sets the PPA document's identifier.
         /// </summary>
         /// <remarks>
-        /// This is the Id of the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+        /// This is the Id of the <see cref="Models.SmartDocument"/> from which the View Model is built.
         /// </remarks>
         /// <value>
         /// The ppa identifier.
@@ -131,7 +125,7 @@ namespace SmartDocs.Models.ViewModels
         public DateTime EndDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier for the <see cref="T:SmartDocs.Models.SmartJob"/> associated with the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+        /// Gets or sets the identifier for the <see cref="SmartJob"/> associated with the <see cref="SmartDocument.SmartDocumentType.PPA"/> from which the View Model is built.
         /// </summary>
         /// <value>
         /// The job identifier.
@@ -140,15 +134,15 @@ namespace SmartDocs.Models.ViewModels
         public int JobId { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="T:SmartDocs.Models.JobDescription"/> associated with the <see cref="SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+        /// Gets or sets the <see cref="JobDescription"/> associated with the <see cref="SmartDocument.SmartDocumentType.PPA"/> from which the View Model is built.
         /// </summary>
         /// <value>
         /// The job.
         /// </value>
-        public JobDescription job { get; set; }
+        public JobDescription Job { get; set; }
 
         /// <summary>
-        /// Gets or sets the id of the <see cref="T:SmartDocs.Models.SmartUser"/> who is the author of the <see cref="T:SmartDocs.Models.SmartPPA"/> from which the View Model is built.
+        /// Gets or sets the id of the <see cref="T:SmartDocs.Models.SmartUser"/> who is the author of the <see cref="SmartDocument.SmartDocumentType.PPA"/> from which the View Model is built.
         /// </summary>
         /// <value>
         /// The author user identifier.
@@ -180,9 +174,9 @@ namespace SmartDocs.Models.ViewModels
         /// Gets or sets the list of categories associated with the Job Description for the PPA.
         /// </summary>
         /// <remarks>
-        /// I *think* this has been deprecated, now that the VM object contains a <see cref="SmartDocs.Models.SmartJob"/> property.
+        /// I *think* this has been deprecated, now that the VM object contains a <see cref="SmartJob"/> property.
         /// As I recall, I was using this to invoke the JobDescriptionCategoryList view component, but I changed the ViewComponent to invoke directly from a
-        /// <see cref="T:SmartDocs.Models.JobDescription"/> instead of a List of <see cref="T:SmartDocs.Models.Types.JobDescriptionCategory"/>
+        /// <see cref="JobDescription"/> instead of a List of <see cref="JobDescriptionCategory"/>
         /// </remarks>
         /// <value>
         /// The categories.
@@ -193,7 +187,7 @@ namespace SmartDocs.Models.ViewModels
         /// Gets or sets the list of Job Descriptions available in the database.
         /// </summary>
         /// <remarks>
-        /// This builds a list of <see cref="T:SmartDocs.Models.Types.JobDescriptionListItem"/> from the available <see cref="T:SmartDocs.Models.SmartJob"/>s.
+        /// This builds a list of <see cref="JobDescriptionListItem"/> from the available <see cref="SmartJob"/>s.
         /// </remarks>
         /// <value>
         /// The job list.
@@ -204,7 +198,7 @@ namespace SmartDocs.Models.ViewModels
         /// Gets or sets the components.
         /// </summary>
         /// <remarkds>
-        /// This shows a list of <see cref="T:SmartDocs.Models.OrganizationComponent"/> in the database.
+        /// This shows a list of <see cref="OrganizationComponent"/> in the database.
         /// </remarkds>
         /// <value>
         /// The components.
@@ -215,7 +209,7 @@ namespace SmartDocs.Models.ViewModels
         /// Gets or sets the Users list.
         /// </summary>
         /// <remarks>
-        /// This assembles a List of <see cref="T:SmartDocs.Models.Types.UserListItem"/> from the available <see cref="T:SmartDocs.Models.SmartUser"/>s.
+        /// This assembles a List of <see cref="UserListItem"/> from the available <see cref="SmartUser"/>s.
         /// </remarks>
         /// <value>
         /// The users.
@@ -223,7 +217,7 @@ namespace SmartDocs.Models.ViewModels
         public List<UserListItem> Users { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDocs.Models.ViewModels.PPAFormViewModel"/> class.
+        /// Initializes a new instance of the <see cref="PPAFormViewModel"/> class.
         /// <remarks>
         /// This constructor is used when a new PPA is being created.
         /// </remarks>
@@ -239,48 +233,6 @@ namespace SmartDocs.Models.ViewModels
             JobList = new List<JobDescriptionListItem>();
             Components = new List<OrganizationComponent>();
             Users = new List<UserListItem>();            
-        }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PPAFormViewModel"/> class.
-        /// </summary>
-        /// <remarks>
-        /// This method is designed to facilitate editing an existing PPA in the Db.
-        /// As of Version 1.1, this method is deprecated for all but conversions from the old format.
-        /// </remarks>
-        /// <param name="ppa">A <see cref="T:SmartDocs.Models.SmartPPA"/></param>
-        public PPAFormViewModel(Ppas ppa)
-        {
-            // TODO: Fully Deprecate this constructor.
-            DocumentId = ppa.Ppaid;
-            FirstName = ppa.EmployeeFirstName;
-            LastName = ppa.EmployeeLastName;
-            DepartmentIdNumber = ppa.DepartmentIdNumber;
-            PayrollIdNumber = ppa.PayrollIdNumber;
-            PositionNumber = ppa.PositionNumber;
-            DepartmentDivision = ppa.DepartmentDivision;
-            DepartmentDivisionCode = ppa.DepartmentDivisionCode;
-            WorkPlaceAddress = ppa.WorkplaceAddress;
-            SupervisedByEmployee = ppa.SupervisedByEmployee;
-            StartDate = ppa.StartDate;
-            EndDate = ppa.EndDate;
-            JobId = ppa.Job.JobId;
-            AuthorUserId = Convert.ToInt32(ppa.OwnerUserId);
-            Assessment = ppa.AssessmentComments;
-            Recommendation = ppa.RecommendationComments;
-
-            // the PPA ratings are stored in 6 columns in the DB record... pull the columns in to the array to "re-assemble" the assigned category ratings 
-            // once the Job Description is re-created
-            int?[] scores = { ppa.CategoryScore1, ppa.CategoryScore2, ppa.CategoryScore3, ppa.CategoryScore4, ppa.CategoryScore5, ppa.CategoryScore6 };
-            // pull the Job Description associated with the PPA record by passing the SmartJob associated with the SmartPPA parameter to the appropriate constructor for JobDescription
-            job = new JobDescription(ppa.Job);
-            // reassign the selected scores from the SmartPPA object to the re-created JobDescription object
-            for (int i = 0; i < job.Categories.Count(); i++)
-            {
-                job.Categories[i].SelectedScore = scores[i] ?? 0;
-            }
-
-            Categories = job.Categories;
-
         }
     }
 }

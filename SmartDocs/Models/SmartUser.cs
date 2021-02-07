@@ -47,6 +47,9 @@ namespace SmartDocs.Models
         /// </value>
         [Display(Name = "Display Name")]
         public string DisplayName { get; set; }
+        /// <summary>
+        /// A collection of <see cref="SmartDocument"/>s authored by the user.
+        /// </summary>
         public virtual ICollection<SmartDocument> Documents { get;set;}
     }
 }

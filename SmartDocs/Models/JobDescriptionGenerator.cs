@@ -49,7 +49,6 @@ namespace SmartDocs.Models
             var mem = new MemoryStream();
             try
             {
-                // TODO: Consider serializing the Document AND XML the field map?
                 byte[] byteArray = File.ReadAllBytes("Resources/Templates/Job_Description_Template.docx");
                 mem.Write(byteArray, 0, byteArray.Length);
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Open(mem, true))
