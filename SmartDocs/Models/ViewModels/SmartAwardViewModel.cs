@@ -9,38 +9,97 @@ using System.Threading.Tasks;
 
 namespace SmartDocs.Models.ViewModels
 {
+    /// <summary>
+    /// Abstract base class for Award Form Viewmodel types.
+    /// </summary>
     public abstract class SmartAwardViewModel
     {
+        /// <summary>
+        /// The <see cref="SmartDocument.DocumentId"/> of the document.
+        /// </summary>
         public int DocumentId { get; set; }
+        /// <summary>
+        /// The <see cref="SmartUser.UserId"/> of the document's author.
+        /// </summary>
         public int AuthorUserId { get; set; }
-        [Display(Name = "Nominee's Agency"), Required]
+        /// <summary>
+        /// The name of the agency to which the award nominee is assigned.
+        /// </summary>
+        [Display(Name = "Nominee's Agency"), Required, StringLength(100)]
         public string AgencyName { get; set; }
-        [Display(Name = "Nominee's Name"), Required]
+        /// <summary>
+        /// The nominee's name.
+        /// </summary>
+        [Display(Name = "Nominee's Name"), Required, StringLength(100)]
         public string NomineeName { get; set; }
-        [Display(Name = "Nominee's Class Title"), Required]
+        /// <summary>
+        /// The nominee's class title.
+        /// </summary>
+        [Display(Name = "Nominee's Class Title"), Required, StringLength(100)]
         public string ClassTitle { get; set; }
-        [Display(Name = "Nominee's District/Division"), Required]
+        /// <summary>
+        /// The nominee's assigned district/division.
+        /// </summary>
+        [Display(Name = "Nominee's District/Division"), Required, StringLength(100)]
         public string Division { get; set; }
+        /// <summary>
+        /// The integer id of the award type.
+        /// </summary>
         [Required(ErrorMessage = "You must select an Award Type.")]
         [Display(Name = "Award Type")]
         public int? SelectedAward { get; set; }
+        /// <summary>
+        /// The kind of award.
+        /// </summary>
         public string Kind { get; set; }
-        [Required, Display(Name = "Award Class")]
+        /// <summary>
+        /// The award's class name.
+        /// </summary>
+        [Required, Display(Name = "Award Class"), StringLength(100)]
         public string AwardClass { get; set; }
-        [Required, Display(Name = "Award Name")]
+        /// <summary>
+        /// The award's name.
+        /// </summary>
+        [Required, Display(Name = "Award Name"), StringLength(100)]
         public string AwardName { get; set; }
+        /// <summary>
+        /// The Component View Name.
+        /// </summary>
         public string ComponentViewName { get; set; }
+        /// <summary>
+        /// The description.
+        /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// Boolean indicates whether the award type has an associated award ribbon.
+        /// </summary>
         public bool HasRibbon { get; set; }
-        public List<OrganizationComponent> Components { get; set; }
+        /// <summary>
+        /// List of <see cref="OrganizationUnit"/> used to populate a drop down.
+        /// </summary>
+        public List<OrganizationUnit> Units { get; set; }
+        /// <summary>
+        /// List of <see cref="SmartUser"/> used to populate a drop down.
+        /// </summary>
         public List<SmartUser> Users { get; set; }
+        /// <summary>
+        /// List of <see cref="AwardSelectListOption"/> used to populate a drop down.
+        /// </summary>
         public List<AwardSelectListOption> AwardList { get; set; }
-
+        /// <summary>
+        /// Returns the Component model.
+        /// </summary>
+        /// <returns></returns>
         public abstract AwardTypeFormViewComponentViewModel GetComponentModel();
     }
-
+    /// <summary>
+    /// Implementation of <see cref="SmartAwardViewModel"/> used for an empty award view.
+    /// </summary>
     public class EmptyAwardViewModel : SmartAwardViewModel
     {
+        /// <summary>
+        /// Creates a new instance of the class.
+        /// </summary>
         public EmptyAwardViewModel()
         {
             AwardList = new List<AwardSelectListOption>
@@ -60,23 +119,39 @@ namespace SmartDocs.Models.ViewModels
                 },
             };
         }
+        /// <summary>
+        /// Returns the component model.
+        /// </summary>
+        /// <returns></returns>
         public override AwardTypeFormViewComponentViewModel GetComponentModel()
         {
             return null;
         }
     }
-
+    /// <summary>
+    /// Implementation of <see cref="SelectListItem"/> that adds a subtext property.
+    /// </summary>
     public class AwardSelectListOption : SelectListItem
     {
+        /// <summary>
+        /// The string containing the subtext.
+        /// </summary>
         public string SubText { get; set; }
     }
-
+    /// <summary>
+    /// Implementation of <see cref="SmartAwardViewModel"/> used for Good Conduct Award Types.
+    /// </summary>
     public class GoodConductAwardViewModel: SmartAwardViewModel
     {
+        /// <summary>
+        /// The date that eligibility for the award was confirmed.
+        /// </summary>
         [Display(Name = "Date Eligibility Confirmed by IAD"), Required]
         [DataType(DataType.Date)]
         public DateTime EligibilityConfirmationDate { get; set; }
-
+        /// <summary>
+        /// Creates a new instance of the class.
+        /// </summary>
         public GoodConductAwardViewModel()
         {           
             AwardList = new List<AwardSelectListOption>
@@ -96,6 +171,10 @@ namespace SmartDocs.Models.ViewModels
                 },
             };
         }
+        /// <summary>
+        /// Returns the Component Model.
+        /// </summary>
+        /// <returns></returns>
         public override AwardTypeFormViewComponentViewModel GetComponentModel()
         {
             return new GoodConductAwardFormViewComponentViewModel
@@ -110,17 +189,33 @@ namespace SmartDocs.Models.ViewModels
             };
         }
     }
+    /// <summary>
+    /// Implementation of <see cref="SmartAwardViewModel"/> used for Outstanding performance award types.
+    /// </summary>
     public class OutstandingPerformanceAwardViewModel : SmartAwardViewModel
     {
-
+        /// <summary>
+        /// The start date of the eligiblity period
+        /// </summary>
         [Display(Name = "Start Date of Eligibility Period"), Required]
         public DateTime StartDate { get; set; }
+        /// <summary>
+        /// The end date of the eligiblity period
+        /// </summary>
         [Display(Name = "End Date of Eligibility Period"), Required]
         public DateTime EndDate { get; set; }
+        /// <summary>
+        /// The integer id of the selected award type.
+        /// </summary>
         [Required, Display(Name = "Select the type of Outstanding Performance Award")]
         public int? SelectedAwardType { get; set; }
+        /// <summary>
+        /// List of award types.
+        /// </summary>
         public List<SelectListItem> AwardTypes { get; set; }
-
+        /// <summary>
+        /// Creates a new instance of the class.
+        /// </summary>
         public OutstandingPerformanceAwardViewModel()
         {
            
@@ -141,6 +236,10 @@ namespace SmartDocs.Models.ViewModels
                 },
             };
         }
+        /// <summary>
+        /// Returns the component model.
+        /// </summary>
+        /// <returns></returns>
         public override AwardTypeFormViewComponentViewModel GetComponentModel()
         {
             return new OutstandingPerformanceAwardFormViewComponentViewModel
@@ -175,10 +274,17 @@ namespace SmartDocs.Models.ViewModels
             };
         }
     }
-
-    public class AwardTypeModelBinderProvider : Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinderProvider
+    /// <summary>
+    /// Custom model-binding provider used in the <see cref="SmartAwardViewModel"/> classes.
+    /// </summary>
+    public class AwardTypeModelBinderProvider : IModelBinderProvider
     {
-        public Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinder GetBinder(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBinderProviderContext context)
+        /// <summary>
+        /// Gets the model binder.
+        /// </summary>
+        /// <param name="context">A <see cref="ModelBinderProviderContext"/></param>
+        /// <returns>An implementation of <see cref="IModelBinder"/></returns>
+        public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
             if (context.Metadata.ModelType != typeof(SmartAwardViewModel))
             {
@@ -194,13 +300,25 @@ namespace SmartDocs.Models.ViewModels
             return new AwardTypeModelBinder(binders);
         }
     }
+    /// <summary>
+    /// Custom model-binder used in <see cref="SmartAwardViewModel"/> derived classes.
+    /// </summary>
     public class AwardTypeModelBinder : IModelBinder
     {
         private Dictionary<Type, (ModelMetadata, IModelBinder)> binders;
+        /// <summary>
+        /// Creates the binder.
+        /// </summary>
+        /// <param name="binders"></param>
         public AwardTypeModelBinder(Dictionary<Type, (ModelMetadata, IModelBinder)> binders)
         {
             this.binders = binders;
         }
+        /// <summary>
+        /// Binds the model.
+        /// </summary>
+        /// <param name="bindingContext">A <see cref="ModelBindingContext"/></param>
+        /// <returns></returns>
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var modelKindName = ModelNames.CreatePropertyModelName(bindingContext.ModelName, nameof(SmartAwardViewModel.Kind));

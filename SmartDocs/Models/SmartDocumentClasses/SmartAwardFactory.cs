@@ -171,7 +171,7 @@ namespace SmartDocs.Models.SmartDocumentClasses
                 default:
                     throw new NotImplementedException("The Award Type specified in the FormData collection is missing or invalid.");
             }
-            vm.Components = _repository.Components.ToList();
+            vm.Units = _repository.Units.ToList();
             vm.Users = _repository.Users.ToList();
             vm.AwardList = new List<AwardSelectListOption>
             {

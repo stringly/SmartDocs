@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SmartDocs.Models
 {
@@ -55,9 +56,9 @@ namespace SmartDocs.Models
         /// Gets the Components.
         /// </summary>
         /// <value>
-        /// The <see cref="OrganizationComponent"/>s.
+        /// The <see cref="OrganizationUnit"/>s.
         /// </value>
-        public IEnumerable<OrganizationComponent> Components => context.Components;
+        public IEnumerable<OrganizationUnit> Units => context.Units.OrderBy(x => x.Title);
 
         /// <summary>
         /// Gets the <see cref="SmartDocument"/> of the type <see cref="SmartDocument.SmartDocumentType.PPA"/>.
@@ -87,7 +88,6 @@ namespace SmartDocs.Models
         /// The <see cref="SmartDocument"/>s in the repo that are of the type <see cref="SmartDocument.SmartDocumentType.JobDescription"/>
         /// </value>
         public IEnumerable<SmartDocument> JobDescriptionForms => context.Documents.Include(y => y.Template).Include(z => z.Author).Where(x => x.Type == SmartDocument.SmartDocumentType.JobDescription);
-
         /// <summary>
         /// Saves/Updates the <see cref="SmartJob"/>.
         /// </summary>
@@ -228,35 +228,37 @@ namespace SmartDocs.Models
         }
 
         /// <summary>
-        /// Saves/Updates a <see cref="OrganizationComponent"/> the user.
+        /// Saves/Updates a <see cref="OrganizationUnit"/>.
         /// </summary>
         /// <remarks>
-        /// If this method is passed a SmartUser with a non-zero OrganizationComponent.ComponentId, it will update the corresponding OrganizationComponent in the repo. If this method is passed a OrganizationComponent with a OrganizationComponent.ComponentId = 0, then it will create a new OrganizationComponent in the repo.
+        /// If this method is passed a SmartUser with a non-zero OrganizationUnit.Id, it will update the corresponding OrganizationUnit in the repo. If this method is passed a OrganizationUnit with a OrganizationUnit.Id = 0, then it will create a new OrganizationUnit in the repo.
         /// </remarks>
-        /// <param name="component">The <see cref="OrganizationComponent"/> to be added/updated.</param>
-        public void SaveComponent(OrganizationComponent component)
+        /// <param name="unit">The <see cref="OrganizationUnit"/> to be added/updated.</param>
+        public void SaveUnit(OrganizationUnit unit)
         {
-            if (component.ComponentId == 0)
+            if (unit.Id == 0)
             {
-                context.Components.Add(component);
+                context.Units.Add(unit);
             }
             else
             {
-                OrganizationComponent dbComponent = context.Components.FirstOrDefault(x => x.ComponentId == component.ComponentId);
-                dbComponent.Name = component.Name;
-                dbComponent.Address = component.Address;
-                dbComponent.DepartmentCode = component.DepartmentCode;               
+                OrganizationUnit dbUnit = context.Units.FirstOrDefault(x => x.Id == unit.Id);
+                dbUnit.Title = unit.Title;
+                dbUnit.Address = unit.Address;
+                dbUnit.Code = unit.Code;
+                dbUnit.Division = unit.Division;
+                dbUnit.Bureau = unit.Bureau;
             }
             context.SaveChanges();
         }
 
         /// <summary>
-        /// Removes a <see cref="OrganizationComponent"/>.
+        /// Removes a <see cref="OrganizationUnit"/>.
         /// </summary>
-        /// <param name="component">The <see cref="OrganizationComponent"/> to remove.</param>
-        public void RemoveComponent(OrganizationComponent component)
+        /// <param name="unit">The <see cref="OrganizationUnit"/> to remove.</param>
+        public void RemoveUnit(OrganizationUnit unit)
         {
-            context.Components.Remove(component);
+            context.Units.Remove(unit);
             context.SaveChanges();
         }
 
@@ -267,6 +269,13 @@ namespace SmartDocs.Models
         public SmartUser GetUserByLogonName(string logonName)
         {
             return context.Users.FirstOrDefault(x => x.LogonName == logonName);
+        }
+        /// <summary>
+        /// Gets the list of Documents for the User.
+        /// </summary>
+        public IEnumerable<SmartDocument> GetDocumentsForUser(int userId)
+        {
+            return context.Documents.Where(x => x.AuthorUserId == userId);
         }
     }
 }

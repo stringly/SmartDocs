@@ -1,0 +1,157 @@
+﻿@model OrganizationUnitIndexViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Current Organization Units</h2>
+<a asp-action="Create">Add New</a>
+<hr />
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-inline" asp-page="/Index" method="get">
+            <div class="form-group">
+                <label class="control-label" asp-for="CurrentFilter">Search:</label>
+                <input type="text" name="searchString" class="form-control" value="@Model.CurrentFilter">
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="SelectedDivision">Division:</label>
+                <select asp-for="SelectedDivision" class="form-control" asp-items="Model.Divisions">
+                    <option value="" selected disabled>Choose a Division</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="SelectedBureau">Bureau:</label>
+                <select asp-for="SelectedBureau" class="form-control" asp-items="Model.Bureaus">
+                    <option value="" selected disabled>Choose a Bureau</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+            @if (!String.IsNullOrEmpty(Model.CurrentFilter) || !String.IsNullOrEmpty(Model.SelectedDivision) || !String.IsNullOrEmpty(Model.SelectedBureau))
+            {
+                <a asp-action="/Index" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Reset List</a>
+            }
+        </form>
+    </div>
+</div>
+@if (Model.Units.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr class="tablePageControlHeaderRow">
+                <th colspan="6">
+                    <div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
+                         page-class="" page-class-normal=""
+                         page-class-selected="active" page-url-searchString="@Model.CurrentFilter" page-url-sortOrder="@Model.CurrentSort" page-url-SelectedDivison="@Model.SelectedDivision" page-url-SelectedBureau="@Model.SelectedBureau"
+                         class="btn-group">
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.TitleSort" asp-route-searchString="@Model.CurrentFilter" asp-route-SelectedDivison="@Model.SelectedDivision" asp-route-SelectedBureau="@Model.SelectedBureau" title="Sort by Title">
+                        Title
+                        @if (Model.CurrentSort == "title_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>                    
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.CodeSort" asp-route-searchString="@Model.CurrentFilter" asp-route-SelectedDivison="@Model.SelectedDivision" asp-route-SelectedBureau="@Model.SelectedBureau" title="Sort by Code">
+                        Code
+                        @if (Model.CurrentSort == "code_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.DivisionSort" asp-route-searchString="@Model.CurrentFilter" asp-route-SelectedDivison="@Model.SelectedDivision" asp-route-SelectedBureau="@Model.SelectedBureau" title="Sort by Division">
+                        Division
+                        @if (Model.CurrentSort == "division_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.BureauSort" asp-route-searchString="@Model.CurrentFilter" asp-route-SelectedDivison="@Model.SelectedDivision" asp-route-SelectedBureau="@Model.SelectedBureau" title="Sort by Bureau">
+                        Bureau
+                        @if (Model.CurrentSort == "bureau_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="/Index" asp-route-sortOrder="@Model.AddressSort" asp-route-searchString="@Model.CurrentFilter" asp-route-SelectedDivison="@Model.SelectedDivision" asp-route-SelectedBureau="@Model.SelectedBureau" title="Sort by Address">
+                        Address
+                        @if (Model.CurrentSort == "address_desc")
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                        }
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var unit in Model.Units)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => unit.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => unit.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => unit.Division)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => unit.Bureau)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => unit.Address)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@unit.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@unit.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@unit.Id">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <hr />
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <strong>No matching Organization Units found.</strong>
+        </div>
+    </div>
+    <hr />
+}
+

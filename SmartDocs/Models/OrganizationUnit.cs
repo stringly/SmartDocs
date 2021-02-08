@@ -5,7 +5,7 @@ namespace SmartDocs.Models
     /// <summary>
     /// Entity Class that represents an Organizational Component
     /// </summary>
-    public class OrganizationComponent
+    public class OrganizationUnit
     {
         /// <summary>
         /// Gets or sets the component identifier.
@@ -14,7 +14,7 @@ namespace SmartDocs.Models
         /// The component identifier.
         /// </value>
         [Key]
-        public int ComponentId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -22,7 +22,7 @@ namespace SmartDocs.Models
         /// <value>
         /// The name.
         /// </value>
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets the address.
@@ -38,6 +38,14 @@ namespace SmartDocs.Models
         /// <value>
         /// The department code.
         /// </value>
-        public string DepartmentCode { get; set; }
+        public string Code { get; set; }
+        /// <summary>
+        /// Gets or sets the Unit's Division Name.
+        /// </summary>
+        public string Division { get; set; }
+        /// <summary>
+        /// Gets or sets the Unit's Bureau Name.
+        /// </summary>
+        public string Bureau { get; set; }
     }
 }

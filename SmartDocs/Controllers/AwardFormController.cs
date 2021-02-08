@@ -44,7 +44,7 @@ namespace SmartDocs.Controllers
             vm.NomineeName = NomineeName;
             vm.ClassTitle = ClassTitle;
             vm.Division = Division;
-            vm.Components = _repository.Components.ToList();
+            vm.Units = _repository.Units.ToList();
             vm.Users = _repository.Users.ToList();
             ViewData["Title"] = "Create Award Form";
             return View(vm);
@@ -62,7 +62,7 @@ namespace SmartDocs.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["Title"] = "Create Award Form: Error";
-                form.Components = _repository.Components.ToList();
+                form.Units = _repository.Units.ToList();
                 form.Users = _repository.Users.ToList();
                 return View(form);
             }
@@ -112,7 +112,7 @@ namespace SmartDocs.Controllers
             {
                 // rebuild and return VM
                 ViewData["Title"] = "Edit Award Form: Error";
-                form.Components = _repository.Components.ToList();
+                form.Units = _repository.Units.ToList();
                 form.Users = _repository.Users.ToList();
                 return View(form);
             }
